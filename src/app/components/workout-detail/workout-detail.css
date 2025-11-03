@@ -1,0 +1,426 @@
+.jacaona-workout-detail-container {
+  min-height: 100vh;
+  background: var(--jacaona-bg-primary);
+  padding-bottom: 80px;
+}
+
+/* Top Bar */
+.jacaona-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--jacaona-space-lg);
+  background: var(--jacaona-bg-secondary);
+  border-bottom: 1px solid var(--jacaona-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.jacaona-back-btn {
+  background: transparent;
+  border: none;
+  color: var(--jacaona-text-primary);
+  cursor: pointer;
+  padding: var(--jacaona-space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--jacaona-radius-md);
+  transition: background-color 0.15s ease;
+}
+
+.jacaona-back-btn:hover {
+  background: var(--jacaona-bg-tertiary);
+}
+
+.jacaona-page-title {
+  color: var(--jacaona-text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.jacaona-menu-btn {
+  background: transparent;
+  border: none;
+  color: var(--jacaona-text-primary);
+  cursor: pointer;
+  padding: var(--jacaona-space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--jacaona-radius-md);
+  transition: background-color 0.15s ease;
+}
+
+.jacaona-menu-btn:hover {
+  background: var(--jacaona-bg-tertiary);
+}
+
+/* Main Content */
+.jacaona-main-content {
+  padding: var(--jacaona-space-xl);
+}
+
+/* Workout Title */
+.jacaona-workout-title {
+  color: var(--jacaona-text-primary);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 var(--jacaona-space-lg) 0;
+}
+
+/* Workout Description */
+.jacaona-workout-description {
+  color: var(--jacaona-text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: calc(var(--jacaona-space-lg) * -0.5) 0 var(--jacaona-space-lg) 0;
+  opacity: 0.9;
+}
+
+/* Stats Row */
+.jacaona-stats-row {
+  display: flex;
+  gap: var(--jacaona-space-lg);
+  margin-bottom: var(--jacaona-space-xl);
+}
+
+.jacaona-stat-item {
+  flex: 1;
+  text-align: center;
+}
+
+.jacaona-stat-label {
+  color: var(--jacaona-text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--jacaona-space-xs);
+}
+
+.jacaona-stat-value {
+  color: var(--jacaona-text-primary);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.jacaona-stat-primary {
+  color: var(--jacaona-accent-blue);
+}
+
+/* Separator */
+.jacaona-separator {
+  height: 1px;
+  background: var(--jacaona-border);
+  margin: var(--jacaona-space-xl) 0;
+}
+
+/* Workout Header */
+.jacaona-workout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--jacaona-space-xl);
+}
+
+.jacaona-workout-label {
+  color: var(--jacaona-text-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.jacaona-edit-btn {
+  background: transparent;
+  border: none;
+  color: var(--jacaona-accent-blue);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  padding: var(--jacaona-space-sm) var(--jacaona-space-md);
+  border-radius: var(--jacaona-radius-md);
+  transition: background-color 0.15s ease;
+}
+
+.jacaona-edit-btn:hover {
+  background: var(--jacaona-bg-tertiary);
+}
+
+/* Exercises List */
+.jacaona-exercises-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--jacaona-space-xl);
+}
+
+.jacaona-exercise-item {
+  background: var(--jacaona-bg-secondary);
+  border-radius: var(--jacaona-radius-lg);
+  padding: var(--jacaona-space-lg);
+  border: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.jacaona-exercise-name {
+  color: var(--jacaona-accent-blue);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: var(--jacaona-space-md);
+}
+
+/* Sets Table */
+.jacaona-sets-table {
+  width: 100%;
+}
+
+.jacaona-table-header,
+.jacaona-table-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--jacaona-space-md);
+  padding: var(--jacaona-space-sm) 0;
+}
+
+.jacaona-table-header {
+  border-bottom: 1px solid var(--jacaona-border);
+  margin-bottom: var(--jacaona-space-xs);
+}
+
+.jacaona-table-header .jacaona-table-cell {
+  color: var(--jacaona-text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.jacaona-table-row {
+  border-bottom: 1px solid var(--jacaona-border-subtle);
+}
+
+.jacaona-table-row:last-child {
+  border-bottom: none;
+}
+
+.jacaona-table-cell {
+  color: var(--jacaona-text-primary);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.jacaona-table-cell:first-child {
+  color: var(--jacaona-text-muted);
+}
+
+/* Loading State */
+.jacaona-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: var(--jacaona-text-muted);
+}
+
+/* Bottom Menu */
+.jacaona-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  display: flex;
+  align-items: flex-end;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.jacaona-bottom-menu {
+  width: 100%;
+  background: var(--jacaona-bg-secondary);
+  border-radius: var(--jacaona-radius-xl) var(--jacaona-radius-xl) 0 0;
+  padding: var(--jacaona-space-lg);
+  padding-bottom: calc(var(--jacaona-space-lg) + env(safe-area-inset-bottom));
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.jacaona-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--jacaona-space-md);
+  padding: var(--jacaona-space-lg);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  border-radius: var(--jacaona-radius-md);
+}
+
+.jacaona-menu-item:hover {
+  background: var(--jacaona-bg-tertiary);
+}
+
+.jacaona-menu-item:active {
+  background: var(--jacaona-bg-tertiary);
+  opacity: 0.8;
+}
+
+.jacaona-menu-icon {
+  color: var(--jacaona-text-primary);
+  flex-shrink: 0;
+}
+
+.jacaona-menu-text {
+  color: var(--jacaona-text-primary);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.jacaona-menu-separator {
+  height: 1px;
+  background: var(--jacaona-border);
+  margin: var(--jacaona-space-xs) 0;
+}
+
+.jacaona-menu-item-danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.jacaona-menu-icon-danger {
+  color: #ef4444;
+}
+
+.jacaona-menu-text-danger {
+  color: #ef4444;
+}
+
+/* Delete Confirmation Dialog */
+.jacaona-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--jacaona-space-xl);
+  animation: fadeIn 0.2s ease;
+}
+
+.jacaona-dialog {
+  background: var(--jacaona-bg-secondary);
+  border-radius: var(--jacaona-radius-lg);
+  padding: var(--jacaona-space-xl);
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--jacaona-space-md);
+  animation: scaleIn 0.2s ease;
+  border: 1px solid var(--jacaona-border);
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.jacaona-dialog-message {
+  color: var(--jacaona-text-primary);
+  font-size: 16px;
+  text-align: center;
+  margin: 0;
+  margin-bottom: var(--jacaona-space-md);
+  line-height: 1.5;
+}
+
+.jacaona-dialog-btn {
+  width: 100%;
+  padding: var(--jacaona-space-md) var(--jacaona-space-lg);
+  border-radius: var(--jacaona-radius-md);
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.jacaona-dialog-btn-danger {
+  background: var(--jacaona-bg-tertiary);
+  color: #ef4444;
+}
+
+.jacaona-dialog-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.jacaona-dialog-btn-danger:active {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.jacaona-dialog-btn-cancel {
+  background: transparent;
+  color: var(--jacaona-text-primary);
+  border: 1px solid var(--jacaona-border);
+}
+
+.jacaona-dialog-btn-cancel:hover {
+  background: var(--jacaona-bg-tertiary);
+}
+
+.jacaona-dialog-btn-cancel:active {
+  background: var(--jacaona-bg-tertiary);
+  opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .jacaona-main-content {
+    padding: var(--jacaona-space-lg);
+  }
+
+  .jacaona-stats-row {
+    gap: var(--jacaona-space-md);
+  }
+
+  .jacaona-stat-value {
+    font-size: 20px;
+  }
+
+  .jacaona-exercise-item {
+    padding: var(--jacaona-space-md);
+  }
+}

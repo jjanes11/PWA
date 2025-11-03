@@ -1,0 +1,125 @@
+<div class="jacaona-workout-detail-container">
+  @if (workout(); as w) {
+    <!-- Top Bar -->
+    <div class="jacaona-top-bar">
+      <button class="jacaona-back-btn" (click)="goBack()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20v-2z"/>
+        </svg>
+      </button>
+      <h1 class="jacaona-page-title">Workout Detail</h1>
+      <button class="jacaona-menu-btn" (click)="openMenu()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="jacaona-main-content">
+      <!-- Workout Title -->
+      <h2 class="jacaona-workout-title">{{ w.name }}</h2>
+      @if (w.notes) {
+        <p class="jacaona-workout-description">{{ w.notes }}</p>
+      }
+      
+      <!-- Workout Stats -->
+      <div class="jacaona-stats-row">
+        <div class="jacaona-stat-item">
+          <div class="jacaona-stat-label">Duration</div>
+          <div class="jacaona-stat-value jacaona-stat-primary">{{ workoutStats().duration }}</div>
+        </div>
+        <div class="jacaona-stat-item">
+          <div class="jacaona-stat-label">Volume</div>
+          <div class="jacaona-stat-value">{{ workoutStats().volume }} kg</div>
+        </div>
+        <div class="jacaona-stat-item">
+          <div class="jacaona-stat-label">Sets</div>
+          <div class="jacaona-stat-value">{{ workoutStats().sets }}</div>
+        </div>
+      </div>
+
+      <!-- Separator -->
+      <div class="jacaona-separator"></div>
+
+      <!-- Workout Header -->
+      <div class="jacaona-workout-header">
+        <span class="jacaona-workout-label">Workout</span>
+        <button class="jacaona-edit-btn" (click)="editWorkout()">Edit Workout</button>
+      </div>
+
+      <!-- Exercises List -->
+      <div class="jacaona-exercises-list">
+        @for (exercise of w.exercises; track exercise.id) {
+          <div class="jacaona-exercise-item">
+            <!-- Exercise Name -->
+            <div class="jacaona-exercise-name">{{ exercise.name }}</div>
+
+            <!-- Sets Table -->
+            <div class="jacaona-sets-table">
+              <div class="jacaona-table-header">
+                <div class="jacaona-table-cell">Set</div>
+                <div class="jacaona-table-cell">Weight</div>
+                <div class="jacaona-table-cell">Reps</div>
+              </div>
+              @for (set of exercise.sets; track set.id; let i = $index) {
+                <div class="jacaona-table-row">
+                  <div class="jacaona-table-cell">{{ i + 1 }}</div>
+                  <div class="jacaona-table-cell">{{ set.weight }} kg</div>
+                  <div class="jacaona-table-cell">{{ set.reps }}</div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="jacaona-loading">
+      <p>Loading workout...</p>
+    </div>
+  }
+
+  <!-- Bottom Menu -->
+  @if (showMenu()) {
+    <div class="jacaona-menu-overlay" (click)="closeMenu()">
+      <div class="jacaona-bottom-menu" (click)="$event.stopPropagation()">
+        <button class="jacaona-menu-item" (click)="saveAsRoutine()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="jacaona-menu-icon">
+            <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/>
+          </svg>
+          <span class="jacaona-menu-text">Save as Routine</span>
+        </button>
+        <div class="jacaona-menu-separator"></div>
+        <button class="jacaona-menu-item" (click)="editWorkout()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="jacaona-menu-icon">
+            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+          </svg>
+          <span class="jacaona-menu-text">Edit Workout</span>
+        </button>
+        <div class="jacaona-menu-separator"></div>
+        <button class="jacaona-menu-item jacaona-menu-item-danger" (click)="deleteWorkout()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="jacaona-menu-icon jacaona-menu-icon-danger">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+          <span class="jacaona-menu-text jacaona-menu-text-danger">Delete Workout</span>
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Delete Confirmation Dialog -->
+  @if (showDeleteDialog()) {
+    <div class="jacaona-dialog-overlay" (click)="cancelDelete()">
+      <div class="jacaona-dialog" (click)="$event.stopPropagation()">
+        <p class="jacaona-dialog-message">Are you sure you want to delete this workout?</p>
+        <button class="jacaona-dialog-btn jacaona-dialog-btn-danger" (click)="confirmDelete()">
+          Delete Workout
+        </button>
+        <button class="jacaona-dialog-btn jacaona-dialog-btn-cancel" (click)="cancelDelete()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  }
+</div>

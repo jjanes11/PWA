@@ -1,0 +1,68 @@
+<div class="jacaona-save-workout-container">
+  <!-- Top Bar -->
+  <div class="jacaona-top-bar">
+    <button class="jacaona-back-btn" (click)="goBack()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20v-2z"/>
+      </svg>
+    </button>
+    <h1 class="jacaona-page-title">Save Workout</h1>
+    <button class="jacaona-save-btn" (click)="saveWorkout()">
+      Save
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="jacaona-main-content">
+    <!-- Workout Title Input -->
+    <div class="jacaona-input-section">
+      <input 
+        type="text" 
+        class="jacaona-title-input" 
+        placeholder="Workout title"
+        [(ngModel)]="workoutTitle"
+      />
+    </div>
+
+    <!-- Workout Summary -->
+    <div class="jacaona-summary-section">
+      <div class="jacaona-stats-row">
+        <div class="jacaona-stat-item">
+          <div class="jacaona-stat-label">Duration</div>
+          <div class="jacaona-stat-value jacaona-stat-primary">{{ formattedDuration() }}</div>
+        </div>
+        <div class="jacaona-stat-item">
+          <div class="jacaona-stat-label">Volume</div>
+          <div class="jacaona-stat-value">{{ workoutStats().volume }} kg</div>
+        </div>
+        <div class="jacaona-stat-item">
+          <div class="jacaona-stat-label">Sets</div>
+          <div class="jacaona-stat-value">{{ workoutStats().sets }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Separator -->
+    <div class="jacaona-separator"></div>
+
+    <!-- When Section -->
+    <div class="jacaona-when-section">
+      <div class="jacaona-section-title">When</div>
+      <div class="jacaona-when-value">{{ workoutDateTime() }}</div>
+    </div>
+
+    <!-- Separator -->
+    <div class="jacaona-separator"></div>
+
+    <!-- Description Section -->
+    <div class="jacaona-description-section">
+      <div class="jacaona-section-title">Description</div>
+      <textarea 
+        class="jacaona-description-input" 
+        placeholder="How did your workout go? Leave some notes"
+        [(ngModel)]="workoutDescription"
+        rows="4"
+      ></textarea>
+    </div>
+  </div>
+</div>

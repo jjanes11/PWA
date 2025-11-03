@@ -1,0 +1,91 @@
+<div class="jacaona-create-routine-page">
+  <!-- Top Bar -->
+  <header class="jacaona-topbar">
+    <button class="jacaona-btn-link jacaona-cancel" (click)="cancel()">Cancel</button>
+    <h1 class="jacaona-title">Create Routine</h1>
+    <button class="jacaona-btn jacaona-btn-primary" (click)="save()">Save</button>
+  </header>
+
+  <!-- Main Content -->
+  <main class="jacaona-content">
+    <div class="jacaona-field">
+      <input
+        class="jacaona-input-title"
+        type="text"
+        [(ngModel)]="title"
+        placeholder="Routine title"
+        aria-label="Routine title"
+      />
+    </div>
+
+    @if (!currentWorkout()?.exercises || currentWorkout()!.exercises.length === 0) {
+      <!-- Empty State -->
+      <div class="jacaona-empty-state">
+        <div class="jacaona-empty-icon">
+          <svg viewBox="0 0 24 24" width="56" height="56" fill="currentColor" aria-hidden="true">
+            <path d="M3 10h2v4H3v-4Zm3-3h2v10H6V7Zm12 0h-2v10h2V7Zm3 3h-2v4h2v-4ZM9 11h6v2H9v-2Z"/>
+          </svg>
+        </div>
+        <p class="jacaona-empty-hint">Get started by adding an exercise to your routine.</p>
+      </div>
+    } @else {
+      <!-- Exercises List -->
+      <div class="jacaona-exercises-container">
+        @for (exercise of currentWorkout()!.exercises; track exercise.id) {
+          <div class="jacaona-exercise-card">
+            <!-- Exercise Name -->
+            <h3 class="jacaona-exercise-title">{{ exercise.name }}</h3>
+            
+            <!-- Sets Table -->
+            <div class="jacaona-sets-table">
+              <!-- Table Headers -->
+              <div class="jacaona-table-header">
+                <div class="jacaona-header-set">SET</div>
+                <div class="jacaona-header-weight">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/>
+                  </svg>
+                  KG
+                </div>
+                <div class="jacaona-header-reps">REPS</div>
+              </div>
+              
+              <!-- Table Rows -->
+              @for (set of exercise.sets; track set.id; let i = $index) {
+                <div class="jacaona-table-row">
+                  <div class="jacaona-cell-set">{{ i + 1 }}</div>
+                  <div class="jacaona-cell-weight">
+                    <input 
+                      type="number" 
+                      [value]="set.weight" 
+                      (input)="updateSet(exercise.id, set.id, 'weight', +$any($event.target).value)"
+                      class="jacaona-input"
+                      min="0"
+                      step="0.5"
+                    />
+                  </div>
+                  <div class="jacaona-cell-reps">
+                    <input 
+                      type="number" 
+                      [value]="set.reps" 
+                      (input)="updateSet(exercise.id, set.id, 'reps', +$any($event.target).value)"
+                      class="jacaona-input"
+                      min="0"
+                    />
+                  </div>
+                </div>
+              }
+            </div>
+            
+            <!-- Add Set Button -->
+            <button class="jacaona-add-set-btn" (click)="addSetToExercise(exercise.id)">
+              + Add Set
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    <button class="jacaona-btn jacaona-btn-primary jacaona-btn-full" (click)="addExercise()">+ Add exercise</button>
+  </main>
+</div>

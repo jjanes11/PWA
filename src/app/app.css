@@ -1,0 +1,121 @@
+.app-container {
+  min-height: 100vh;
+  background: var(--jacaona-bg-primary);
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  background: var(--jacaona-bg-primary);
+}
+
+/* Update Banner Styles for Jacaona Theme */
+.update-banner {
+  background: var(--jacaona-bg-tertiary);
+  border-bottom: 1px solid var(--jacaona-border);
+  padding: var(--jacaona-space-md);
+}
+
+.banner-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.banner-text {
+  color: var(--jacaona-text-primary);
+  font-size: 14px;
+  font-weight: var(--jacaona-font-weight-medium);
+}
+
+.banner-actions {
+  display: flex;
+  gap: var(--jacaona-space-sm);
+}
+
+.update-button {
+  background: var(--jacaona-accent-blue);
+  color: var(--jacaona-bg-primary);
+  border: none;
+  padding: var(--jacaona-space-sm) var(--jacaona-space-md);
+  border-radius: var(--jacaona-radius-sm);
+  font-weight: var(--jacaona-font-weight-medium);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.update-button:hover {
+  background: var(--jacaona-accent-blue-hover);
+}
+
+.dismiss-button {
+  background: transparent;
+  color: var(--jacaona-text-secondary);
+  border: 1px solid var(--jacaona-border);
+  padding: var(--jacaona-space-sm) var(--jacaona-space-md);
+  border-radius: var(--jacaona-radius-sm);
+  font-weight: var(--jacaona-font-weight-medium);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dismiss-button:hover {
+  background: var(--jacaona-bg-secondary);
+  color: var(--jacaona-text-primary);
+}
+
+/* Install Banner */
+.install-banner {
+  background: linear-gradient(135deg, var(--jacaona-accent-blue), var(--jacaona-accent-blue-hover));
+  padding: var(--jacaona-space-md);
+  color: var(--jacaona-bg-primary);
+}
+
+.install-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.install-text {
+  font-weight: var(--jacaona-font-weight-medium);
+  font-size: 14px;
+}
+
+.install-button {
+  background: var(--jacaona-bg-primary);
+  color: var(--jacaona-accent-blue);
+  border: none;
+  padding: var(--jacaona-space-sm) var(--jacaona-space-md);
+  border-radius: var(--jacaona-radius-sm);
+  font-weight: var(--jacaona-font-weight-semibold);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.install-button:hover {
+  background: var(--jacaona-text-primary);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .banner-content,
+  .install-content {
+    flex-direction: column;
+    gap: var(--jacaona-space-sm);
+    text-align: center;
+  }
+  
+  .banner-actions {
+    width: 100%;
+    justify-content: center;
+  }
+}

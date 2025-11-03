@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Icon Generator - Barbell</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0d1117;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .canvas-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .canvas-item {
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            background: #0d1117;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        h1 {
+            margin: 0;
+        }
+        .info {
+            background: #161b22;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <h1>PWA Barbell Icon Generator</h1>
+    
+    <div class="info">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Click "Download All Icons" to download all sizes at once</li>
+            <li>Or click individual "Download" buttons for specific sizes</li>
+            <li>Replace the files in the <code>public/icons</code> folder</li>
+        </ol>
+    </div>
+
+    <button onclick="downloadAllIcons()" style="font-size: 16px; padding: 16px 32px;">📦 Download All Icons</button>
+
+    <div class="canvas-container" id="canvasContainer"></div>
+
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        
+        function drawBarbellIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const scale = size / 512; // Base design on 512x512
+            
+            // Dark background (matching Jacaona theme)
+            ctx.fillStyle = '#0d1117';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Save context and rotate 45 degrees around center
+            ctx.save();
+            ctx.translate(size / 2, size / 2);
+            ctx.rotate(45 * Math.PI / 180);
+            ctx.translate(-size / 2, -size / 2);
+            
+            // Draw barbell in single blue color
+            ctx.fillStyle = '#3b82f6';
+            
+            // Center bar - even thicker and shorter
+            const barHeight = 38 * scale; // Increased from 28
+            const barY = (size - barHeight) / 2;
+            const barWidth = size * 0.35; // Reduced from 0.45
+            const barX = (size - barWidth) / 2;
+            ctx.fillRect(barX, barY, barWidth, barHeight);
+            
+            // Weight plates - all same blue color
+            function drawPlate(x, width, height) {
+                const plateY = (size - height) / 2;
+                ctx.fillStyle = '#3b82f6';
+                ctx.fillRect(x, plateY, width, height);
+            }
+            
+            // Left weight plates - larger/thicker
+            const plate1Width = 40 * scale; // Increased from 35
+            const plate1Height = 160 * scale; // Increased from 140
+            drawPlate(barX - plate1Width, plate1Width, plate1Height);
+            
+            const plate2Width = 32 * scale; // Increased from 28
+            const plate2Height = 130 * scale; // Increased from 110
+            drawPlate(barX - plate1Width - plate2Width - 3 * scale, plate2Width, plate2Height);
+            
+            // Right weight plates
+            drawPlate(barX + barWidth, plate1Width, plate1Height);
+            drawPlate(barX + barWidth + plate1Width + 3 * scale, plate2Width, plate2Height);
+            
+            // Restore context
+            ctx.restore();
+        }
+        
+        function createCanvas(size) {
+            const container = document.getElementById('canvasContainer');
+            const item = document.createElement('div');
+            item.className = 'canvas-item';
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            canvas.id = `icon-${size}`;
+            
+            drawBarbellIcon(canvas, size);
+            
+            const label = document.createElement('div');
+            label.textContent = `${size}x${size}`;
+            label.style.marginTop = '10px';
+            label.style.fontWeight = '600';
+            
+            const button = document.createElement('button');
+            button.textContent = 'Download';
+            button.onclick = () => downloadIcon(canvas, size);
+            
+            item.appendChild(canvas);
+            item.appendChild(label);
+            item.appendChild(button);
+            container.appendChild(item);
+            
+            return canvas;
+        }
+        
+        function downloadIcon(canvas, size) {
+            const link = document.createElement('a');
+            link.download = `icon-${size}x${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        function downloadAllIcons() {
+            sizes.forEach((size, index) => {
+                setTimeout(() => {
+                    const canvas = document.getElementById(`icon-${size}`);
+                    downloadIcon(canvas, size);
+                }, index * 200); // Stagger downloads to avoid browser blocking
+            });
+        }
+        
+        // Generate all canvases
+        sizes.forEach(size => createCanvas(size));
+    </script>
+</body>
+</html>

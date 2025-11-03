@@ -1,0 +1,40 @@
+<div class="app-container">
+  <!-- Update Banner -->
+  @if (showUpdateBanner()) {
+    <div class="update-banner">
+      <div class="banner-content">
+        <span class="banner-text">🆕 New version available!</span>
+        <div class="banner-actions">
+          <button class="update-button" (click)="updateApp()">
+            Update Now
+          </button>
+          <button class="dismiss-button" (click)="dismissUpdateBanner()">
+            Later
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- PWA Install Prompt (Hidden) -->
+  @if (false) {
+    <div class="install-banner">
+      <div class="install-content">
+        <span class="install-text">📱 Install {{ title() }} as an app</span>
+        <button class="install-button" (click)="installPwa()">
+          Install
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Main App Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Bottom Navigation -->
+  @if (showBottomNav()) {
+    <app-bottom-nav></app-bottom-nav>
+  }
+</div>

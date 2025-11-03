@@ -1,0 +1,123 @@
+<div class="jacaona-workout-container">
+  <!-- Top Bar -->
+  <div class="jacaona-top-bar">
+    <button class="jacaona-back-btn" (click)="goBack()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20v-2z"/>
+      </svg>
+    </button>
+    <button class="jacaona-finish-btn" (click)="finishWorkout()">
+      Finish
+    </button>
+  </div>
+
+  <!-- Main View -->
+  <div class="jacaona-main-view">
+    @if (!currentWorkout() || currentWorkout()!.exercises.length === 0) {
+      <!-- Empty State - Centered Weight Icon -->
+      <div class="jacaona-weight-icon">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/>
+        </svg>
+      </div>
+
+      <!-- Get Started Text -->
+      <h2 class="jacaona-get-started">Get started</h2>
+    } @else {
+      <!-- Exercises List -->
+      <div class="jacaona-exercises-container">
+        @for (exercise of currentWorkout()?.exercises || []; track exercise.id) {
+          <div class="jacaona-exercise-card">
+            <!-- Exercise Name -->
+            <h3 class="jacaona-exercise-title">{{ exercise.name }}</h3>
+            
+            <!-- Sets Table -->
+            <div class="jacaona-sets-table">
+              <!-- Table Headers -->
+              <div class="jacaona-table-header">
+                <div class="jacaona-header-set">SET</div>
+                <div class="jacaona-header-weight">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/>
+                  </svg>
+                  KG
+                </div>
+                <div class="jacaona-header-reps">REPS</div>
+                <div class="jacaona-header-check">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
+                  </svg>
+                </div>
+              </div>
+              
+              <!-- Table Rows -->
+              @for (set of exercise.sets; track set.id; let i = $index) {
+                <div class="jacaona-table-row">
+                  <div class="jacaona-cell-set">{{ i + 1 }}</div>
+                  <div class="jacaona-cell-weight">
+                    <input 
+                      type="number" 
+                      [value]="set.weight" 
+                      (input)="updateSet(exercise.id, set.id, 'weight', +$any($event.target).value)"
+                      class="jacaona-input"
+                      min="0"
+                      step="0.5"
+                    />
+                  </div>
+                  <div class="jacaona-cell-reps">
+                    <input 
+                      type="number" 
+                      [value]="set.reps" 
+                      (input)="updateSet(exercise.id, set.id, 'reps', +$any($event.target).value)"
+                      class="jacaona-input"
+                      min="0"
+                    />
+                  </div>
+                  <div class="jacaona-cell-check">
+                    <button 
+                      class="jacaona-check-btn"
+                      [class.jacaona-check-completed]="set.completed"
+                      (click)="toggleSetComplete(exercise.id, set.id)"
+                    >
+                      @if (set.completed) {
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
+                        </svg>
+                      }
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+            
+            <!-- Add Set Button -->
+            <button class="jacaona-add-set-btn" (click)="addSetToExercise(exercise.id)">
+              + Add Set
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Action Buttons -->
+    <div class="jacaona-action-buttons">
+      <button class="jacaona-add-exercise-btn" (click)="addExercise()">
+        Add Exercise
+      </button>
+      
+      <button class="jacaona-discard-btn" (click)="discardWorkout()">
+        Discard Workout
+      </button>
+    </div>
+  </div>
+
+  <!-- Discard Confirmation Dialog -->
+  <app-confirmation-dialog
+    [isVisible]="showDiscardDialog()"
+    message="Are you sure you want to discard this workout?"
+    confirmText="Discard Workout"
+    cancelText="Cancel"
+    (confirmed)="onDiscardConfirmed()"
+    (cancelled)="onDiscardCancelled()"
+  />
+</div>

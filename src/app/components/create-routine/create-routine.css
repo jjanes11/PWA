@@ -1,0 +1,204 @@
+.jacaona-create-routine-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--jacaona-bg-primary);
+  color: var(--jacaona-text-primary);
+}
+
+.jacaona-topbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--jacaona-bg-secondary);
+  border-bottom: 1px solid var(--jacaona-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.jacaona-title {
+  margin: 0;
+  text-align: center;
+  font-size: 16px;
+  color: var(--jacaona-text-primary);
+  font-weight: 600;
+}
+
+.jacaona-btn-link {
+  background: transparent;
+  border: 0;
+  color: var(--jacaona-accent-blue);
+  font-weight: 600;
+  padding: 8px 10px;
+  justify-self: start;
+  cursor: pointer;
+}
+
+.jacaona-btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.jacaona-btn-primary {
+  background: var(--jacaona-accent-blue);
+  color: #fff;
+}
+
+.jacaona-topbar .jacaona-btn-primary {
+  justify-self: end;
+}
+
+.jacaona-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.jacaona-field {
+  padding: 4px 0 10px 0;
+}
+
+.jacaona-input-title {
+  width: 100%;
+  background: transparent;
+  color: var(--jacaona-text-primary);
+  border: 0;
+  border-bottom: 1px solid var(--jacaona-border);
+  padding: 12px 4px;
+  font-size: 16px;
+  outline: none;
+}
+
+.jacaona-input-title::placeholder {
+  color: var(--jacaona-text-tertiary);
+}
+
+.jacaona-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 0;
+}
+
+.jacaona-empty-icon {
+  color: var(--jacaona-text-secondary);
+}
+
+.jacaona-empty-hint {
+  color: var(--jacaona-text-tertiary);
+  text-align: center;
+  margin: 0;
+}
+
+.jacaona-btn-full {
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* Exercises Container */
+.jacaona-exercises-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.jacaona-exercise-card {
+  background: var(--jacaona-bg-secondary);
+  border: none;
+  border-radius: var(--jacaona-radius-lg);
+  padding: var(--jacaona-space-lg);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.jacaona-exercise-title {
+  color: white;
+  font-size: 20px;
+  font-weight: var(--jacaona-font-weight-semibold);
+  margin: 0 0 var(--jacaona-space-lg) 0;
+  text-align: left;
+}
+
+/* Sets Table */
+.jacaona-sets-table {
+  width: 100%;
+}
+
+.jacaona-table-header {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: var(--jacaona-space-md);
+  padding: var(--jacaona-space-md) 0;
+  border-bottom: 1px solid var(--jacaona-border);
+  margin-bottom: var(--jacaona-space-sm);
+}
+
+.jacaona-table-header > div {
+  color: var(--jacaona-text-muted);
+  font-size: 12px;
+  font-weight: var(--jacaona-font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.jacaona-table-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: var(--jacaona-space-md);
+  padding: var(--jacaona-space-sm) 0;
+  align-items: center;
+}
+
+.jacaona-cell-set {
+  color: var(--jacaona-text-muted);
+  font-weight: var(--jacaona-font-weight-medium);
+  text-align: center;
+}
+
+.jacaona-input {
+  background: var(--jacaona-bg-primary);
+  border: 1px solid var(--jacaona-border);
+  color: white;
+  padding: var(--jacaona-space-sm);
+  border-radius: var(--jacaona-radius-sm);
+  font-size: 14px;
+  text-align: center;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.jacaona-input:focus {
+  border-color: var(--jacaona-accent-blue);
+}
+
+/* Add Set Button */
+.jacaona-add-set-btn {
+  width: 100%;
+  background: var(--jacaona-bg-tertiary);
+  color: white;
+  border: 1px solid var(--jacaona-border);
+  padding: var(--jacaona-space-md);
+  border-radius: var(--jacaona-radius-md);
+  font-size: 14px;
+  font-weight: var(--jacaona-font-weight-medium);
+  cursor: pointer;
+  margin-top: var(--jacaona-space-md);
+  transition: background-color 0.15s ease;
+}
+
+.jacaona-add-set-btn:hover {
+  background: var(--jacaona-bg-quaternary);
+}

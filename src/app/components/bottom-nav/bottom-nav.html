@@ -1,0 +1,48 @@
+<nav class="bottom-nav">
+  <div class="nav-items">
+    <button 
+      class="nav-item" 
+      [class.active]="activeTab() === 'dashboard'"
+      (click)="navigateToTab('dashboard')"
+    >
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Dashboard</span>
+    </button>
+    
+    <button 
+      class="nav-item" 
+      [class.active]="activeTab() === 'schedule'"
+      (click)="navigateToTab('schedule')"
+    >
+      <span class="nav-icon">📅</span>
+      <span class="nav-label">Schedule</span>
+    </button>
+    
+    <button 
+      class="nav-item" 
+      [class.active]="activeTab() === 'workouts'"
+      (click)="navigateToTab('workouts')"
+    >
+      <span class="nav-icon">💪</span>
+      <span class="nav-label">Workouts</span>
+    </button>
+    
+    <button 
+      class="nav-item" 
+      [class.active]="activeTab() === 'stats'"
+      (click)="navigateToTab('stats')"
+    >
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Stats</span>
+    </button>
+    
+    <button 
+      class="nav-item" 
+      [class.active]="activeTab() === 'profile'"
+      (click)="navigateToTab('profile')"
+    >
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Profile</span>
+    </button>
+  </div>
+</nav>
