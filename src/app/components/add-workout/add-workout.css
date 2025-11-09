@@ -255,6 +255,13 @@
   color: var(--jacaona-text-muted);
   font-weight: var(--jacaona-font-weight-medium);
   text-align: center;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  user-select: none;
+}
+
+.jacaona-cell-set:hover {
+  color: white;
 }
 
 .jacaona-input {
@@ -392,4 +399,70 @@
 
 .jacaona-menu-text-danger {
   color: var(--jacaona-danger);
+}
+
+/* Set Type Badges */
+.jacaona-set-type-warmup {
+  color: #facc15;
+}
+
+.jacaona-set-type-failure {
+  color: var(--jacaona-danger);
+}
+
+.jacaona-set-type-drop {
+  color: var(--jacaona-accent-blue);
+}
+
+/* Set Type Menu */
+.jacaona-set-type-menu-content {
+  background: var(--jacaona-bg-secondary);
+  border-radius: var(--jacaona-radius-lg);
+  padding: var(--jacaona-space-md);
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 1001;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.jacaona-menu-title {
+  color: white;
+  font-size: 16px;
+  font-weight: var(--jacaona-font-weight-semibold);
+  margin: 0 0 var(--jacaona-space-md) 0;
+  padding: var(--jacaona-space-sm) var(--jacaona-space-md);
+  text-align: center;
+}
+
+/* Set Type Icon Colors */
+.jacaona-set-type-icon-warmup {
+  color: #facc15;
+}
+
+.jacaona-set-type-icon-failure {
+  color: var(--jacaona-danger);
+}
+
+.jacaona-set-type-icon-drop {
+  color: var(--jacaona-accent-blue);
+}
+
+.jacaona-set-type-char {
+  font-size: 16px;
+  font-weight: var(--jacaona-font-weight-bold);
+  display: inline-block;
+  text-align: center;
 }

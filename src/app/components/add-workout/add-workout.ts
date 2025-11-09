@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { Exercise } from '../../models/workout.models';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
+import { createSetTypeMenuMixin } from '../../mixins/set-type-menu.mixin';
 
 @Component({
   selector: 'app-add-workout',
@@ -22,6 +23,22 @@ export class AddWorkoutComponent implements OnInit {
   selectedExerciseId = signal<string | null>(null);
   draggedExerciseId = signal<string | null>(null);
   dragOverExerciseId = signal<string | null>(null);
+  
+  // Set Type Menu Mixin
+  private setTypeMenuMixin = createSetTypeMenuMixin(
+    this.workoutService,
+    () => this.currentWorkout(),
+    () => this.currentWorkout()?.id || null
+  );
+  
+  showSetTypeMenu = this.setTypeMenuMixin.showSetTypeMenu;
+  selectedSet = this.setTypeMenuMixin.selectedSet;
+  openSetTypeMenu = this.setTypeMenuMixin.openSetTypeMenu.bind(this.setTypeMenuMixin);
+  closeSetTypeMenu = this.setTypeMenuMixin.closeSetTypeMenu.bind(this.setTypeMenuMixin);
+  setSetType = this.setTypeMenuMixin.setSetType.bind(this.setTypeMenuMixin);
+  removeSet = this.setTypeMenuMixin.removeSet.bind(this.setTypeMenuMixin);
+  getSetTypeDisplay = this.setTypeMenuMixin.getSetTypeDisplay.bind(this.setTypeMenuMixin);
+  getSetTypeClass = this.setTypeMenuMixin.getSetTypeClass.bind(this.setTypeMenuMixin);
   
   // Touch drag state
   private touchStartY = 0;
@@ -140,7 +157,7 @@ export class AddWorkoutComponent implements OnInit {
     this.closeMenu();
   }
 
-  // Drag and Drop handlers
+  // Drag and Drop handlers for desktop
   onDragStart(exerciseId: string, event: DragEvent): void {
     this.draggedExerciseId.set(exerciseId);
     if (event.dataTransfer) {

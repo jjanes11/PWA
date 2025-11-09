@@ -103,4 +103,17 @@ export class WorkoutDetailComponent implements OnInit {
   cancelDelete(): void {
     this.showDeleteDialog.set(false);
   }
+
+  getSetTypeDisplay(type?: 'normal' | 'warmup' | 'failure' | 'drop'): string {
+    if (!type || type === 'normal') return '';
+    if (type === 'warmup') return 'W';
+    if (type === 'failure') return 'F';
+    if (type === 'drop') return 'D';
+    return '';
+  }
+
+  getSetTypeClass(type?: 'normal' | 'warmup' | 'failure' | 'drop'): string {
+    if (!type || type === 'normal') return '';
+    return `jacaona-set-type-${type}`;
+  }
 }

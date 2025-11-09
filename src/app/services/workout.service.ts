@@ -304,6 +304,16 @@ export class WorkoutService {
     );
     
     this._workouts.set(workouts);
+    
+    // Update current workout if it's the one being modified
+    const currentWorkout = this._currentWorkout();
+    if (currentWorkout && currentWorkout.id === workoutId) {
+      const updatedWorkout = workouts.find(w => w.id === workoutId);
+      if (updatedWorkout) {
+        this._currentWorkout.set(updatedWorkout);
+      }
+    }
+    
     this.saveData();
   }
 

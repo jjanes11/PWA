@@ -1,8 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
+import { createSetTypeMenuMixin } from '../../mixins/set-type-menu.mixin';
 
 @Component({
   selector: 'app-create-routine',
@@ -17,6 +18,22 @@ export class CreateRoutineComponent implements OnInit {
 
   currentWorkout = this.workoutService.currentWorkout;
   title: string = '';
+  
+  // Set Type Menu Mixin
+  private setTypeMenuMixin = createSetTypeMenuMixin(
+    this.workoutService,
+    () => this.currentWorkout(),
+    () => this.currentWorkout()?.id || null
+  );
+  
+  showSetTypeMenu = this.setTypeMenuMixin.showSetTypeMenu;
+  selectedSet = this.setTypeMenuMixin.selectedSet;
+  openSetTypeMenu = this.setTypeMenuMixin.openSetTypeMenu.bind(this.setTypeMenuMixin);
+  closeSetTypeMenu = this.setTypeMenuMixin.closeSetTypeMenu.bind(this.setTypeMenuMixin);
+  setSetType = this.setTypeMenuMixin.setSetType.bind(this.setTypeMenuMixin);
+  removeSet = this.setTypeMenuMixin.removeSet.bind(this.setTypeMenuMixin);
+  getSetTypeDisplay = this.setTypeMenuMixin.getSetTypeDisplay.bind(this.setTypeMenuMixin);
+  getSetTypeClass = this.setTypeMenuMixin.getSetTypeClass.bind(this.setTypeMenuMixin);
 
   ngOnInit(): void {
     // Create a draft workout to hold routine exercises
