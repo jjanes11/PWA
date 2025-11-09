@@ -36,6 +36,9 @@ jobs:
     - name: Build Angular app
       run: npm run build -- --base-href="/jacaona/"
       
+    - name: Add .nojekyll file
+      run: touch dist/angular-pwa/browser/.nojekyll
+      
     - name: Update manifest for GitHub Pages
       run: |
         (Get-Content dist/angular-pwa/browser/manifest.webmanifest) -replace '"scope": "/"', '"scope": "/jacaona/"' | Set-Content dist/angular-pwa/browser/manifest.webmanifest
