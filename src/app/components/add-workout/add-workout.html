@@ -37,6 +37,10 @@
             (dragleave)="onDragLeave(exercise.id, $event)"
             (drop)="onDrop(exercise.id, $event)"
             (dragend)="onDragEnd($event)"
+            (touchstart)="onTouchStart(exercise.id, $event)"
+            (touchmove)="onTouchMove($event)"
+            (touchend)="onTouchEnd($event)"
+            (touchcancel)="onTouchEnd($event)"
           >
             <!-- Exercise Header -->
             <div class="jacaona-exercise-header">

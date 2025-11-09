@@ -161,6 +161,9 @@
   box-sizing: border-box;
   cursor: grab;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  touch-action: pan-y; /* Allow vertical scrolling but enable custom touch handling */
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .jacaona-exercise-card:active {
@@ -170,6 +173,13 @@
 .jacaona-exercise-card.jacaona-drag-over {
   transform: translateY(-4px);
   box-shadow: 0 0 0 2px var(--jacaona-accent-blue);
+}
+
+/* Re-enable pointer events on interactive elements */
+.jacaona-exercise-card input,
+.jacaona-exercise-card button {
+  pointer-events: auto;
+  touch-action: auto;
 }
 
 /* Exercise Header */

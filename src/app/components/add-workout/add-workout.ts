@@ -22,6 +22,13 @@ export class AddWorkoutComponent implements OnInit {
   selectedExerciseId = signal<string | null>(null);
   draggedExerciseId = signal<string | null>(null);
   dragOverExerciseId = signal<string | null>(null);
+  
+  // Touch drag state
+  private touchStartY = 0;
+  private touchStartX = 0;
+  private isDragging = false;
+  private draggedElement: HTMLElement | null = null;
+  private placeholder: HTMLElement | null = null;
 
   ngOnInit(): void {
     // Create a new workout if none exists
@@ -205,5 +212,154 @@ export class AddWorkoutComponent implements OnInit {
     draggedCard.style.opacity = '';
     this.draggedExerciseId.set(null);
     this.dragOverExerciseId.set(null);
+  }
+
+  // Touch handlers for mobile
+  onTouchStart(exerciseId: string, event: TouchEvent): void {
+    const touch = event.touches[0];
+    this.touchStartY = touch.clientY;
+    this.touchStartX = touch.clientX;
+    this.isDragging = false;
+    
+    // Start a timer to detect long press
+    const longPressTimer = setTimeout(() => {
+      if (!this.isDragging) {
+        this.startTouchDrag(exerciseId, event);
+      }
+    }, 200); // 200ms long press
+    
+    // Store timer to cancel if touch ends early
+    (event.target as any)._longPressTimer = longPressTimer;
+  }
+
+  private startTouchDrag(exerciseId: string, event: TouchEvent): void {
+    this.isDragging = true;
+    this.draggedExerciseId.set(exerciseId);
+    
+    const target = event.target as HTMLElement;
+    this.draggedElement = target.closest('.jacaona-exercise-card') as HTMLElement;
+    
+    if (this.draggedElement) {
+      // Create placeholder
+      this.placeholder = this.draggedElement.cloneNode(true) as HTMLElement;
+      this.placeholder.style.opacity = '0.3';
+      this.placeholder.style.pointerEvents = 'none';
+      
+      // Style dragged element
+      this.draggedElement.style.opacity = '0.8';
+      this.draggedElement.style.transform = 'scale(1.05)';
+      this.draggedElement.style.zIndex = '1000';
+      this.draggedElement.style.transition = 'none';
+      
+      // Prevent scrolling while dragging
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  onTouchMove(event: TouchEvent): void {
+    // Cancel long press timer if moving before long press completes
+    const target = event.target as any;
+    if (target._longPressTimer && !this.isDragging) {
+      const touch = event.touches[0];
+      const moveDistance = Math.sqrt(
+        Math.pow(touch.clientX - this.touchStartX, 2) +
+        Math.pow(touch.clientY - this.touchStartY, 2)
+      );
+      
+      // If moved more than 10px, cancel long press
+      if (moveDistance > 10) {
+        clearTimeout(target._longPressTimer);
+        target._longPressTimer = null;
+      }
+      return;
+    }
+
+    if (!this.isDragging || !this.draggedElement) return;
+    
+    event.preventDefault();
+    const touch = event.touches[0];
+    
+    // Move the dragged element
+    const deltaY = touch.clientY - this.touchStartY;
+    this.draggedElement.style.transform = `translateY(${deltaY}px) scale(1.05)`;
+    
+    // Find element under touch point
+    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+    const cardBelow = elementBelow?.closest('.jacaona-exercise-card') as HTMLElement;
+    
+    if (cardBelow && cardBelow !== this.draggedElement) {
+      const targetId = this.getExerciseIdFromElement(cardBelow);
+      if (targetId) {
+        this.dragOverExerciseId.set(targetId);
+        
+        // Reorder in DOM for visual feedback
+        const container = this.draggedElement.parentElement;
+        const cards = Array.from(container?.children || []) as HTMLElement[];
+        const draggedIndex = cards.indexOf(this.draggedElement);
+        const targetIndex = cards.indexOf(cardBelow);
+        
+        if (draggedIndex !== -1 && targetIndex !== -1 && container) {
+          if (draggedIndex < targetIndex) {
+            container.insertBefore(this.draggedElement, cardBelow.nextSibling);
+          } else {
+            container.insertBefore(this.draggedElement, cardBelow);
+          }
+        }
+      }
+    }
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    // Cancel long press timer
+    const target = event.target as any;
+    if (target._longPressTimer) {
+      clearTimeout(target._longPressTimer);
+      target._longPressTimer = null;
+    }
+
+    if (!this.isDragging) return;
+    
+    event.preventDefault();
+    
+    const draggedId = this.draggedExerciseId();
+    const targetId = this.dragOverExerciseId();
+    const workout = this.currentWorkout();
+    
+    // Perform the actual reorder in data
+    if (draggedId && targetId && draggedId !== targetId && workout) {
+      this.workoutService.reorderExercises(workout.id, draggedId, targetId);
+    }
+    
+    // Cleanup
+    if (this.draggedElement) {
+      this.draggedElement.style.opacity = '';
+      this.draggedElement.style.transform = '';
+      this.draggedElement.style.zIndex = '';
+      this.draggedElement.style.transition = '';
+    }
+    
+    if (this.placeholder && this.placeholder.parentElement) {
+      this.placeholder.parentElement.removeChild(this.placeholder);
+    }
+    
+    document.body.style.overflow = '';
+    
+    this.isDragging = false;
+    this.draggedElement = null;
+    this.placeholder = null;
+    this.draggedExerciseId.set(null);
+    this.dragOverExerciseId.set(null);
+  }
+
+  private getExerciseIdFromElement(element: HTMLElement): string | null {
+    // Try to find exercise ID from the element's data or index
+    const container = element.parentElement;
+    if (!container) return null;
+    
+    const cards = Array.from(container.children);
+    const index = cards.indexOf(element);
+    
+    const exercises = this.currentWorkout()?.exercises || [];
+    return exercises[index]?.id || null;
   }
 }
