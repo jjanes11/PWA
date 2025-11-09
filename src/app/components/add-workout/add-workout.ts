@@ -283,28 +283,21 @@ export class AddWorkoutComponent implements OnInit {
     const deltaY = touch.clientY - this.touchStartY;
     this.draggedElement.style.transform = `translateY(${deltaY}px) scale(1.05)`;
     
-    // Find element under touch point
+    // Find element under touch point (excluding the dragged element itself)
+    this.draggedElement.style.pointerEvents = 'none';
     const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+    this.draggedElement.style.pointerEvents = '';
+    
     const cardBelow = elementBelow?.closest('.jacaona-exercise-card') as HTMLElement;
+    
+    // Clear previous drag-over state
+    this.dragOverExerciseId.set(null);
     
     if (cardBelow && cardBelow !== this.draggedElement) {
       const targetId = this.getExerciseIdFromElement(cardBelow);
-      if (targetId) {
+      if (targetId && targetId !== this.draggedExerciseId()) {
+        // Set the drag-over state for visual feedback
         this.dragOverExerciseId.set(targetId);
-        
-        // Reorder in DOM for visual feedback
-        const container = this.draggedElement.parentElement;
-        const cards = Array.from(container?.children || []) as HTMLElement[];
-        const draggedIndex = cards.indexOf(this.draggedElement);
-        const targetIndex = cards.indexOf(cardBelow);
-        
-        if (draggedIndex !== -1 && targetIndex !== -1 && container) {
-          if (draggedIndex < targetIndex) {
-            container.insertBefore(this.draggedElement, cardBelow.nextSibling);
-          } else {
-            container.insertBefore(this.draggedElement, cardBelow);
-          }
-        }
       }
     }
   }
@@ -328,6 +321,12 @@ export class AddWorkoutComponent implements OnInit {
     // Perform the actual reorder in data
     if (draggedId && targetId && draggedId !== targetId && workout) {
       this.workoutService.reorderExercises(workout.id, draggedId, targetId);
+      
+      // Force UI update by triggering change detection
+      setTimeout(() => {
+        this.draggedExerciseId.set(null);
+        this.dragOverExerciseId.set(null);
+      }, 0);
     }
     
     // Cleanup
@@ -336,6 +335,7 @@ export class AddWorkoutComponent implements OnInit {
       this.draggedElement.style.transform = '';
       this.draggedElement.style.zIndex = '';
       this.draggedElement.style.transition = '';
+      this.draggedElement.style.pointerEvents = '';
     }
     
     if (this.placeholder && this.placeholder.parentElement) {
@@ -347,17 +347,23 @@ export class AddWorkoutComponent implements OnInit {
     this.isDragging = false;
     this.draggedElement = null;
     this.placeholder = null;
-    this.draggedExerciseId.set(null);
-    this.dragOverExerciseId.set(null);
+    
+    // Clear signals after a small delay to allow for smooth transition
+    if (!targetId || draggedId === targetId) {
+      this.draggedExerciseId.set(null);
+      this.dragOverExerciseId.set(null);
+    }
   }
 
   private getExerciseIdFromElement(element: HTMLElement): string | null {
-    // Try to find exercise ID from the element's data or index
-    const container = element.parentElement;
+    // Get the exercise ID by finding the card's position in the list
+    const container = element.closest('.jacaona-exercises-container');
     if (!container) return null;
     
-    const cards = Array.from(container.children);
+    const cards = Array.from(container.querySelectorAll('.jacaona-exercise-card'));
     const index = cards.indexOf(element);
+    
+    if (index === -1) return null;
     
     const exercises = this.currentWorkout()?.exercises || [];
     return exercises[index]?.id || null;
