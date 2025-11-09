@@ -45,7 +45,7 @@ Once deployed, your PWA will be available at: `https://yourusername.github.io/ja
    ```bash
    npm run build
    ```
-   Build artifacts will be stored in the `dist/angular-pwa/browser/` directory.
+   Build artifacts will be stored in the `dist/jacaona-app/browser/` directory.
 
 ## 📦 Deployment
 
@@ -86,7 +86,7 @@ You can also deploy to other platforms:
 # Build for production
 npm run build
 
-# Deploy the dist/angular-pwa/browser/ folder to your hosting provider
+# Deploy the dist/jacaona-app/browser/ folder to your hosting provider
 ```
 
 ## 🏗️ Project Structure

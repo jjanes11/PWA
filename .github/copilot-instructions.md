@@ -26,7 +26,7 @@ This is an Angular Progressive Web App (PWA) project configured for automatic de
 ## Build & Deployment
 - **Local**: `npm start` for development
 - **Production**: `npm run build` 
-- **Output**: `dist/angular-pwa/browser/`
+- **Output**: `dist/jacaona-app/browser/`
 - **Auto Deploy**: GitHub Actions on push to main branch
 - **Live URL**: `https://yourusername.github.io/jacaona/`
 
