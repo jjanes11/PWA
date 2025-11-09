@@ -49,6 +49,8 @@ html, body {
   background: var(--jacaona-bg-primary);
   color: var(--jacaona-text-primary);
   line-height: 1.5;
+  /* Disable pull-to-refresh on mobile browsers for native app feel */
+  overscroll-behavior-y: contain;
 }
 
 /* Jacaona Button Styles */
