@@ -82,7 +82,7 @@ import { filter, map, startWith } from 'rxjs/operators';
       font-size: 14px;
       font-weight: var(--jacaona-font-weight-medium);
       text-align: center;
-      margin: 0 0 var(--jacaona-space-lg) 0;
+      margin: 0 0 var(--jacaona-space-sm) 0;
       letter-spacing: 0.5px;
     }
 
@@ -98,24 +98,16 @@ import { filter, map, startWith } from 'rxjs/operators';
       align-items: center;
       justify-content: center;
       gap: var(--jacaona-space-sm);
-      padding: var(--jacaona-space-md) var(--jacaona-space-lg);
+      padding: var(--jacaona-space-sm) var(--jacaona-space-md);
       border: none;
-      border-radius: var(--jacaona-radius-md);
-      background: var(--jacaona-bg-tertiary);
+      border-radius: 0;
+      background: transparent;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: opacity 0.15s ease;
     }
 
     .jacaona-dialog-action-btn:active {
-      transform: translateY(1px);
-    }
-
-    .jacaona-resume-btn {
-      border: 1px solid var(--jacaona-accent-blue);
-    }
-
-    .jacaona-resume-btn:hover {
-      background: rgba(10, 132, 255, 0.1);
+      opacity: 0.6;
     }
 
     .jacaona-resume-btn .jacaona-action-icon {
@@ -124,14 +116,6 @@ import { filter, map, startWith } from 'rxjs/operators';
 
     .jacaona-resume-btn .jacaona-action-text {
       color: var(--jacaona-accent-blue);
-    }
-
-    .jacaona-discard-btn {
-      border: 1px solid var(--jacaona-danger);
-    }
-
-    .jacaona-discard-btn:hover {
-      background: rgba(255, 59, 48, 0.1);
     }
 
     .jacaona-discard-btn .jacaona-action-icon {
@@ -149,8 +133,8 @@ import { filter, map, startWith } from 'rxjs/operators';
     }
 
     .jacaona-action-text {
-      font-size: 16px;
-      font-weight: var(--jacaona-font-weight-semibold);
+      font-size: 14px;
+      font-weight: var(--jacaona-font-weight-medium);
     }
   `]
 })
