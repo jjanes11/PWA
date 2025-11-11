@@ -12,12 +12,14 @@ export class WorkoutService {
   private _workouts = signal<Workout[]>([]);
   private _templates = signal<WorkoutTemplate[]>([]);
   private _currentWorkout = signal<Workout | null>(null);
+  private _routineDraft = signal<Workout | null>(null); // Separate draft for routine creation
   private _showWorkoutInProgressDialog = signal<boolean>(false);
 
   // Public readonly signals
   readonly workouts = this._workouts.asReadonly();
   readonly templates = this._templates.asReadonly();
   readonly currentWorkout = this._currentWorkout.asReadonly();
+  readonly routineDraft = this._routineDraft.asReadonly();
   readonly showWorkoutInProgressDialog = this._showWorkoutInProgressDialog.asReadonly();
 
   // Computed statistics
@@ -96,26 +98,36 @@ export class WorkoutService {
       return null;
     }
 
-    // Create a draft workout with the same name and exercises
-    const draftWorkout = this.createWorkout(sourceWorkout.name);
-    
-    // Clone exercises with new IDs but same structure
-    const exercises: Exercise[] = sourceWorkout.exercises.map(exercise => ({
+    // Create a new draft workout (don't use createWorkout to avoid setting currentWorkout)
+    const now = new Date();
+    const draftWorkout: Workout = {
       id: this.generateId(),
-      name: exercise.name,
-      sets: exercise.sets.map(set => ({
+      name: sourceWorkout.name,
+      date: now,
+      startTime: now,
+      exercises: sourceWorkout.exercises.map(exercise => ({
         id: this.generateId(),
-        reps: set.reps,
-        weight: set.weight,
-        completed: false,
-        type: set.type,
-        restTime: set.restTime,
-        notes: set.notes
-      }))
-    }));
+        name: exercise.name,
+        sets: exercise.sets.map(set => ({
+          id: this.generateId(),
+          reps: set.reps,
+          weight: set.weight,
+          completed: false,
+          type: set.type,
+          restTime: set.restTime,
+          notes: set.notes
+        }))
+      })),
+      completed: false
+    };
 
-    draftWorkout.exercises = exercises;
-    this.updateWorkout(draftWorkout);
+    // Add to workouts list
+    const workouts = [...this._workouts(), draftWorkout];
+    this._workouts.set(workouts);
+    
+    // Set as routine draft (not currentWorkout, to preserve in-progress workout)
+    this._routineDraft.set(draftWorkout);
+    this.saveData();
     
     return draftWorkout;
   }
@@ -130,7 +142,15 @@ export class WorkoutService {
       this._currentWorkout.set(workout);
     }
     
+    if (this._routineDraft()?.id === workout.id) {
+      this._routineDraft.set(workout);
+    }
+    
     this.saveData();
+  }
+
+  clearRoutineDraft(): void {
+    this._routineDraft.set(null);
   }
 
   deleteWorkout(id: string): void {

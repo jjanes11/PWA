@@ -76,11 +76,12 @@ export class WorkoutDetailComponent implements OnInit {
     const workout = this.workout();
     if (workout) {
       this.closeMenu();
-      // Create a draft workout from the current workout's data
-      this.workoutService.createDraftFromWorkout(workout.id);
-      // Navigate to routine/new where the draft will be pre-filled
+      // Navigate to routine/new with workout data in state, don't create a draft yet
       this.router.navigate(['/routine/new'], {
-        state: { returnUrl: `/workout/${workout.id}` }
+        state: { 
+          returnUrl: `/workout/${workout.id}`,
+          sourceWorkoutId: workout.id
+        }
       });
     }
   }

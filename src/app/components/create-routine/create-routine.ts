@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
+import { Workout } from '../../models/workout.models';
 import { createSetTypeMenuMixin } from '../../mixins/set-type-menu.mixin';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 
@@ -17,16 +18,17 @@ export class CreateRoutineComponent implements OnInit {
   private router = inject(Router);
   private workoutService = inject(WorkoutService);
 
-  currentWorkout = this.workoutService.currentWorkout;
+  routineDraft = this.workoutService.routineDraft; // Use routineDraft instead of currentWorkout
   title: string = '';
   showCancelDialog = signal(false);
   private returnUrl = signal<string>('/workouts');
+  private sourceWorkoutId: string | null = null;
   
   // Set Type Menu Mixin
   private setTypeMenuMixin = createSetTypeMenuMixin(
     this.workoutService,
-    () => this.currentWorkout(),
-    () => this.currentWorkout()?.id || null
+    () => this.routineDraft(),
+    () => this.routineDraft()?.id || null
   );
   
   showSetTypeMenu = this.setTypeMenuMixin.showSetTypeMenu;
@@ -51,15 +53,42 @@ export class CreateRoutineComponent implements OnInit {
         this.returnUrl.set(historyState['returnUrl']);
       }
     }
+    
+    // Check if we have a source workout ID (for "save as routine")
+    if (state && state['sourceWorkoutId']) {
+      this.sourceWorkoutId = state['sourceWorkoutId'];
+    } else {
+      const historyState = history.state;
+      if (historyState && historyState['sourceWorkoutId']) {
+        this.sourceWorkoutId = historyState['sourceWorkoutId'];
+      }
+    }
   }
 
   ngOnInit(): void {
-    // Create a draft workout to hold routine exercises
-    if (!this.currentWorkout()) {
-      this.workoutService.createWorkout('New Routine');
+    // If we have a source workout ID, create a draft from it
+    if (this.sourceWorkoutId) {
+      this.workoutService.createDraftFromWorkout(this.sourceWorkoutId);
+      const workout = this.routineDraft();
+      if (workout) {
+        this.title = workout.name || '';
+      }
+    } else if (!this.routineDraft()) {
+      // Create a draft workout to hold routine exercises
+      const now = new Date();
+      const draftWorkout: Workout = {
+        id: this.workoutService['generateId'](),
+        name: 'New Routine',
+        date: now,
+        startTime: now,
+        exercises: [],
+        completed: false
+      };
+      this.workoutService['_workouts'].set([...this.workoutService['_workouts'](), draftWorkout]);
+      this.workoutService['_routineDraft'].set(draftWorkout);
     } else {
       // Restore title from existing workout
-      this.title = this.currentWorkout()?.name || '';
+      this.title = this.routineDraft()?.name || '';
     }
   }
 
@@ -68,10 +97,10 @@ export class CreateRoutineComponent implements OnInit {
   }
 
   onDiscardConfirmed(): void {
-    const workout = this.currentWorkout();
+    const workout = this.routineDraft();
     if (workout) {
       this.workoutService.deleteWorkout(workout.id);
-      this.workoutService.setCurrentWorkout(null);
+      this.workoutService.clearRoutineDraft();
     }
     this.showCancelDialog.set(false);
     this.router.navigate([this.returnUrl()]);
@@ -82,7 +111,7 @@ export class CreateRoutineComponent implements OnInit {
   }
 
   save(): void {
-    const workout = this.currentWorkout();
+    const workout = this.routineDraft();
     if (workout) {
       // Create updated workout with the user's title
       const updatedWorkout = {
@@ -98,14 +127,14 @@ export class CreateRoutineComponent implements OnInit {
       
       // Clean up draft workout
       this.workoutService.deleteWorkout(workout.id);
-      this.workoutService.setCurrentWorkout(null);
+      this.workoutService.clearRoutineDraft();
     }
     this.router.navigate(['/workouts']);
   }
 
   addExercise(): void {
     // Save current title to workout before navigating
-    const workout = this.currentWorkout();
+    const workout = this.routineDraft();
     if (workout && this.title.trim()) {
       const updatedWorkout = { ...workout, name: this.title.trim() };
       this.workoutService.updateWorkout(updatedWorkout);
@@ -118,14 +147,14 @@ export class CreateRoutineComponent implements OnInit {
   }
 
   addSetToExercise(exerciseId: string): void {
-    const workout = this.currentWorkout();
+    const workout = this.routineDraft();
     if (workout) {
       this.workoutService.addSetToExercise(workout.id, exerciseId);
     }
   }
 
   updateSet(exerciseId: string, setId: string, field: 'reps' | 'weight', value: number): void {
-    const workout = this.currentWorkout();
+    const workout = this.routineDraft();
     if (workout) {
       const exercise = workout.exercises.find(e => e.id === exerciseId);
       const set = exercise?.sets.find(s => s.id === setId);

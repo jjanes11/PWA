@@ -18,7 +18,7 @@
       />
     </div>
 
-    @if (!currentWorkout()?.exercises || currentWorkout()!.exercises.length === 0) {
+    @if (!routineDraft()?.exercises || routineDraft()!.exercises.length === 0) {
       <!-- Empty State -->
       <div class="jacaona-empty-state">
         <div class="jacaona-empty-icon">
@@ -31,7 +31,7 @@
     } @else {
       <!-- Exercises List -->
       <div class="jacaona-exercises-container">
-        @for (exercise of currentWorkout()!.exercises; track exercise.id) {
+        @for (exercise of routineDraft()!.exercises; track exercise.id) {
           <div class="jacaona-exercise-card">
             <!-- Exercise Name -->
             <h3 class="jacaona-exercise-title">{{ exercise.name }}</h3>

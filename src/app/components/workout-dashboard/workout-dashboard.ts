@@ -105,11 +105,12 @@ export class WorkoutDashboardComponent {
     const workoutId = this.selectedWorkoutId();
     if (workoutId) {
       this.closeMenu();
-      // Create a draft workout from the selected workout's data
-      this.workoutService.createDraftFromWorkout(workoutId);
-      // Navigate to routine/new where the draft will be pre-filled
+      // Navigate to routine/new with workout data in state, don't create a draft yet
       this.router.navigate(['/routine/new'], {
-        state: { returnUrl: '/home' }
+        state: { 
+          returnUrl: '/home',
+          sourceWorkoutId: workoutId
+        }
       });
     }
   }
