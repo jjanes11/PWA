@@ -43,6 +43,7 @@ export interface ExerciseTemplate {
 export interface SetTemplate {
   reps: number;
   weight: number;
+  type?: SetType; // Set type (defaults to 'normal')
 }
 
 export interface WorkoutStats {

@@ -77,7 +77,8 @@ export class WorkoutService {
         id: this.generateId(),
         reps: setTemplate.reps,
         weight: setTemplate.weight,
-        completed: false
+        completed: false,
+        type: setTemplate.type
       }))
     }));
 
@@ -85,6 +86,36 @@ export class WorkoutService {
     this.updateWorkout(workout);
     
     return workout;
+  }
+
+  createDraftFromWorkout(workoutId: string): Workout | null {
+    const sourceWorkout = this._workouts().find(w => w.id === workoutId);
+    if (!sourceWorkout) {
+      return null;
+    }
+
+    // Create a draft workout with the same name and exercises
+    const draftWorkout = this.createWorkout(sourceWorkout.name);
+    
+    // Clone exercises with new IDs but same structure
+    const exercises: Exercise[] = sourceWorkout.exercises.map(exercise => ({
+      id: this.generateId(),
+      name: exercise.name,
+      sets: exercise.sets.map(set => ({
+        id: this.generateId(),
+        reps: set.reps,
+        weight: set.weight,
+        completed: false,
+        type: set.type,
+        restTime: set.restTime,
+        notes: set.notes
+      }))
+    }));
+
+    draftWorkout.exercises = exercises;
+    this.updateWorkout(draftWorkout);
+    
+    return draftWorkout;
   }
 
   updateWorkout(workout: Workout): void {
@@ -327,7 +358,8 @@ export class WorkoutService {
         name: e.name,
         sets: e.sets.map(s => ({
           reps: s.reps,
-          weight: s.weight
+          weight: s.weight,
+          type: s.type
         }))
       }))
     };

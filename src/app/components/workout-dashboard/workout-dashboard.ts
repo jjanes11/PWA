@@ -102,9 +102,14 @@ export class WorkoutDashboardComponent {
   }
 
   saveAsRoutine(): void {
-    console.log('Save as routine clicked for workout:', this.selectedWorkoutId());
-    this.closeMenu();
-    // TODO: Implement save as routine functionality
+    const workoutId = this.selectedWorkoutId();
+    if (workoutId) {
+      this.closeMenu();
+      // Create a draft workout from the selected workout's data
+      this.workoutService.createDraftFromWorkout(workoutId);
+      // Navigate to routine/new where the draft will be pre-filled
+      this.router.navigate(['/routine/new']);
+    }
   }
 
   editWorkout(): void {

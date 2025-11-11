@@ -73,9 +73,14 @@ export class WorkoutDetailComponent implements OnInit {
   }
 
   saveAsRoutine(): void {
-    console.log('Save as routine clicked');
-    this.closeMenu();
-    // TODO: Implement save as routine functionality
+    const workout = this.workout();
+    if (workout) {
+      this.closeMenu();
+      // Create a draft workout from the current workout's data
+      this.workoutService.createDraftFromWorkout(workout.id);
+      // Navigate to routine/new where the draft will be pre-filled
+      this.router.navigate(['/routine/new']);
+    }
   }
 
   editWorkout(): void {
