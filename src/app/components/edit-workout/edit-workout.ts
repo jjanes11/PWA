@@ -17,15 +17,15 @@ export class EditWorkoutComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
 
-  currentWorkout = this.workoutService.currentWorkout;
+  workout = signal<Workout | null>(null); // Local workout being edited
   workoutTitle = signal('');
   workoutDescription = signal('');
   
   // Set Type Menu Mixin
   private setTypeMenuMixin = createSetTypeMenuMixin(
     this.workoutService,
-    () => this.currentWorkout(),
-    () => this.currentWorkout()?.id || null
+    () => this.workout(),
+    () => this.workout()?.id || null
   );
   
   showSetTypeMenu = this.setTypeMenuMixin.showSetTypeMenu;
@@ -39,7 +39,7 @@ export class EditWorkoutComponent implements OnInit {
 
   // Computed workout stats
   workoutStats = computed(() => {
-    const w = this.currentWorkout();
+    const w = this.workout();
     if (!w) return { duration: '0m', volume: 0, sets: 0 };
 
     const totalSets = w.exercises.reduce((sum, e) => sum + e.sets.length, 0);
@@ -66,7 +66,7 @@ export class EditWorkoutComponent implements OnInit {
   });
 
   workoutDateTime = computed(() => {
-    const w = this.currentWorkout();
+    const w = this.workout();
     if (!w?.startTime) return '';
     
     const date = new Date(w.startTime);
@@ -85,9 +85,15 @@ export class EditWorkoutComponent implements OnInit {
     if (workoutId) {
       const foundWorkout = this.workoutService.workouts().find(w => w.id === workoutId);
       if (foundWorkout) {
-        this.workoutService.setCurrentWorkout(foundWorkout);
+        this.workout.set(foundWorkout);
         this.workoutTitle.set(foundWorkout.name);
         this.workoutDescription.set(foundWorkout.notes || '');
+        
+        // Clear currentWorkout if it's set to this workout (from add-exercise navigation)
+        const currentWorkout = this.workoutService.currentWorkout();
+        if (currentWorkout?.id === workoutId) {
+          this.workoutService.setCurrentWorkout(null);
+        }
       } else {
         this.router.navigate(['/home']);
       }
@@ -97,7 +103,7 @@ export class EditWorkoutComponent implements OnInit {
   }
 
   cancel(): void {
-    const workout = this.currentWorkout();
+    const workout = this.workout();
     if (workout) {
       this.router.navigate(['/workout', workout.id]);
     } else {
@@ -106,7 +112,7 @@ export class EditWorkoutComponent implements OnInit {
   }
 
   saveWorkout(): void {
-    const workout = this.currentWorkout();
+    const workout = this.workout();
     if (!workout) return;
 
     // Update workout with new values
@@ -117,29 +123,44 @@ export class EditWorkoutComponent implements OnInit {
     };
 
     this.workoutService.updateWorkout(updatedWorkout);
+    this.workout.set(updatedWorkout); // Update local signal
     this.router.navigate(['/workout', workout.id]);
   }
 
   updateSet(exercise: Exercise, set: Set, field: 'weight' | 'reps', value: number): void {
-    const workout = this.currentWorkout();
+    const workout = this.workout();
     if (!workout) return;
 
     const updatedSet = { ...set, [field]: value };
     this.workoutService.updateSet(workout.id, exercise.id, updatedSet);
+    
+    // Refresh local workout
+    const refreshedWorkout = this.workoutService.workouts().find(w => w.id === workout.id);
+    if (refreshedWorkout) {
+      this.workout.set(refreshedWorkout);
+    }
   }
 
   addSet(exercise: Exercise): void {
-    const workout = this.currentWorkout();
+    const workout = this.workout();
     if (!workout) return;
 
     this.workoutService.addSetToExercise(workout.id, exercise.id);
+    
+    // Refresh local workout
+    const refreshedWorkout = this.workoutService.workouts().find(w => w.id === workout.id);
+    if (refreshedWorkout) {
+      this.workout.set(refreshedWorkout);
+    }
   }
 
   addExercise(): void {
-    const workout = this.currentWorkout();
+    const workout = this.workout();
     if (!workout) return;
     
-    // Current workout is already set, just navigate
+    // Temporarily set as currentWorkout so add-exercise can add to it
+    this.workoutService.setCurrentWorkout(workout);
+    
     this.router.navigate(['/add-exercise'], { 
       state: { returnUrl: `/edit-workout/${workout.id}` } 
     });
