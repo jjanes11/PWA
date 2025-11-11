@@ -31,7 +31,7 @@
     @for (exercise of filteredExercises(); track exercise.id) {
       <div 
         class="jacaona-exercise-item"
-        [class.jacaona-exercise-selected]="selectedExercise()?.id === exercise.id"
+        [class.jacaona-exercise-selected]="isExerciseSelected(exercise)"
         (click)="selectExercise(exercise)"
       >
         <span class="jacaona-exercise-name">{{ exercise.name }}</span>
@@ -50,10 +50,14 @@
   </div>
 
   <!-- Add Exercise Button -->
-  @if (selectedExercise()) {
+  @if (selectedExercises().length > 0) {
     <div class="jacaona-bottom-button-container">
-      <button class="jacaona-add-exercise-btn" (click)="addSelectedExercise()">
-        Add exercise
+      <button class="jacaona-add-exercise-btn" (click)="addSelectedExercises()">
+        @if (selectedExercises().length === 1) {
+          Add exercise
+        } @else {
+          Add {{ selectedExercises().length }} exercises
+        }
       </button>
     </div>
   }

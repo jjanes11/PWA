@@ -17,7 +17,7 @@ export class AddExercise {
   private workoutService = inject(WorkoutService);
   
   searchQuery = signal('');
-  selectedExercise = signal<Exercise | null>(null);
+  selectedExercises = signal<Exercise[]>([]);
   private returnUrl = signal<string>('/workout/new');
   isReplaceMode = signal(false);
   replaceExerciseId = signal<string | null>(null);
@@ -85,30 +85,42 @@ export class AddExercise {
         this.router.navigate([this.returnUrl()]);
       }
     } else {
-      // Normal add mode - toggle selection
-      const current = this.selectedExercise();
-      if (current && current.id === exercise.id) {
-        this.selectedExercise.set(null);
+      // Normal add mode - toggle selection for multiple exercises
+      const currentSelections = this.selectedExercises();
+      const index = currentSelections.findIndex(e => e.id === exercise.id);
+      
+      if (index >= 0) {
+        // Exercise is already selected, remove it
+        const updated = [...currentSelections];
+        updated.splice(index, 1);
+        this.selectedExercises.set(updated);
       } else {
-        this.selectedExercise.set(exercise);
+        // Exercise not selected, add it
+        this.selectedExercises.set([...currentSelections, exercise]);
       }
     }
   }
 
-  addSelectedExercise(): void {
-    const selected = this.selectedExercise();
+  isExerciseSelected(exercise: Exercise): boolean {
+    return this.selectedExercises().some(e => e.id === exercise.id);
+  }
+
+  addSelectedExercises(): void {
+    const selected = this.selectedExercises();
     const currentWorkout = this.workoutService.currentWorkout();
     
-    if (selected && currentWorkout) {
-      // Add exercise to current workout
-      const exercise = this.workoutService.addExerciseToWorkout(currentWorkout.id, selected.name);
+    if (selected.length > 0 && currentWorkout) {
+      // Add each selected exercise to current workout
+      selected.forEach(selectedExercise => {
+        const exercise = this.workoutService.addExerciseToWorkout(currentWorkout.id, selectedExercise.name);
+        
+        // Add 3 default sets with 0 reps and weight
+        for (let i = 0; i < 3; i++) {
+          this.workoutService.addSetToExercise(currentWorkout.id, exercise.id);
+        }
+      });
       
-      // Add 3 default sets with 0 reps and weight
-      for (let i = 0; i < 3; i++) {
-        this.workoutService.addSetToExercise(currentWorkout.id, exercise.id);
-      }
-      
-      console.log('Added exercise to workout:', selected);
+      console.log('Added exercises to workout:', selected);
       this.router.navigate([this.returnUrl()]);
     }
   }
