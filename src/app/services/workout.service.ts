@@ -199,6 +199,10 @@ export class WorkoutService {
     if (updated && this._currentWorkout()?.id === workoutId) {
       this._currentWorkout.set(updated);
     }
+    // Also update routineDraft if it's the one being modified
+    if (updated && this._routineDraft()?.id === workoutId) {
+      this._routineDraft.set(updated);
+    }
 
     this.saveData();
 
@@ -218,6 +222,11 @@ export class WorkoutService {
     if (this._currentWorkout()?.id === workoutId) {
       const updatedWorkout = workouts.find(w => w.id === workoutId);
       this._currentWorkout.set(updatedWorkout || null);
+    }
+    // Also update routineDraft if it's the one being modified
+    if (this._routineDraft()?.id === workoutId) {
+      const updatedWorkout = workouts.find(w => w.id === workoutId);
+      this._routineDraft.set(updatedWorkout || null);
     }
     
     this.saveData();
@@ -244,6 +253,11 @@ export class WorkoutService {
     if (this._currentWorkout()?.id === workoutId) {
       const updatedWorkout = workouts.find(w => w.id === workoutId);
       this._currentWorkout.set(updatedWorkout || null);
+    }
+    // Also update routineDraft if it's the one being modified
+    if (this._routineDraft()?.id === workoutId) {
+      const updatedWorkout = workouts.find(w => w.id === workoutId);
+      this._routineDraft.set(updatedWorkout || null);
     }
     
     this.saveData();
@@ -274,6 +288,11 @@ export class WorkoutService {
     if (this._currentWorkout()?.id === workoutId) {
       const updatedWorkout = workouts.find(w => w.id === workoutId);
       this._currentWorkout.set(updatedWorkout || null);
+    }
+    // Also update routineDraft if it's the one being modified
+    if (this._routineDraft()?.id === workoutId) {
+      const updatedWorkout = workouts.find(w => w.id === workoutId);
+      this._routineDraft.set(updatedWorkout || null);
     }
     
     this.saveData();
@@ -308,6 +327,10 @@ export class WorkoutService {
     if (updated && this._currentWorkout()?.id === workoutId) {
       this._currentWorkout.set(updated);
     }
+    // Also update routineDraft if it's the one being modified
+    if (updated && this._routineDraft()?.id === workoutId) {
+      this._routineDraft.set(updated);
+    }
 
     this.saveData();
 
@@ -338,6 +361,10 @@ export class WorkoutService {
     if (updated && this._currentWorkout()?.id === workoutId) {
       this._currentWorkout.set(updated);
     }
+    // Also update routineDraft if it's the one being modified
+    if (updated && this._routineDraft()?.id === workoutId) {
+      this._routineDraft.set(updated);
+    }
 
     this.saveData();
   }
@@ -364,6 +391,14 @@ export class WorkoutService {
       const updatedWorkout = workouts.find(w => w.id === workoutId);
       if (updatedWorkout) {
         this._currentWorkout.set(updatedWorkout);
+      }
+    }
+    // Also update routineDraft if it's the one being modified
+    const routineDraft = this._routineDraft();
+    if (routineDraft && routineDraft.id === workoutId) {
+      const updatedWorkout = workouts.find(w => w.id === workoutId);
+      if (updatedWorkout) {
+        this._routineDraft.set(updatedWorkout);
       }
     }
     

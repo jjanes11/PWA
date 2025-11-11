@@ -78,10 +78,12 @@ export class AddExercise {
     // In replace mode, immediately replace and navigate back
     if (this.isReplaceMode()) {
       const currentWorkout = this.workoutService.currentWorkout();
+      const routineDraft = this.workoutService.routineDraft();
+      const targetWorkout = currentWorkout || routineDraft;
       const oldExerciseId = this.replaceExerciseId();
       
-      if (currentWorkout && oldExerciseId) {
-        this.workoutService.replaceExerciseInWorkout(currentWorkout.id, oldExerciseId, exercise.name);
+      if (targetWorkout && oldExerciseId) {
+        this.workoutService.replaceExerciseInWorkout(targetWorkout.id, oldExerciseId, exercise.name);
         this.router.navigate([this.returnUrl()]);
       }
     } else {
@@ -108,15 +110,19 @@ export class AddExercise {
   addSelectedExercises(): void {
     const selected = this.selectedExercises();
     const currentWorkout = this.workoutService.currentWorkout();
+    const routineDraft = this.workoutService.routineDraft();
     
-    if (selected.length > 0 && currentWorkout) {
-      // Add each selected exercise to current workout
+    // Use whichever workout is available (currentWorkout or routineDraft)
+    const targetWorkout = currentWorkout || routineDraft;
+    
+    if (selected.length > 0 && targetWorkout) {
+      // Add each selected exercise to target workout
       selected.forEach(selectedExercise => {
-        const exercise = this.workoutService.addExerciseToWorkout(currentWorkout.id, selectedExercise.name);
+        const exercise = this.workoutService.addExerciseToWorkout(targetWorkout.id, selectedExercise.name);
         
         // Add 3 default sets with 0 reps and weight
         for (let i = 0; i < 3; i++) {
-          this.workoutService.addSetToExercise(currentWorkout.id, exercise.id);
+          this.workoutService.addSetToExercise(targetWorkout.id, exercise.id);
         }
       });
       
