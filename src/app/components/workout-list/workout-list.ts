@@ -17,6 +17,7 @@ export class WorkoutListComponent {
   templates = this.workoutService.templates;
   showMenu = signal(false);
   showDeleteDialog = signal(false);
+  showWorkoutInProgressDialog = signal(false);
   selectedTemplateId = signal<string | null>(null);
   draggedTemplateId = signal<string | null>(null);
   dragOverTemplateId = signal<string | null>(null);
@@ -29,8 +30,35 @@ export class WorkoutListComponent {
   private placeholder: HTMLElement | null = null;
 
   startNewWorkout(): void {
-    console.log('Navigating to /workout/new');
+    const currentWorkout = this.workoutService.currentWorkout();
+    // Check if there's a workout in progress
+    if (currentWorkout && currentWorkout.exercises.length > 0) {
+      this.showWorkoutInProgressDialog.set(true);
+    } else {
+      console.log('Navigating to /workout/new');
+      this.router.navigate(['/workout/new']);
+    }
+  }
+
+  resumeWorkout(): void {
+    this.showWorkoutInProgressDialog.set(false);
+    this.workoutService.hideWorkoutInProgressDialog();
     this.router.navigate(['/workout/new']);
+  }
+
+  confirmStartNewWorkout(): void {
+    const currentWorkout = this.workoutService.currentWorkout();
+    if (currentWorkout) {
+      this.workoutService.deleteWorkout(currentWorkout.id);
+      this.workoutService.setCurrentWorkout(null);
+    }
+    this.workoutService.hideWorkoutInProgressDialog();
+    this.showWorkoutInProgressDialog.set(false);
+    this.router.navigate(['/workout/new']);
+  }
+
+  cancelStartNewWorkout(): void {
+    this.showWorkoutInProgressDialog.set(false);
   }
 
   createNewRoutine(): void {

@@ -105,4 +105,23 @@
       </div>
     </div>
   }
+
+  <!-- Workout In Progress Confirmation Dialog -->
+  @if (showWorkoutInProgressDialog()) {
+    <div class="jacaona-dialog-overlay" (click)="cancelStartNewWorkout()">
+      <div class="jacaona-dialog" (click)="$event.stopPropagation()">
+        <p class="jacaona-dialog-message">You have a workout in progress</p>
+        <p class="jacaona-dialog-submessage">If you start a new workout, your old workout will be permanently deleted.</p>
+        <button class="jacaona-dialog-btn jacaona-dialog-btn-primary" (click)="resumeWorkout()">
+          Resume Workout in Progress
+        </button>
+        <button class="jacaona-dialog-btn jacaona-dialog-btn-danger-text" (click)="confirmStartNewWorkout()">
+          Start New Workout
+        </button>
+        <button class="jacaona-dialog-btn jacaona-dialog-btn-cancel" (click)="cancelStartNewWorkout()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  }
 </div>

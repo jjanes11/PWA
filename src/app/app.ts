@@ -2,11 +2,12 @@ import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { UpdateService } from './services/update.service';
 import { BottomNavComponent } from './components/bottom-nav/bottom-nav';
+import { WorkoutInProgressDialog } from './components/workout-in-progress-dialog/workout-in-progress-dialog';
 import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, BottomNavComponent],
+  imports: [RouterOutlet, BottomNavComponent, WorkoutInProgressDialog],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

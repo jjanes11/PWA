@@ -326,6 +326,34 @@
   background: var(--jacaona-bg-tertiary);
 }
 
+.jacaona-dialog-submessage {
+  color: var(--jacaona-text-secondary);
+  font-size: 14px;
+  text-align: center;
+  margin: 0 0 var(--jacaona-space-xl) 0;
+  line-height: 1.5;
+}
+
+.jacaona-dialog-btn-primary {
+  background: var(--jacaona-accent-blue);
+  color: white;
+  margin-bottom: var(--jacaona-space-sm);
+}
+
+.jacaona-dialog-btn-primary:hover {
+  background: var(--jacaona-accent-blue-hover);
+}
+
+.jacaona-dialog-btn-danger-text {
+  background: transparent;
+  color: var(--jacaona-danger);
+  margin-bottom: var(--jacaona-space-sm);
+}
+
+.jacaona-dialog-btn-danger-text:hover {
+  background: rgba(255, 59, 48, 0.1);
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

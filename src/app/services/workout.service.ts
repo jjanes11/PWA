@@ -12,11 +12,13 @@ export class WorkoutService {
   private _workouts = signal<Workout[]>([]);
   private _templates = signal<WorkoutTemplate[]>([]);
   private _currentWorkout = signal<Workout | null>(null);
+  private _showWorkoutInProgressDialog = signal<boolean>(false);
 
   // Public readonly signals
   readonly workouts = this._workouts.asReadonly();
   readonly templates = this._templates.asReadonly();
   readonly currentWorkout = this._currentWorkout.asReadonly();
+  readonly showWorkoutInProgressDialog = this._showWorkoutInProgressDialog.asReadonly();
 
   // Computed statistics
   readonly stats = computed<WorkoutStats>(() => {
@@ -455,5 +457,13 @@ export class WorkoutService {
       console.error('Failed to load templates:', error);
       this._templates.set([]);
     }
+  }
+  // Workout In Progress Dialog Management
+  showWorkoutInProgressDialogMethod(): void {
+    this._showWorkoutInProgressDialog.set(true);
+  }
+
+  hideWorkoutInProgressDialog(): void {
+    this._showWorkoutInProgressDialog.set(false);
   }
 }

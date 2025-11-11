@@ -37,17 +37,6 @@ import { filter } from 'rxjs/operators';
         </button>
         
         <button 
-          class="jacaona-nav-item jacaona-nav-center" 
-          (click)="navigateToTab('workout/new')"
-        >
-          <div class="jacaona-start-workout">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-            </svg>
-          </div>
-        </button>
-        
-        <button 
           class="jacaona-nav-item" 
           [class.active]="activeTab() === 'analytics'"
           (click)="navigateToTab('analytics')"

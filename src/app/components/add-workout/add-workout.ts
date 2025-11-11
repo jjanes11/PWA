@@ -55,7 +55,19 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/workouts']);
+    const workout = this.currentWorkout();
+    // Only show dialog if workout has exercises
+    if (workout && workout.exercises.length > 0) {
+      this.workoutService.showWorkoutInProgressDialogMethod();
+      this.router.navigate(['/workouts']);
+    } else {
+      // No exercises, just navigate back and clean up
+      if (workout) {
+        this.workoutService.deleteWorkout(workout.id);
+        this.workoutService.setCurrentWorkout(null);
+      }
+      this.router.navigate(['/workouts']);
+    }
   }
 
   finishWorkout(): void {
