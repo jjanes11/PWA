@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { createSetTypeMenuMixin } from '../../mixins/set-type-menu.mixin';
+import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 
 @Component({
   selector: 'app-create-routine',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmationDialog],
   templateUrl: './create-routine.html',
   styleUrl: './create-routine.css'
 })
@@ -18,6 +19,8 @@ export class CreateRoutineComponent implements OnInit {
 
   currentWorkout = this.workoutService.currentWorkout;
   title: string = '';
+  showCancelDialog = signal(false);
+  private returnUrl = signal<string>('/workouts');
   
   // Set Type Menu Mixin
   private setTypeMenuMixin = createSetTypeMenuMixin(
@@ -35,6 +38,21 @@ export class CreateRoutineComponent implements OnInit {
   getSetTypeDisplay = this.setTypeMenuMixin.getSetTypeDisplay.bind(this.setTypeMenuMixin);
   getSetTypeClass = this.setTypeMenuMixin.getSetTypeClass.bind(this.setTypeMenuMixin);
 
+  constructor() {
+    // Check if we have a return URL from navigation state
+    const navigation = this.router.currentNavigation();
+    const state = navigation?.extras?.state;
+    if (state && state['returnUrl']) {
+      this.returnUrl.set(state['returnUrl']);
+    } else {
+      // Check history state as fallback
+      const historyState = history.state;
+      if (historyState && historyState['returnUrl']) {
+        this.returnUrl.set(historyState['returnUrl']);
+      }
+    }
+  }
+
   ngOnInit(): void {
     // Create a draft workout to hold routine exercises
     if (!this.currentWorkout()) {
@@ -46,12 +64,21 @@ export class CreateRoutineComponent implements OnInit {
   }
 
   cancel(): void {
+    this.showCancelDialog.set(true);
+  }
+
+  onDiscardConfirmed(): void {
     const workout = this.currentWorkout();
     if (workout) {
       this.workoutService.deleteWorkout(workout.id);
       this.workoutService.setCurrentWorkout(null);
     }
-    this.router.navigate(['/workouts']);
+    this.showCancelDialog.set(false);
+    this.router.navigate([this.returnUrl()]);
+  }
+
+  onDiscardCancelled(): void {
+    this.showCancelDialog.set(false);
   }
 
   save(): void {

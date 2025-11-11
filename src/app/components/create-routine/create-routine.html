@@ -132,4 +132,14 @@
       </div>
     </div>
   }
+
+  <!-- Discard Confirmation Dialog -->
+  <app-confirmation-dialog
+    [isVisible]="showCancelDialog()"
+    message="Are you sure you want to discard the routine?"
+    confirmText="Discard Routine"
+    cancelText="Cancel"
+    (confirmed)="onDiscardConfirmed()"
+    (cancelled)="onDiscardCancelled()"
+  />
 </div>

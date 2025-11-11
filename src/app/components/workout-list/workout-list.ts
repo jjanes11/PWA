@@ -34,7 +34,9 @@ export class WorkoutListComponent {
   }
 
   createNewRoutine(): void {
-    this.router.navigate(['/routine/new']);
+    this.router.navigate(['/routine/new'], {
+      state: { returnUrl: '/workouts' }
+    });
   }
 
   startRoutine(template: WorkoutTemplate): void {
