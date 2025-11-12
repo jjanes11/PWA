@@ -1,7 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 import { WorkoutService } from '../../services/workout.service';
 import { WorkoutTemplate, ExerciseTemplate } from '../../models/workout.models';
 import { createSetTypeMenuMixin } from '../../mixins/set-type-menu.mixin';
@@ -14,11 +16,16 @@ import { NavigationService } from '../../services/navigation.service';
   templateUrl: './edit-routine.html',
   styleUrl: './edit-routine.css'
 })
-export class EditRoutineComponent implements OnInit {
+export class EditRoutineComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
   private navigationService = inject(NavigationService);
+
+  // Convert route params to signal
+  private templateId = toSignal(
+    this.route.params.pipe(map(params => params['id']))
+  );
 
   template = signal<WorkoutTemplate | null>(null);
   currentWorkout = this.workoutService.currentWorkout;
@@ -40,32 +47,38 @@ export class EditRoutineComponent implements OnInit {
   getSetTypeDisplay = this.setTypeMenuMixin.getSetTypeDisplay.bind(this.setTypeMenuMixin);
   getSetTypeClass = this.setTypeMenuMixin.getSetTypeClass.bind(this.setTypeMenuMixin);
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+  constructor() {
+    // Effect that loads template when ID changes
+    effect(() => {
+      const id = this.templateId();
+      if (!id) {
+        this.router.navigate(['/workouts']);
+        return;
+      }
+
       const foundTemplate = this.workoutService.templates().find(t => t.id === id);
       
-      if (foundTemplate) {
-        this.template.set(foundTemplate);
-        
-        // Check if we already have a draft workout (returning from add-exercise)
-        const existingDraft = this.workoutService.currentWorkout();
-        
-        if (existingDraft) {
-          // Restore from existing draft
-          this.title = existingDraft.name;
-        } else {
-          // First time loading, create new draft from template
-          this.title = foundTemplate.name;
-          
-          const draftWorkout = this.workoutService.createWorkoutFromTemplate(foundTemplate);
-          this.workoutService.setCurrentWorkout(draftWorkout);
-        }
-      } else {
-        // Template not found, go back
+      if (!foundTemplate) {
         this.router.navigate(['/workouts']);
+        return;
       }
-    }
+
+      this.template.set(foundTemplate);
+      
+      // Check if we already have a draft workout (returning from add-exercise)
+      const existingDraft = this.workoutService.currentWorkout();
+      
+      if (existingDraft) {
+        // Restore from existing draft
+        this.title = existingDraft.name;
+      } else {
+        // First time loading, create new draft from template
+        this.title = foundTemplate.name;
+        
+        const draftWorkout = this.workoutService.createWorkoutFromTemplate(foundTemplate);
+        this.workoutService.setCurrentWorkout(draftWorkout);
+      }
+    });
   }
 
   cancel(): void {

@@ -1,8 +1,9 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 import { WorkoutService } from '../../services/workout.service';
-import { Workout } from '../../models/workout.models';
 
 @Component({
   selector: 'app-workout-detail',
@@ -10,12 +11,33 @@ import { Workout } from '../../models/workout.models';
   templateUrl: './workout-detail.html',
   styleUrl: './workout-detail.css',
 })
-export class WorkoutDetailComponent implements OnInit {
+export class WorkoutDetailComponent {
   private workoutService = inject(WorkoutService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
-  workout = signal<Workout | null>(null);
+  // Convert route params to signal
+  private workoutId = toSignal(
+    this.route.params.pipe(map(params => params['id']))
+  );
+
+  // Computed signal that automatically updates when workoutId changes
+  workout = computed(() => {
+    const id = this.workoutId();
+    if (!id) {
+      this.router.navigate(['/home']);
+      return null;
+    }
+    
+    const foundWorkout = this.workoutService.workouts().find(w => w.id === id);
+    if (!foundWorkout) {
+      this.router.navigate(['/home']);
+      return null;
+    }
+    
+    return foundWorkout;
+  });
+
   showMenu = signal(false);
   showDeleteDialog = signal(false);
 
@@ -45,20 +67,6 @@ export class WorkoutDetailComponent implements OnInit {
       sets: totalSets
     };
   });
-
-  ngOnInit(): void {
-    const workoutId = this.route.snapshot.paramMap.get('id');
-    if (workoutId) {
-      const foundWorkout = this.workoutService.workouts().find(w => w.id === workoutId);
-      if (foundWorkout) {
-        this.workout.set(foundWorkout);
-      } else {
-        this.router.navigate(['/home']);
-      }
-    } else {
-      this.router.navigate(['/home']);
-    }
-  }
 
   goBack(): void {
     this.router.navigate(['/home']);

@@ -1,7 +1,9 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 import { WorkoutService } from '../../services/workout.service';
 import { Workout, Exercise, Set } from '../../models/workout.models';
 import { createSetTypeMenuMixin } from '../../mixins/set-type-menu.mixin';
@@ -13,15 +15,49 @@ import { NavigationService } from '../../services/navigation.service';
   templateUrl: './edit-workout.html',
   styleUrl: './edit-workout.css',
 })
-export class EditWorkoutComponent implements OnInit {
+export class EditWorkoutComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
   private navigationService = inject(NavigationService);
 
-  workout = signal<Workout | null>(null); // Local workout being edited
+  // Convert route params to signal
+  private workoutId = toSignal(
+    this.route.params.pipe(map(params => params['id']))
+  );
+
+  // Local workout being edited (writable signal)
+  workout = signal<Workout | null>(null);
   workoutTitle = signal('');
   workoutDescription = signal('');
+
+  constructor() {
+    // Effect that loads workout when ID changes
+    effect(() => {
+      const id = this.workoutId();
+      if (!id) {
+        this.router.navigate(['/home']);
+        return;
+      }
+
+      const foundWorkout = this.workoutService.workouts().find(w => w.id === id);
+      if (!foundWorkout) {
+        this.router.navigate(['/home']);
+        return;
+      }
+
+      // Update local signals
+      this.workout.set(foundWorkout);
+      this.workoutTitle.set(foundWorkout.name);
+      this.workoutDescription.set(foundWorkout.notes || '');
+
+      // Clear currentWorkout if it's set to this workout (from add-exercise navigation)
+      const currentWorkout = this.workoutService.currentWorkout();
+      if (currentWorkout?.id === id) {
+        this.workoutService.setCurrentWorkout(null);
+      }
+    });
+  }
   
   // Set Type Menu Mixin
   private setTypeMenuMixin = createSetTypeMenuMixin(
@@ -81,28 +117,6 @@ export class EditWorkoutComponent implements OnInit {
       minute: '2-digit'
     });
   });
-
-  ngOnInit(): void {
-    const workoutId = this.route.snapshot.paramMap.get('id');
-    if (workoutId) {
-      const foundWorkout = this.workoutService.workouts().find(w => w.id === workoutId);
-      if (foundWorkout) {
-        this.workout.set(foundWorkout);
-        this.workoutTitle.set(foundWorkout.name);
-        this.workoutDescription.set(foundWorkout.notes || '');
-        
-        // Clear currentWorkout if it's set to this workout (from add-exercise navigation)
-        const currentWorkout = this.workoutService.currentWorkout();
-        if (currentWorkout?.id === workoutId) {
-          this.workoutService.setCurrentWorkout(null);
-        }
-      } else {
-        this.router.navigate(['/home']);
-      }
-    } else {
-      this.router.navigate(['/home']);
-    }
-  }
 
   cancel(): void {
     const workout = this.workout();
