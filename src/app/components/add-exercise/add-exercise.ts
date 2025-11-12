@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ExerciseService, Exercise } from '../../services/exercise.service';
 import { WorkoutService } from '../../services/workout.service';
+import { NavigationService } from '../../services/navigation.service';
 
 @Component({
   selector: 'app-add-exercise',
@@ -15,6 +16,7 @@ export class AddExercise {
   private router = inject(Router);
   private exerciseService = inject(ExerciseService);
   private workoutService = inject(WorkoutService);
+  private navigationService = inject(NavigationService);
   
   searchQuery = signal('');
   selectedExercises = signal<Exercise[]>([]);
@@ -23,29 +25,14 @@ export class AddExercise {
   replaceExerciseId = signal<string | null>(null);
 
   constructor() {
-    // Check if we have a return URL from navigation state
-    const navigation = this.router.currentNavigation();
-    const state = navigation?.extras?.state;
-    if (state && state['returnUrl']) {
-      this.returnUrl.set(state['returnUrl']);
-    } else {
-      // Check history state as fallback
-      const historyState = history.state;
-      if (historyState && historyState['returnUrl']) {
-        this.returnUrl.set(historyState['returnUrl']);
-      }
-    }
+    // Get return URL from navigation service
+    this.returnUrl.set(this.navigationService.getReturnUrl('/workout/new'));
 
     // Check if we're in replace mode
-    if (state && state['replaceExerciseId']) {
+    const replaceId = this.navigationService.getReplaceExerciseId();
+    if (replaceId) {
       this.isReplaceMode.set(true);
-      this.replaceExerciseId.set(state['replaceExerciseId']);
-    } else {
-      const historyState = history.state;
-      if (historyState && historyState['replaceExerciseId']) {
-        this.isReplaceMode.set(true);
-        this.replaceExerciseId.set(historyState['replaceExerciseId']);
-      }
+      this.replaceExerciseId.set(replaceId);
     }
   }
 
@@ -65,9 +52,7 @@ export class AddExercise {
   }
 
   create(): void {
-    this.router.navigate(['/create-exercise'], {
-      state: { returnUrl: this.returnUrl() }
-    });
+    this.navigationService.navigateWithReturnUrl('/create-exercise', this.returnUrl());
   }
 
   onSearchChange(): void {

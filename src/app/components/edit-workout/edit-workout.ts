@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { Workout, Exercise, Set } from '../../models/workout.models';
 import { createSetTypeMenuMixin } from '../../mixins/set-type-menu.mixin';
+import { NavigationService } from '../../services/navigation.service';
 
 @Component({
   selector: 'app-edit-workout',
@@ -16,6 +17,7 @@ export class EditWorkoutComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
+  private navigationService = inject(NavigationService);
 
   workout = signal<Workout | null>(null); // Local workout being edited
   workoutTitle = signal('');
@@ -161,8 +163,6 @@ export class EditWorkoutComponent implements OnInit {
     // Temporarily set as currentWorkout so add-exercise can add to it
     this.workoutService.setCurrentWorkout(workout);
     
-    this.router.navigate(['/add-exercise'], { 
-      state: { returnUrl: `/edit-workout/${workout.id}` } 
-    });
+    this.navigationService.navigateWithReturnUrl('/add-exercise', `/edit-workout/${workout.id}`);
   }
 }

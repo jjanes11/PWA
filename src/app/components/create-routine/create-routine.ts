@@ -6,6 +6,7 @@ import { WorkoutService } from '../../services/workout.service';
 import { Workout } from '../../models/workout.models';
 import { createSetTypeMenuMixin } from '../../mixins/set-type-menu.mixin';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
+import { NavigationService } from '../../services/navigation.service';
 
 @Component({
   selector: 'app-create-routine',
@@ -17,6 +18,7 @@ import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 export class CreateRoutineComponent implements OnInit {
   private router = inject(Router);
   private workoutService = inject(WorkoutService);
+  private navigationService = inject(NavigationService);
 
   routineDraft = this.workoutService.routineDraft; // Use routineDraft instead of currentWorkout
   title: string = '';
@@ -41,28 +43,9 @@ export class CreateRoutineComponent implements OnInit {
   getSetTypeClass = this.setTypeMenuMixin.getSetTypeClass.bind(this.setTypeMenuMixin);
 
   constructor() {
-    // Check if we have a return URL from navigation state
-    const navigation = this.router.currentNavigation();
-    const state = navigation?.extras?.state;
-    if (state && state['returnUrl']) {
-      this.returnUrl.set(state['returnUrl']);
-    } else {
-      // Check history state as fallback
-      const historyState = history.state;
-      if (historyState && historyState['returnUrl']) {
-        this.returnUrl.set(historyState['returnUrl']);
-      }
-    }
-    
-    // Check if we have a source workout ID (for "save as routine")
-    if (state && state['sourceWorkoutId']) {
-      this.sourceWorkoutId = state['sourceWorkoutId'];
-    } else {
-      const historyState = history.state;
-      if (historyState && historyState['sourceWorkoutId']) {
-        this.sourceWorkoutId = historyState['sourceWorkoutId'];
-      }
-    }
+    // Get return URL and source workout ID from navigation service
+    this.returnUrl.set(this.navigationService.getReturnUrl('/workouts'));
+    this.sourceWorkoutId = this.navigationService.getSourceWorkoutId();
   }
 
   ngOnInit(): void {
@@ -141,9 +124,7 @@ export class CreateRoutineComponent implements OnInit {
     }
     
     // Navigate to add-exercise and return to this page after adding
-    this.router.navigate(['/add-exercise'], {
-      state: { returnUrl: '/routine/new' }
-    });
+    this.navigationService.navigateWithReturnUrl('/add-exercise', '/routine/new');
   }
 
   addSetToExercise(exerciseId: string): void {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ExerciseService } from '../../services/exercise.service';
+import { NavigationService } from '../../services/navigation.service';
 
 @Component({
   selector: 'app-create-exercise',
@@ -13,29 +14,18 @@ import { ExerciseService } from '../../services/exercise.service';
 export class CreateExercise {
   private router = inject(Router);
   private exerciseService = inject(ExerciseService);
+  private navigationService = inject(NavigationService);
   
   exerciseName = signal('');
   private returnUrl = signal<string>('/workout/new');
 
   constructor() {
-    // Check if we have a return URL from navigation state
-    const navigation = this.router.currentNavigation();
-    const state = navigation?.extras?.state;
-    if (state && state['returnUrl']) {
-      this.returnUrl.set(state['returnUrl']);
-    } else {
-      // Check history state as fallback
-      const historyState = history.state;
-      if (historyState && historyState['returnUrl']) {
-        this.returnUrl.set(historyState['returnUrl']);
-      }
-    }
+    // Get return URL from navigation service
+    this.returnUrl.set(this.navigationService.getReturnUrl('/workout/new'));
   }
 
   goBack(): void {
-    this.router.navigate(['/add-exercise'], {
-      state: { returnUrl: this.returnUrl() }
-    });
+    this.navigationService.navigateWithReturnUrl('/add-exercise', this.returnUrl());
   }
 
   save(): void {
@@ -49,8 +39,6 @@ export class CreateExercise {
     console.log('Created custom exercise:', newExercise);
     
     // Navigate back to add-exercise page with the new exercise available
-    this.router.navigate(['/add-exercise'], {
-      state: { returnUrl: this.returnUrl() }
-    });
+    this.navigationService.navigateWithReturnUrl('/add-exercise', this.returnUrl());
   }
 }

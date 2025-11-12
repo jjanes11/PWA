@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { Workout, WorkoutTemplate } from '../../models/workout.models';
+import { NavigationService } from '../../services/navigation.service';
 
 @Component({
   selector: 'app-workout-list',
@@ -13,6 +14,7 @@ import { Workout, WorkoutTemplate } from '../../models/workout.models';
 export class WorkoutListComponent {
   private router = inject(Router);
   private workoutService = inject(WorkoutService);
+  private navigationService = inject(NavigationService);
 
   templates = this.workoutService.templates;
   showMenu = signal(false);
@@ -62,9 +64,7 @@ export class WorkoutListComponent {
   }
 
   createNewRoutine(): void {
-    this.router.navigate(['/routine/new'], {
-      state: { returnUrl: '/workouts' }
-    });
+    this.navigationService.navigateWithReturnUrl('/routine/new', '/workouts');
   }
 
   startRoutine(template: WorkoutTemplate): void {
