@@ -4,13 +4,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { Exercise } from '../../models/workout.models';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
-import { createSetTypeMenuMixin } from '../../mixins/set-type-menu.mixin';
 import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
+import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
+import { getSetTypeDisplay, getSetTypeClass } from '../../utils/set-type.utils';
 
 @Component({
   selector: 'app-add-workout',
-  imports: [CommonModule, ConfirmationDialog, DraggableDirective, CardMenuComponent],
+  imports: [CommonModule, ConfirmationDialog, DraggableDirective, CardMenuComponent, SetTypeMenuComponent],
   templateUrl: './add-workout.html',
   styleUrl: './add-workout.css'
 })
@@ -23,6 +24,13 @@ export class AddWorkoutComponent implements OnInit {
   showDiscardDialog = signal(false);
   selectedExerciseId = signal<string | null>(null);
   draggedExerciseId = signal<string | null>(null);
+  
+  // Set Type Menu
+  showSetTypeMenu = signal(false);
+  selectedSet = signal<{ exerciseId: string; setId: string } | null>(null);
+  
+  getSetTypeDisplay = getSetTypeDisplay;
+  getSetTypeClass = getSetTypeClass;
 
   menuItems: MenuItem[] = [
     {
@@ -39,21 +47,16 @@ export class AddWorkoutComponent implements OnInit {
   ];
   dragOverExerciseId = signal<string | null>(null);
   
-  // Set Type Menu Mixin
-  private setTypeMenuMixin = createSetTypeMenuMixin(
-    this.workoutService,
-    () => this.currentWorkout(),
-    () => this.currentWorkout()?.id || null
-  );
-  
-  showSetTypeMenu = this.setTypeMenuMixin.showSetTypeMenu;
-  selectedSet = this.setTypeMenuMixin.selectedSet;
-  openSetTypeMenu = this.setTypeMenuMixin.openSetTypeMenu.bind(this.setTypeMenuMixin);
-  closeSetTypeMenu = this.setTypeMenuMixin.closeSetTypeMenu.bind(this.setTypeMenuMixin);
-  setSetType = this.setTypeMenuMixin.setSetType.bind(this.setTypeMenuMixin);
-  removeSet = this.setTypeMenuMixin.removeSet.bind(this.setTypeMenuMixin);
-  getSetTypeDisplay = this.setTypeMenuMixin.getSetTypeDisplay.bind(this.setTypeMenuMixin);
-  getSetTypeClass = this.setTypeMenuMixin.getSetTypeClass.bind(this.setTypeMenuMixin);
+  openSetTypeMenu(exerciseId: string, setId: string, event: Event): void {
+    event.stopPropagation();
+    this.selectedSet.set({ exerciseId, setId });
+    this.showSetTypeMenu.set(true);
+  }
+
+  closeSetTypeMenu(): void {
+    this.showSetTypeMenu.set(false);
+    this.selectedSet.set(null);
+  }
 
   ngOnInit(): void {
     // Create a new workout if none exists

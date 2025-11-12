@@ -6,12 +6,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { WorkoutService } from '../../services/workout.service';
 import { Workout, Exercise, Set } from '../../models/workout.models';
-import { createSetTypeMenuMixin } from '../../mixins/set-type-menu.mixin';
 import { NavigationService } from '../../services/navigation.service';
+import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
+import { getSetTypeDisplay, getSetTypeClass } from '../../utils/set-type.utils';
 
 @Component({
   selector: 'app-edit-workout',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SetTypeMenuComponent],
   templateUrl: './edit-workout.html',
   styleUrl: './edit-workout.css',
 })
@@ -30,6 +31,13 @@ export class EditWorkoutComponent {
   workout = signal<Workout | null>(null);
   workoutTitle = signal('');
   workoutDescription = signal('');
+  
+  // Set Type Menu
+  showSetTypeMenu = signal(false);
+  selectedSet = signal<{ exerciseId: string; setId: string } | null>(null);
+  
+  getSetTypeDisplay = getSetTypeDisplay;
+  getSetTypeClass = getSetTypeClass;
 
   constructor() {
     // Effect that loads workout when ID changes
@@ -59,21 +67,16 @@ export class EditWorkoutComponent {
     });
   }
   
-  // Set Type Menu Mixin
-  private setTypeMenuMixin = createSetTypeMenuMixin(
-    this.workoutService,
-    () => this.workout(),
-    () => this.workout()?.id || null
-  );
-  
-  showSetTypeMenu = this.setTypeMenuMixin.showSetTypeMenu;
-  selectedSet = this.setTypeMenuMixin.selectedSet;
-  openSetTypeMenu = this.setTypeMenuMixin.openSetTypeMenu.bind(this.setTypeMenuMixin);
-  closeSetTypeMenu = this.setTypeMenuMixin.closeSetTypeMenu.bind(this.setTypeMenuMixin);
-  setSetType = this.setTypeMenuMixin.setSetType.bind(this.setTypeMenuMixin);
-  removeSet = this.setTypeMenuMixin.removeSet.bind(this.setTypeMenuMixin);
-  getSetTypeDisplay = this.setTypeMenuMixin.getSetTypeDisplay.bind(this.setTypeMenuMixin);
-  getSetTypeClass = this.setTypeMenuMixin.getSetTypeClass.bind(this.setTypeMenuMixin);
+  openSetTypeMenu(exerciseId: string, setId: string, event: Event): void {
+    event.stopPropagation();
+    this.selectedSet.set({ exerciseId, setId });
+    this.showSetTypeMenu.set(true);
+  }
+
+  closeSetTypeMenu(): void {
+    this.showSetTypeMenu.set(false);
+    this.selectedSet.set(null);
+  }
 
   // Computed workout stats
   workoutStats = computed(() => {

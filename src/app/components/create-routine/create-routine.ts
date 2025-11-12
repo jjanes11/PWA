@@ -4,14 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { Workout } from '../../models/workout.models';
-import { createSetTypeMenuMixin } from '../../mixins/set-type-menu.mixin';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { NavigationService } from '../../services/navigation.service';
+import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
+import { getSetTypeDisplay, getSetTypeClass } from '../../utils/set-type.utils';
 
 @Component({
   selector: 'app-create-routine',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConfirmationDialog],
+  imports: [CommonModule, FormsModule, ConfirmationDialog, SetTypeMenuComponent],
   templateUrl: './create-routine.html',
   styleUrl: './create-routine.css'
 })
@@ -26,21 +27,23 @@ export class CreateRoutineComponent implements OnInit {
   private returnUrl = signal<string>('/workouts');
   private sourceWorkoutId: string | null = null;
   
-  // Set Type Menu Mixin
-  private setTypeMenuMixin = createSetTypeMenuMixin(
-    this.workoutService,
-    () => this.routineDraft(),
-    () => this.routineDraft()?.id || null
-  );
+  // Set Type Menu
+  showSetTypeMenu = signal(false);
+  selectedSet = signal<{ exerciseId: string; setId: string } | null>(null);
   
-  showSetTypeMenu = this.setTypeMenuMixin.showSetTypeMenu;
-  selectedSet = this.setTypeMenuMixin.selectedSet;
-  openSetTypeMenu = this.setTypeMenuMixin.openSetTypeMenu.bind(this.setTypeMenuMixin);
-  closeSetTypeMenu = this.setTypeMenuMixin.closeSetTypeMenu.bind(this.setTypeMenuMixin);
-  setSetType = this.setTypeMenuMixin.setSetType.bind(this.setTypeMenuMixin);
-  removeSet = this.setTypeMenuMixin.removeSet.bind(this.setTypeMenuMixin);
-  getSetTypeDisplay = this.setTypeMenuMixin.getSetTypeDisplay.bind(this.setTypeMenuMixin);
-  getSetTypeClass = this.setTypeMenuMixin.getSetTypeClass.bind(this.setTypeMenuMixin);
+  getSetTypeDisplay = getSetTypeDisplay;
+  getSetTypeClass = getSetTypeClass;
+  
+  openSetTypeMenu(exerciseId: string, setId: string, event: Event): void {
+    event.stopPropagation();
+    this.selectedSet.set({ exerciseId, setId });
+    this.showSetTypeMenu.set(true);
+  }
+
+  closeSetTypeMenu(): void {
+    this.showSetTypeMenu.set(false);
+    this.selectedSet.set(null);
+  }
 
   constructor() {
     // Get return URL and source workout ID from navigation service
