@@ -31,16 +31,11 @@
             class="jacaona-exercise-card"
             [class.jacaona-drag-over]="dragOverExerciseId() === exercise.id"
             draggable="true"
-            (dragstart)="onDragStart(exercise.id, $event)"
-            (dragover)="onDragOver(exercise.id, $event)"
-            (dragenter)="onDragEnter(exercise.id, $event)"
-            (dragleave)="onDragLeave(exercise.id, $event)"
-            (drop)="onDrop(exercise.id, $event)"
-            (dragend)="onDragEnd($event)"
-            (touchstart)="onTouchStart(exercise.id, $event)"
-            (touchmove)="onTouchMove($event)"
-            (touchend)="onTouchEnd($event)"
-            (touchcancel)="onTouchEnd($event)"
+            appDraggable
+            [dragItemId]="exercise.id"
+            [draggedId]="draggedExerciseId"
+            [dragOverId]="dragOverExerciseId"
+            (dragReorder)="onExerciseReorder($event)"
           >
             <!-- Exercise Header -->
             <div class="jacaona-exercise-header">
