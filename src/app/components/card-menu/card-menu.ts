@@ -8,6 +8,7 @@ import {
   effect
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BottomSheetDialog } from '../bottom-sheet-dialog/bottom-sheet-dialog';
 
 export interface MenuItem {
   action: string;
@@ -19,7 +20,7 @@ export interface MenuItem {
 @Component({
   selector: 'app-card-menu',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BottomSheetDialog],
   templateUrl: './card-menu.html',
   styleUrl: './card-menu.css'
 })

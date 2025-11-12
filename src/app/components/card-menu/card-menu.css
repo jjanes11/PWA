@@ -1,24 +1,4 @@
-/* Bottom Menu */
-.jacaona-menu-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 2000;
-  display: flex;
-  align-items: flex-end;
-  animation: fadeIn 0.2s ease;
-}
-
-.jacaona-bottom-menu {
-  width: 100%;
-  background: var(--jacaona-bg-secondary);
-  border-radius: var(--jacaona-radius-lg) var(--jacaona-radius-lg) 0 0;
-  padding: var(--jacaona-space-lg);
-  animation: slideUp 0.3s ease;
-}
+/* Card-menu-specific styles. Overlay/animations provided by app-bottom-sheet-dialog */
 
 .jacaona-menu-item {
   width: 100%;
@@ -64,22 +44,4 @@
   height: 1px;
   background: var(--jacaona-border);
   margin: var(--jacaona-space-xs) 0;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
 }

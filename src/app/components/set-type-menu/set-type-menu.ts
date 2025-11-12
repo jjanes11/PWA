@@ -10,13 +10,14 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WorkoutService } from '../../services/workout.service';
+import { BottomSheetDialog } from '../bottom-sheet-dialog/bottom-sheet-dialog';
 
 export type SetType = 'normal' | 'warmup' | 'failure' | 'drop';
 
 @Component({
   selector: 'app-set-type-menu',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BottomSheetDialog],
   templateUrl: './set-type-menu.html',
   styleUrl: './set-type-menu.css'
 })

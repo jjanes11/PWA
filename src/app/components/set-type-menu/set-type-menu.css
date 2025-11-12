@@ -1,24 +1,4 @@
-/* Menu Overlay (reuses from card-menu but with different content styling) */
-.jacaona-menu-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 2000;
-  display: flex;
-  align-items: flex-end;
-  animation: fadeIn 0.2s ease;
-}
-
-.jacaona-set-type-menu-content {
-  width: 100%;
-  background: var(--jacaona-bg-secondary);
-  border-radius: var(--jacaona-radius-lg) var(--jacaona-radius-lg) 0 0;
-  padding: var(--jacaona-space-lg);
-  animation: slideUp 0.3s ease;
-}
+/* Set-type-menu specific styles. Overlay/animations provided by app-bottom-sheet-dialog */
 
 .jacaona-menu-title {
   color: var(--jacaona-text-primary);
@@ -94,22 +74,4 @@
   display: inline-block;
   text-align: center;
   min-width: 24px;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
 }
