@@ -6,10 +6,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { WorkoutService } from '../../services/workout.service';
 import { Workout } from '../../models/workout.models';
-import { NavigationService } from '../../services/navigation.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
+import { useNavigationContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-edit-workout',
@@ -21,7 +21,9 @@ export class EditWorkoutComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
-  private navigationService = inject(NavigationService);
+  private navigationContext = useNavigationContext({
+    defaultOrigin: '/home'
+  });
 
   // Convert route params to signal
   private workoutId = toSignal(
@@ -65,6 +67,8 @@ export class EditWorkoutComponent {
       this.workout.set(foundWorkout);
       this.workoutTitle.set(foundWorkout.name);
       this.workoutDescription.set(foundWorkout.notes || '');
+
+      this.navigationContext.setOrigin(`/workout/${foundWorkout.id}`);
 
       // Clear currentWorkout if it's set to this workout (from add-exercise navigation)
       const currentWorkout = this.workoutService.currentWorkout();
@@ -122,12 +126,7 @@ export class EditWorkoutComponent {
   });
 
   cancel(): void {
-    const workout = this.workout();
-    if (workout) {
-      this.router.navigate(['/workout', workout.id]);
-    } else {
-      this.router.navigate(['/home']);
-    }
+    this.navigationContext.exit({ skipCleanup: true });
   }
 
   saveWorkout(): void {
@@ -143,7 +142,7 @@ export class EditWorkoutComponent {
 
     this.workoutService.updateWorkout(updatedWorkout);
     this.workout.set(updatedWorkout); // Update local signal
-    this.router.navigate(['/workout', workout.id]);
+    this.navigationContext.exit({ skipCleanup: true });
   }
 
   addExercise(): void {
@@ -153,7 +152,7 @@ export class EditWorkoutComponent {
     // Temporarily set as currentWorkout so add-exercise can add to it
     this.workoutService.setCurrentWorkout(workout);
     
-    this.navigationService.navigateWithReturnUrl('/add-exercise', `/edit-workout/${workout.id}`);
+    this.navigationContext.navigateWithReturn('/add-exercise');
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {

@@ -10,6 +10,7 @@ import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exe
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useWorkoutContext } from '../../utils/workout-context';
 import { useDiscardGuard } from '../../utils/discard-guard';
+import { useNavigationContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-add-workout',
@@ -22,6 +23,16 @@ export class AddWorkoutComponent implements OnInit {
   private router = inject(Router);
   private workoutContext = useWorkoutContext('active');
   currentWorkout = this.workoutContext.workout;
+  private navigationContext = useNavigationContext({
+    defaultOrigin: '/workouts',
+    cleanup: () => {
+      const workout = this.currentWorkout();
+      if (workout) {
+        this.workoutService.deleteWorkout(workout.id);
+        this.workoutContext.setWorkout(null);
+      }
+    }
+  });
   private exerciseCardController = useExerciseCardController(this.workoutService, {
     getWorkout: () => this.workoutContext.workout()
   });
@@ -66,14 +77,10 @@ export class AddWorkoutComponent implements OnInit {
     // Only show dialog if workout has exercises
     if (workout && workout.exercises.length > 0) {
       this.workoutService.showWorkoutInProgressDialogMethod();
-      this.router.navigate(['/workouts']);
+      this.router.navigateByUrl(this.navigationContext.origin());
     } else {
-      // No exercises, just navigate back and clean up
-      if (workout) {
-        this.workoutService.deleteWorkout(workout.id);
-        this.workoutContext.setWorkout(null);
-      }
-      this.router.navigate(['/workouts']);
+      // No exercises, perform cleanup and navigate back
+      this.navigationContext.exit();
     }
   }
 
@@ -84,12 +91,12 @@ export class AddWorkoutComponent implements OnInit {
       this.router.navigate(['/save-workout']);
     } else {
       // If no exercises, just go back
-      this.goBack();
+      this.navigationContext.exit();
     }
   }
 
   addExercise(): void {
-    this.router.navigate(['/add-exercise']);
+    this.navigationContext.navigateWithReturn('/add-exercise');
   }
 
   discardWorkout(): void {
@@ -103,11 +110,8 @@ export class AddWorkoutComponent implements OnInit {
     switch (action) {
       case 'replace':
         if (exerciseId) {
-          this.router.navigate(['/add-exercise'], {
-            state: { 
-              returnUrl: '/workout/new',
-              replaceExerciseId: exerciseId
-            }
+          this.navigationContext.navigateWithReturn('/add-exercise', {
+            replaceExerciseId: exerciseId
           });
         }
         break;
@@ -142,11 +146,6 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   private handleDiscardConfirm(): void {
-    const workout = this.currentWorkout();
-    if (workout) {
-      this.workoutService.deleteWorkout(workout.id);
-      this.workoutContext.setWorkout(null);
-    }
-    this.goBack();
+    this.navigationContext.exit();
   }
 }

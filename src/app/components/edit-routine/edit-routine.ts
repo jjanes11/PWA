@@ -11,6 +11,7 @@ import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { useWorkoutContext } from '../../utils/workout-context';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
+import { useNavigationContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-edit-routine',
@@ -28,6 +29,16 @@ export class EditRoutineComponent {
   currentWorkout = this.workoutContext.workout;
   private exerciseCardController = useExerciseCardController(this.workoutService, {
     getWorkout: () => this.workoutContext.workout()
+  });
+  private navigationContext = useNavigationContext({
+    defaultOrigin: '/workouts',
+    cleanup: () => {
+      const workout = this.currentWorkout();
+      if (workout) {
+        this.workoutService.deleteWorkout(workout.id);
+        this.workoutContext.setWorkout(null);
+      }
+    }
   });
 
   // Convert route params to signal
@@ -81,13 +92,7 @@ export class EditRoutineComponent {
   }
 
   cancel(): void {
-    // Clean up draft workout
-    const workout = this.currentWorkout();
-    if (workout) {
-      this.workoutService.deleteWorkout(workout.id);
-      this.workoutContext.setWorkout(null);
-    }
-    this.router.navigate(['/workouts']);
+    this.navigationContext.exit();
   }
 
   update(): void {
@@ -103,10 +108,9 @@ export class EditRoutineComponent {
       
       // Save the draft workout as the new template
       this.workoutService.saveAsTemplate(workout);
-      
-      // Clean up draft workout
-      this.workoutService.deleteWorkout(workout.id);
-      this.workoutContext.setWorkout(null);
+
+      this.navigationContext.exit();
+      return;
     }
     this.router.navigate(['/workouts']);
   }
@@ -119,7 +123,7 @@ export class EditRoutineComponent {
       this.workoutService.updateWorkout(updatedWorkout);
     }
     
-    this.navigationService.navigateWithReturnUrl('/add-exercise', '/routine/edit/' + this.template()?.id);
+    this.navigationContext.navigateWithReturn('/add-exercise');
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {

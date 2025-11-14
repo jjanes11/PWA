@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,6 +10,7 @@ import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exe
 import { useWorkoutContext } from '../../utils/workout-context';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useDiscardGuard } from '../../utils/discard-guard';
+import { useNavigationContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-create-routine',
@@ -28,8 +29,17 @@ export class CreateRoutineComponent implements OnInit {
     getWorkout: () => this.workoutContext.workout()
   });
   title: string = '';
-  private returnUrl = signal<string>('/workouts');
   private sourceWorkoutId: string | null = null;
+  private navigationContext = useNavigationContext({
+    defaultOrigin: '/workouts',
+    cleanup: () => {
+      const workout = this.routineDraft();
+      if (workout) {
+        this.workoutService.deleteWorkout(workout.id);
+        this.workoutContext.setWorkout(null);
+      }
+    }
+  });
   discardGuard = useDiscardGuard({
     message: 'Are you sure you want to discard the routine?',
     confirmText: 'Discard Routine',
@@ -46,7 +56,6 @@ export class CreateRoutineComponent implements OnInit {
 
   constructor() {
     // Get return URL and source workout ID from navigation service
-    this.returnUrl.set(this.navigationService.getReturnUrl('/workouts'));
     this.sourceWorkoutId = this.navigationService.getSourceWorkoutId();
   }
 
@@ -85,10 +94,9 @@ export class CreateRoutineComponent implements OnInit {
       
       // Save as template for routines
       this.workoutService.saveAsTemplate(updatedWorkout);
-      
-      // Clean up draft workout
-      this.workoutService.deleteWorkout(workout.id);
-      this.workoutContext.setWorkout(null);
+
+      this.navigationContext.exit();
+      return;
     }
     this.router.navigate(['/workouts']);
   }
@@ -102,7 +110,7 @@ export class CreateRoutineComponent implements OnInit {
     }
     
     // Navigate to add-exercise and return to this page after adding
-    this.navigationService.navigateWithReturnUrl('/add-exercise', '/routine/new');
+    this.navigationContext.navigateWithReturn('/add-exercise');
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {
@@ -112,11 +120,6 @@ export class CreateRoutineComponent implements OnInit {
   }
 
   private handleDiscardConfirm(): void {
-    const workout = this.routineDraft();
-    if (workout) {
-      this.workoutService.deleteWorkout(workout.id);
-      this.workoutContext.setWorkout(null);
-    }
-    this.router.navigate([this.returnUrl()]);
+    this.navigationContext.exit();
   }
 }
