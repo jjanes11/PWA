@@ -9,6 +9,7 @@ import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useWorkoutContext } from '../../utils/workout-context';
+import { useDiscardGuard } from '../../utils/discard-guard';
 
 @Component({
   selector: 'app-add-workout',
@@ -24,7 +25,11 @@ export class AddWorkoutComponent implements OnInit {
   private exerciseCardController = useExerciseCardController(this.workoutService, {
     getWorkout: () => this.workoutContext.workout()
   });
-  showDiscardDialog = signal(false);
+  discardGuard = useDiscardGuard({
+    message: 'Are you sure you want to discard this workout?',
+    confirmText: 'Discard Workout',
+    onConfirm: () => this.handleDiscardConfirm()
+  });
   selectedExerciseId = signal<string | null>(null);
   draggedExerciseId = signal<string | null>(null);
   
@@ -88,22 +93,7 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   discardWorkout(): void {
-    this.showDiscardDialog.set(true);
-  }
-
-  onDiscardConfirmed(): void {
-    const workout = this.currentWorkout();
-    if (workout) {
-      // Delete the current workout and clear current workout
-      this.workoutService.deleteWorkout(workout.id);
-      this.workoutContext.setWorkout(null);
-    }
-    this.showDiscardDialog.set(false);
-    this.goBack();
-  }
-
-  onDiscardCancelled(): void {
-    this.showDiscardDialog.set(false);
+    this.discardGuard.open();
   }
 
   handleMenuAction(exerciseId: string, action: string): void {
@@ -149,5 +139,14 @@ export class AddWorkoutComponent implements OnInit {
         this.handleMenuAction(event.exerciseId, event.data);
         break;
     }
+  }
+
+  private handleDiscardConfirm(): void {
+    const workout = this.currentWorkout();
+    if (workout) {
+      this.workoutService.deleteWorkout(workout.id);
+      this.workoutContext.setWorkout(null);
+    }
+    this.goBack();
   }
 }

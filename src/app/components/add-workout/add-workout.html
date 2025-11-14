@@ -61,12 +61,12 @@
 
   <!-- Discard Confirmation Dialog -->
   <app-confirmation-dialog
-    [isVisible]="showDiscardDialog()"
-    message="Are you sure you want to discard this workout?"
-    confirmText="Discard Workout"
-    cancelText="Cancel"
-    (confirmed)="onDiscardConfirmed()"
-    (cancelled)="onDiscardCancelled()"
+    [isVisible]="discardGuard.isVisible()"
+    [message]="discardGuard.message"
+    [confirmText]="discardGuard.confirmText"
+    [cancelText]="discardGuard.cancelText"
+    (confirmed)="discardGuard.confirm()"
+    (cancelled)="discardGuard.cancel()"
   />
 
   <!-- Set Type Menu Overlay -->

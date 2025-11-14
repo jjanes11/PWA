@@ -58,11 +58,11 @@
 
   <!-- Discard Confirmation Dialog -->
   <app-confirmation-dialog
-    [isVisible]="showCancelDialog()"
-    message="Are you sure you want to discard the routine?"
-    confirmText="Discard Routine"
-    cancelText="Cancel"
-    (confirmed)="onDiscardConfirmed()"
-    (cancelled)="onDiscardCancelled()"
+    [isVisible]="discardGuard.isVisible()"
+    [message]="discardGuard.message"
+    [confirmText]="discardGuard.confirmText"
+    [cancelText]="discardGuard.cancelText"
+    (confirmed)="discardGuard.confirm()"
+    (cancelled)="discardGuard.cancel()"
   />
 </div>

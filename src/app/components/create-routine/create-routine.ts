@@ -9,6 +9,7 @@ import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { useWorkoutContext } from '../../utils/workout-context';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
+import { useDiscardGuard } from '../../utils/discard-guard';
 
 @Component({
   selector: 'app-create-routine',
@@ -27,9 +28,13 @@ export class CreateRoutineComponent implements OnInit {
     getWorkout: () => this.workoutContext.workout()
   });
   title: string = '';
-  showCancelDialog = signal(false);
   private returnUrl = signal<string>('/workouts');
   private sourceWorkoutId: string | null = null;
+  discardGuard = useDiscardGuard({
+    message: 'Are you sure you want to discard the routine?',
+    confirmText: 'Discard Routine',
+    onConfirm: () => this.handleDiscardConfirm()
+  });
   
   // Set Type Menu (via controller)
   showSetTypeMenu = this.exerciseCardController.showSetTypeMenu;
@@ -63,21 +68,7 @@ export class CreateRoutineComponent implements OnInit {
   }
 
   cancel(): void {
-    this.showCancelDialog.set(true);
-  }
-
-  onDiscardConfirmed(): void {
-    const workout = this.routineDraft();
-    if (workout) {
-      this.workoutService.deleteWorkout(workout.id);
-      this.workoutContext.setWorkout(null);
-    }
-    this.showCancelDialog.set(false);
-    this.router.navigate([this.returnUrl()]);
-  }
-
-  onDiscardCancelled(): void {
-    this.showCancelDialog.set(false);
+    this.discardGuard.open();
   }
 
   save(): void {
@@ -118,5 +109,14 @@ export class CreateRoutineComponent implements OnInit {
     if (this.exerciseCardController.handleAction(event)) {
       return;
     }
+  }
+
+  private handleDiscardConfirm(): void {
+    const workout = this.routineDraft();
+    if (workout) {
+      this.workoutService.deleteWorkout(workout.id);
+      this.workoutContext.setWorkout(null);
+    }
+    this.router.navigate([this.returnUrl()]);
   }
 }
