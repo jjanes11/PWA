@@ -8,6 +8,7 @@ import { DraggableDirective, DragReorderEvent } from '../../directives/draggable
 import { MenuItem } from '../card-menu/card-menu';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
+import { useSetTypeMenu } from '../../utils/set-type-menu';
 
 @Component({
   selector: 'app-add-workout',
@@ -25,9 +26,10 @@ export class AddWorkoutComponent implements OnInit {
   selectedExerciseId = signal<string | null>(null);
   draggedExerciseId = signal<string | null>(null);
   
+  private setTypeMenu = useSetTypeMenu();
   // Set Type Menu
-  showSetTypeMenu = signal(false);
-  selectedSet = signal<{ exerciseId: string; setId: string } | null>(null);
+  showSetTypeMenu = this.setTypeMenu.isOpen;
+  selectedSet = this.setTypeMenu.selectedSet;
 
   menuItems: MenuItem[] = [
     {
@@ -45,14 +47,11 @@ export class AddWorkoutComponent implements OnInit {
   dragOverExerciseId = signal<string | null>(null);
   
   openSetTypeMenu(exerciseId: string, setId: string, event: Event): void {
-    event.stopPropagation();
-    this.selectedSet.set({ exerciseId, setId });
-    this.showSetTypeMenu.set(true);
+    this.setTypeMenu.open(exerciseId, setId, event);
   }
 
   closeSetTypeMenu(): void {
-    this.showSetTypeMenu.set(false);
-    this.selectedSet.set(null);
+    this.setTypeMenu.close();
   }
 
   ngOnInit(): void {

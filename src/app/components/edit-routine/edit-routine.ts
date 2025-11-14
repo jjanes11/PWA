@@ -9,6 +9,7 @@ import { WorkoutTemplate, ExerciseTemplate } from '../../models/workout.models';
 import { NavigationService } from '../../services/navigation.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
+import { useSetTypeMenu } from '../../utils/set-type-menu';
 
 @Component({
   selector: 'app-edit-routine',
@@ -31,20 +32,18 @@ export class EditRoutineComponent {
   template = signal<WorkoutTemplate | null>(null);
   currentWorkout = this.workoutService.currentWorkout;
   title: string = '';
-  
+
+  private setTypeMenu = useSetTypeMenu();
   // Set Type Menu
-  showSetTypeMenu = signal(false);
-  selectedSet = signal<{ exerciseId: string; setId: string } | null>(null);
+  showSetTypeMenu = this.setTypeMenu.isOpen;
+  selectedSet = this.setTypeMenu.selectedSet;
 
   openSetTypeMenu(exerciseId: string, setId: string, event: Event): void {
-    event.stopPropagation();
-    this.selectedSet.set({ exerciseId, setId });
-    this.showSetTypeMenu.set(true);
+    this.setTypeMenu.open(exerciseId, setId, event);
   }
 
   closeSetTypeMenu(): void {
-    this.showSetTypeMenu.set(false);
-    this.selectedSet.set(null);
+    this.setTypeMenu.close();
   }
 
   constructor() {

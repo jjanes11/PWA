@@ -9,6 +9,7 @@ import { Workout, Exercise, Set } from '../../models/workout.models';
 import { NavigationService } from '../../services/navigation.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
+import { useSetTypeMenu } from '../../utils/set-type-menu';
 
 @Component({
   selector: 'app-edit-workout',
@@ -32,9 +33,10 @@ export class EditWorkoutComponent {
   workoutTitle = signal('');
   workoutDescription = signal('');
   
+  private setTypeMenu = useSetTypeMenu();
   // Set Type Menu
-  showSetTypeMenu = signal(false);
-  selectedSet = signal<{ exerciseId: string; setId: string } | null>(null);
+  showSetTypeMenu = this.setTypeMenu.isOpen;
+  selectedSet = this.setTypeMenu.selectedSet;
 
   constructor() {
     // Effect that loads workout when ID changes
@@ -65,14 +67,11 @@ export class EditWorkoutComponent {
   }
   
   openSetTypeMenu(exerciseId: string, setId: string, event: Event): void {
-    event.stopPropagation();
-    this.selectedSet.set({ exerciseId, setId });
-    this.showSetTypeMenu.set(true);
+    this.setTypeMenu.open(exerciseId, setId, event);
   }
 
   closeSetTypeMenu(): void {
-    this.showSetTypeMenu.set(false);
-    this.selectedSet.set(null);
+    this.setTypeMenu.close();
   }
 
   // Computed workout stats
