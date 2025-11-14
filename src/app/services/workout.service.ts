@@ -321,22 +321,23 @@ export class WorkoutService {
     };
 
     const templates = [...this._templates(), template];
-    this._templates.set(templates);
-    this.saveTemplates();
-    
+    this.commitTemplates(templates);
+
     return template;
   }
 
   saveTemplateDirectly(template: WorkoutTemplate): void {
     const templates = [...this._templates(), template];
-    this._templates.set(templates);
-    this.saveTemplates();
+    this.commitTemplates(templates);
+  }
+
+  updateTemplate(template: WorkoutTemplate): WorkoutTemplate | null {
+    return this.updateTemplateById(template.id, () => template);
   }
 
   deleteTemplate(id: string): void {
     const templates = this._templates().filter(t => t.id !== id);
-    this._templates.set(templates);
-    this.saveTemplates();
+    this.commitTemplates(templates);
   }
 
   reorderTemplates(draggedTemplateId: string, targetTemplateId: string): void {
@@ -348,9 +349,8 @@ export class WorkoutService {
       const [draggedTemplate] = templates.splice(draggedIndex, 1);
       templates.splice(targetIndex, 0, draggedTemplate);
     }
-    
-    this._templates.set(templates);
-    this.saveTemplates();
+
+    this.commitTemplates(templates);
   }
 
   // Utility Methods
@@ -377,6 +377,29 @@ export class WorkoutService {
     return updatedWorkout;
   }
 
+  private updateTemplateById(
+    templateId: string,
+    mutate: (template: WorkoutTemplate) => WorkoutTemplate
+  ): WorkoutTemplate | null {
+    let updatedTemplate: WorkoutTemplate | null = null;
+
+    const updatedTemplates = this._templates().map((template) => {
+      if (template.id !== templateId) {
+        return template;
+      }
+
+      updatedTemplate = mutate(template);
+      return updatedTemplate;
+    });
+
+    if (!updatedTemplate) {
+      return null;
+    }
+
+    this.commitTemplates(updatedTemplates);
+    return updatedTemplate;
+  }
+
   private commitWorkouts(workouts: Workout[], updatedWorkout?: Workout | null): void {
     this._workouts.set(workouts);
 
@@ -387,6 +410,11 @@ export class WorkoutService {
     }
 
     this.saveData();
+  }
+
+  private commitTemplates(templates: WorkoutTemplate[]): void {
+    this._templates.set(templates);
+    this.saveTemplates();
   }
 
   private syncDerivedWorkouts(updatedWorkout: Workout): void {
