@@ -152,20 +152,7 @@ export class WorkoutService {
   }
 
   updateWorkout(workout: Workout): void {
-    const workouts = this._workouts().map(w => 
-      w.id === workout.id ? workout : w
-    );
-    this._workouts.set(workouts);
-    
-    if (this._currentWorkout()?.id === workout.id) {
-      this._currentWorkout.set(workout);
-    }
-    
-    if (this._routineDraft()?.id === workout.id) {
-      this._routineDraft.set(workout);
-    }
-    
-    this.saveData();
+    this.updateWorkoutById(workout.id, () => workout);
   }
 
   clearRoutineDraft(): void {
@@ -174,13 +161,7 @@ export class WorkoutService {
 
   deleteWorkout(id: string): void {
     const workouts = this._workouts().filter(w => w.id !== id);
-    this._workouts.set(workouts);
-    
-    if (this._currentWorkout()?.id === id) {
-      this._currentWorkout.set(null);
-    }
-    
-    this.saveData();
+    this.commitWorkouts(workouts);
   }
 
   setCurrentWorkout(workout: Workout | null): void {
@@ -199,229 +180,124 @@ export class WorkoutService {
 
   // Exercise Management
   addExerciseToWorkout(workoutId: string, exerciseName: string): Exercise {
-    const exercise: Exercise = {
-      id: this.generateId(),
-      name: exerciseName,
-      sets: []
-    };
+    let createdExercise: Exercise | null = null;
 
-    const workouts = this._workouts().map(w => 
-      w.id === workoutId 
-        ? { ...w, exercises: [...w.exercises, exercise] }
-        : w
-    );
+    const updatedWorkout = this.updateWorkoutById(workoutId, workout => {
+      const exercise: Exercise = {
+        id: this.generateId(),
+        name: exerciseName,
+        sets: []
+      };
+      createdExercise = exercise;
 
-    this._workouts.set(workouts);
+      return {
+        ...workout,
+        exercises: [...workout.exercises, exercise]
+      };
+    });
 
-    // If the current workout is the one we updated, update the signal to the new object
-    const updated = workouts.find(w => w.id === workoutId) || null;
-    if (updated && this._currentWorkout()?.id === workoutId) {
-      this._currentWorkout.set(updated);
-    }
-    // Also update routineDraft if it's the one being modified
-    if (updated && this._routineDraft()?.id === workoutId) {
-      this._routineDraft.set(updated);
+    if (!updatedWorkout || !createdExercise) {
+      throw new Error(`Workout ${workoutId} not found`);
     }
 
-    this.saveData();
-
-    return exercise;
+    return createdExercise;
   }
 
   removeExerciseFromWorkout(workoutId: string, exerciseId: string): void {
-    const workouts = this._workouts().map(w => 
-      w.id === workoutId 
-        ? { ...w, exercises: w.exercises.filter(e => e.id !== exerciseId) }
-        : w
-    );
-    
-    this._workouts.set(workouts);
-    
-    // Update current workout if it's the one being modified
-    if (this._currentWorkout()?.id === workoutId) {
-      const updatedWorkout = workouts.find(w => w.id === workoutId);
-      this._currentWorkout.set(updatedWorkout || null);
-    }
-    // Also update routineDraft if it's the one being modified
-    if (this._routineDraft()?.id === workoutId) {
-      const updatedWorkout = workouts.find(w => w.id === workoutId);
-      this._routineDraft.set(updatedWorkout || null);
-    }
-    
-    this.saveData();
+    this.updateWorkoutById(workoutId, workout => ({
+      ...workout,
+      exercises: workout.exercises.filter(e => e.id !== exerciseId)
+    }));
   }
 
   replaceExerciseInWorkout(workoutId: string, exerciseId: string, newExerciseName: string): void {
-    const workouts = this._workouts().map(w => {
-      if (w.id === workoutId) {
-        const exercises = w.exercises.map(e => {
-          if (e.id === exerciseId) {
-            // Keep the same sets but change the exercise name
-            return { ...e, name: newExerciseName };
-          }
-          return e;
-        });
-        return { ...w, exercises };
-      }
-      return w;
-    });
-    
-    this._workouts.set(workouts);
-    
-    // Update current workout if it's the one being modified
-    if (this._currentWorkout()?.id === workoutId) {
-      const updatedWorkout = workouts.find(w => w.id === workoutId);
-      this._currentWorkout.set(updatedWorkout || null);
-    }
-    // Also update routineDraft if it's the one being modified
-    if (this._routineDraft()?.id === workoutId) {
-      const updatedWorkout = workouts.find(w => w.id === workoutId);
-      this._routineDraft.set(updatedWorkout || null);
-    }
-    
-    this.saveData();
+    this.updateWorkoutById(workoutId, workout => ({
+      ...workout,
+      exercises: workout.exercises.map(exercise =>
+        exercise.id === exerciseId ? { ...exercise, name: newExerciseName } : exercise
+      )
+    }));
   }
 
   reorderExercises(workoutId: string, draggedExerciseId: string, targetExerciseId: string): void {
-    const workouts = this._workouts().map(w => {
-      if (w.id === workoutId) {
-        const exercises = [...w.exercises];
-        const draggedIndex = exercises.findIndex(e => e.id === draggedExerciseId);
-        const targetIndex = exercises.findIndex(e => e.id === targetExerciseId);
-        
-        if (draggedIndex !== -1 && targetIndex !== -1) {
-          // Remove the dragged exercise
-          const [draggedExercise] = exercises.splice(draggedIndex, 1);
-          // Insert it at the target position
-          exercises.splice(targetIndex, 0, draggedExercise);
-        }
-        
-        return { ...w, exercises };
+    this.updateWorkoutById(workoutId, workout => {
+      const exercises = [...workout.exercises];
+      const draggedIndex = exercises.findIndex(e => e.id === draggedExerciseId);
+      const targetIndex = exercises.findIndex(e => e.id === targetExerciseId);
+
+      if (draggedIndex === -1 || targetIndex === -1) {
+        return workout;
       }
-      return w;
+
+      const [draggedExercise] = exercises.splice(draggedIndex, 1);
+      exercises.splice(targetIndex, 0, draggedExercise);
+
+      return { ...workout, exercises };
     });
-    
-    this._workouts.set(workouts);
-    
-    // Update current workout if it's the one being modified
-    if (this._currentWorkout()?.id === workoutId) {
-      const updatedWorkout = workouts.find(w => w.id === workoutId);
-      this._currentWorkout.set(updatedWorkout || null);
-    }
-    // Also update routineDraft if it's the one being modified
-    if (this._routineDraft()?.id === workoutId) {
-      const updatedWorkout = workouts.find(w => w.id === workoutId);
-      this._routineDraft.set(updatedWorkout || null);
-    }
-    
-    this.saveData();
   }
 
   // Set Management
   addSetToExercise(workoutId: string, exerciseId: string): Set {
-    const newSet: Set = {
-      id: this.generateId(),
-      reps: 0,
-      weight: 0,
-      completed: false
-    };
+    let createdSet: Set | null = null;
 
-    const workouts = this._workouts().map(w => 
-      w.id === workoutId 
-        ? {
-            ...w, 
-            exercises: w.exercises.map(e => 
-              e.id === exerciseId 
-                ? { ...e, sets: [...e.sets, newSet] }
-                : e
-            )
-          }
-        : w
-    );
+    const updatedWorkout = this.updateWorkoutById(workoutId, workout => ({
+      ...workout,
+      exercises: workout.exercises.map(exercise => {
+        if (exercise.id !== exerciseId) {
+          return exercise;
+        }
 
-    this._workouts.set(workouts);
+        const newSet: Set = {
+          id: this.generateId(),
+          reps: 0,
+          weight: 0,
+          completed: false
+        };
 
-    // Keep currentWorkout in sync if it matches
-    const updated = workouts.find(w => w.id === workoutId) || null;
-    if (updated && this._currentWorkout()?.id === workoutId) {
-      this._currentWorkout.set(updated);
-    }
-    // Also update routineDraft if it's the one being modified
-    if (updated && this._routineDraft()?.id === workoutId) {
-      this._routineDraft.set(updated);
+        createdSet = newSet;
+
+        return {
+          ...exercise,
+          sets: [...exercise.sets, newSet]
+        };
+      })
+    }));
+
+    if (!updatedWorkout || !createdSet) {
+      throw new Error(`Workout ${workoutId} or exercise ${exerciseId} not found`);
     }
 
-    this.saveData();
-
-    return newSet;
+    return createdSet;
   }
 
   updateSet(workoutId: string, exerciseId: string, set: Set): void {
-    const workouts = this._workouts().map(w => 
-      w.id === workoutId 
-        ? {
-            ...w,
-            exercises: w.exercises.map(e => 
-              e.id === exerciseId
-                ? { 
-                    ...e, 
-                    sets: e.sets.map(s => s.id === set.id ? set : s)
-                  }
-                : e
-            )
-          }
-        : w
-    );
-
-    this._workouts.set(workouts);
-
-    // Keep currentWorkout in sync if it matches
-    const updated = workouts.find(w => w.id === workoutId) || null;
-    if (updated && this._currentWorkout()?.id === workoutId) {
-      this._currentWorkout.set(updated);
-    }
-    // Also update routineDraft if it's the one being modified
-    if (updated && this._routineDraft()?.id === workoutId) {
-      this._routineDraft.set(updated);
-    }
-
-    this.saveData();
+    this.updateWorkoutById(workoutId, workout => ({
+      ...workout,
+      exercises: workout.exercises.map(exercise =>
+        exercise.id === exerciseId
+          ? {
+              ...exercise,
+              sets: exercise.sets.map(existingSet =>
+                existingSet.id === set.id ? set : existingSet
+              )
+            }
+          : exercise
+      )
+    }));
   }
 
   removeSetFromExercise(workoutId: string, exerciseId: string, setId: string): void {
-    const workouts = this._workouts().map(w => 
-      w.id === workoutId 
-        ? {
-            ...w,
-            exercises: w.exercises.map(e => 
-              e.id === exerciseId
-                ? { ...e, sets: e.sets.filter(s => s.id !== setId) }
-                : e
-            )
-          }
-        : w
-    );
-    
-    this._workouts.set(workouts);
-    
-    // Update current workout if it's the one being modified
-    const currentWorkout = this._currentWorkout();
-    if (currentWorkout && currentWorkout.id === workoutId) {
-      const updatedWorkout = workouts.find(w => w.id === workoutId);
-      if (updatedWorkout) {
-        this._currentWorkout.set(updatedWorkout);
-      }
-    }
-    // Also update routineDraft if it's the one being modified
-    const routineDraft = this._routineDraft();
-    if (routineDraft && routineDraft.id === workoutId) {
-      const updatedWorkout = workouts.find(w => w.id === workoutId);
-      if (updatedWorkout) {
-        this._routineDraft.set(updatedWorkout);
-      }
-    }
-    
-    this.saveData();
+    this.updateWorkoutById(workoutId, workout => ({
+      ...workout,
+      exercises: workout.exercises.map(exercise =>
+        exercise.id === exerciseId
+          ? {
+              ...exercise,
+              sets: exercise.sets.filter(existingSet => existingSet.id !== setId)
+            }
+          : exercise
+      )
+    }));
   }
 
   // Template Management
@@ -474,6 +350,63 @@ export class WorkoutService {
   }
 
   // Utility Methods
+  private updateWorkoutById(
+    workoutId: string,
+    mutate: (workout: Workout) => Workout
+  ): Workout | null {
+    let updatedWorkout: Workout | null = null;
+
+    const updatedWorkouts = this._workouts().map((workout) => {
+      if (workout.id !== workoutId) {
+        return workout;
+      }
+
+      updatedWorkout = mutate(workout);
+      return updatedWorkout;
+    });
+
+    if (!updatedWorkout) {
+      return null;
+    }
+
+    this.commitWorkouts(updatedWorkouts, updatedWorkout);
+    return updatedWorkout;
+  }
+
+  private commitWorkouts(workouts: Workout[], updatedWorkout?: Workout | null): void {
+    this._workouts.set(workouts);
+
+    if (updatedWorkout) {
+      this.syncDerivedWorkouts(updatedWorkout);
+    } else {
+      this.ensureDerivedWorkoutsExist(workouts);
+    }
+
+    this.saveData();
+  }
+
+  private syncDerivedWorkouts(updatedWorkout: Workout): void {
+    if (this._currentWorkout()?.id === updatedWorkout.id) {
+      this._currentWorkout.set(updatedWorkout);
+    }
+
+    if (this._routineDraft()?.id === updatedWorkout.id) {
+      this._routineDraft.set(updatedWorkout);
+    }
+  }
+
+  private ensureDerivedWorkoutsExist(workouts: Workout[]): void {
+    const current = this._currentWorkout();
+    if (current && !workouts.some(w => w.id === current.id)) {
+      this._currentWorkout.set(null);
+    }
+
+    const draft = this._routineDraft();
+    if (draft && !workouts.some(w => w.id === draft.id)) {
+      this._routineDraft.set(null);
+    }
+  }
+
   private generateId(): string {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
   }
