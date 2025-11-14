@@ -168,6 +168,10 @@ export class WorkoutService {
     this._currentWorkout.set(workout);
   }
 
+  setRoutineDraft(workout: Workout | null): void {
+    this._routineDraft.set(workout);
+  }
+
   completeWorkout(workoutId: string): void {
     const workouts = this._workouts().map(w => 
       w.id === workoutId 

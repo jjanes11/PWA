@@ -10,6 +10,7 @@ import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { useSetTypeMenu } from '../../utils/set-type-menu';
 import { useExerciseSetMutations } from '../../utils/exercise-set-mutations';
+import { useWorkoutContext } from '../../utils/workout-context';
 
 @Component({
   selector: 'app-add-workout',
@@ -20,11 +21,11 @@ import { useExerciseSetMutations } from '../../utils/exercise-set-mutations';
 export class AddWorkoutComponent implements OnInit {
   private workoutService = inject(WorkoutService);
   private router = inject(Router);
+  private workoutContext = useWorkoutContext('active');
+  currentWorkout = this.workoutContext.workout;
   private setMutations = useExerciseSetMutations(this.workoutService, {
-    getWorkout: () => this.currentWorkout()
+    getWorkout: () => this.workoutContext.workout()
   });
-
-  currentWorkout = this.workoutService.currentWorkout;
   showDiscardDialog = signal(false);
   selectedExerciseId = signal<string | null>(null);
   draggedExerciseId = signal<string | null>(null);
@@ -59,9 +60,7 @@ export class AddWorkoutComponent implements OnInit {
 
   ngOnInit(): void {
     // Create a new workout if none exists
-    if (!this.currentWorkout()) {
-      this.workoutService.createWorkout('New Workout');
-    }
+    this.workoutContext.ensureFresh(() => this.workoutService.createWorkout('New Workout'));
   }
 
   goBack(): void {
@@ -74,7 +73,7 @@ export class AddWorkoutComponent implements OnInit {
       // No exercises, just navigate back and clean up
       if (workout) {
         this.workoutService.deleteWorkout(workout.id);
-        this.workoutService.setCurrentWorkout(null);
+        this.workoutContext.setWorkout(null);
       }
       this.router.navigate(['/workouts']);
     }
@@ -104,7 +103,7 @@ export class AddWorkoutComponent implements OnInit {
     if (workout) {
       // Delete the current workout and clear current workout
       this.workoutService.deleteWorkout(workout.id);
-      this.workoutService.setCurrentWorkout(null);
+      this.workoutContext.setWorkout(null);
     }
     this.showDiscardDialog.set(false);
     this.goBack();

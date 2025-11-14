@@ -9,6 +9,7 @@ import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { useSetTypeMenu } from '../../utils/set-type-menu';
 import { useExerciseSetMutations } from '../../utils/exercise-set-mutations';
+import { useWorkoutContext } from '../../utils/workout-context';
 
 @Component({
   selector: 'app-create-routine',
@@ -21,11 +22,11 @@ export class CreateRoutineComponent implements OnInit {
   private router = inject(Router);
   private workoutService = inject(WorkoutService);
   private navigationService = inject(NavigationService);
+  private workoutContext = useWorkoutContext('draft');
+  routineDraft = this.workoutContext.workout; // Use routineDraft instead of currentWorkout
   private setMutations = useExerciseSetMutations(this.workoutService, {
-    getWorkout: () => this.routineDraft()
+    getWorkout: () => this.workoutContext.workout()
   });
-
-  routineDraft = this.workoutService.routineDraft; // Use routineDraft instead of currentWorkout
   title: string = '';
   showCancelDialog = signal(false);
   private returnUrl = signal<string>('/workouts');
@@ -53,17 +54,17 @@ export class CreateRoutineComponent implements OnInit {
   ngOnInit(): void {
     // If we have a source workout ID, create a draft from it
     if (this.sourceWorkoutId) {
-      this.workoutService.createDraftFromWorkout(this.sourceWorkoutId);
-      const workout = this.routineDraft();
-      if (workout) {
-        this.title = workout.name || '';
+      const draftWorkout = this.workoutService.createDraftFromWorkout(this.sourceWorkoutId);
+      if (draftWorkout) {
+        this.workoutContext.setWorkout(draftWorkout);
+        this.title = draftWorkout.name || '';
+        return;
       }
-    } else if (!this.routineDraft()) {
-      const draftWorkout = this.workoutService.createRoutineDraft('New Routine');
-      this.title = draftWorkout.name;
-    } else {
-      // Restore title from existing workout
-      this.title = this.routineDraft()?.name || '';
+    }
+
+    const draftWorkout = this.workoutContext.ensureFresh(() => this.workoutService.createRoutineDraft('New Routine'));
+    if (draftWorkout) {
+      this.title = draftWorkout.name || '';
     }
   }
 
@@ -75,7 +76,7 @@ export class CreateRoutineComponent implements OnInit {
     const workout = this.routineDraft();
     if (workout) {
       this.workoutService.deleteWorkout(workout.id);
-      this.workoutService.clearRoutineDraft();
+      this.workoutContext.setWorkout(null);
     }
     this.showCancelDialog.set(false);
     this.router.navigate([this.returnUrl()]);
@@ -102,7 +103,7 @@ export class CreateRoutineComponent implements OnInit {
       
       // Clean up draft workout
       this.workoutService.deleteWorkout(workout.id);
-      this.workoutService.clearRoutineDraft();
+      this.workoutContext.setWorkout(null);
     }
     this.router.navigate(['/workouts']);
   }

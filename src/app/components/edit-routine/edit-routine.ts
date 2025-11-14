@@ -11,6 +11,7 @@ import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { useSetTypeMenu } from '../../utils/set-type-menu';
 import { useExerciseSetMutations } from '../../utils/exercise-set-mutations';
+import { useWorkoutContext } from '../../utils/workout-context';
 
 @Component({
   selector: 'app-edit-routine',
@@ -24,8 +25,10 @@ export class EditRoutineComponent {
   private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
   private navigationService = inject(NavigationService);
+  private workoutContext = useWorkoutContext('active');
+  currentWorkout = this.workoutContext.workout;
   private setMutations = useExerciseSetMutations(this.workoutService, {
-    getWorkout: () => this.currentWorkout()
+    getWorkout: () => this.workoutContext.workout()
   });
 
   // Convert route params to signal
@@ -34,7 +37,6 @@ export class EditRoutineComponent {
   );
 
   template = signal<WorkoutTemplate | null>(null);
-  currentWorkout = this.workoutService.currentWorkout;
   title: string = '';
 
   private setTypeMenu = useSetTypeMenu();
@@ -69,7 +71,7 @@ export class EditRoutineComponent {
       this.template.set(foundTemplate);
       
       // Check if we already have a draft workout (returning from add-exercise)
-      const existingDraft = this.workoutService.currentWorkout();
+      const existingDraft = this.workoutContext.workout();
       
       if (existingDraft) {
         // Restore from existing draft
@@ -79,7 +81,7 @@ export class EditRoutineComponent {
         this.title = foundTemplate.name;
         
         const draftWorkout = this.workoutService.createWorkoutFromTemplate(foundTemplate);
-        this.workoutService.setCurrentWorkout(draftWorkout);
+        this.workoutContext.setWorkout(draftWorkout);
       }
     });
   }
@@ -89,7 +91,7 @@ export class EditRoutineComponent {
     const workout = this.currentWorkout();
     if (workout) {
       this.workoutService.deleteWorkout(workout.id);
-      this.workoutService.setCurrentWorkout(null);
+      this.workoutContext.setWorkout(null);
     }
     this.router.navigate(['/workouts']);
   }
@@ -110,7 +112,7 @@ export class EditRoutineComponent {
       
       // Clean up draft workout
       this.workoutService.deleteWorkout(workout.id);
-      this.workoutService.setCurrentWorkout(null);
+      this.workoutContext.setWorkout(null);
     }
     this.router.navigate(['/workouts']);
   }
