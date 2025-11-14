@@ -9,6 +9,7 @@ import { NavigationService } from '../../services/navigation.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { useSetTypeMenu } from '../../utils/set-type-menu';
+import { useExerciseSetMutations } from '../../utils/exercise-set-mutations';
 
 @Component({
   selector: 'app-create-routine',
@@ -21,6 +22,9 @@ export class CreateRoutineComponent implements OnInit {
   private router = inject(Router);
   private workoutService = inject(WorkoutService);
   private navigationService = inject(NavigationService);
+  private setMutations = useExerciseSetMutations(this.workoutService, {
+    getWorkout: () => this.routineDraft()
+  });
 
   routineDraft = this.workoutService.routineDraft; // Use routineDraft instead of currentWorkout
   title: string = '';
@@ -126,36 +130,13 @@ export class CreateRoutineComponent implements OnInit {
     this.navigationService.navigateWithReturnUrl('/add-exercise', '/routine/new');
   }
 
-  addSetToExercise(exerciseId: string): void {
-    const workout = this.routineDraft();
-    if (workout) {
-      this.workoutService.addSetToExercise(workout.id, exerciseId);
-    }
-  }
-
-  updateSet(exerciseId: string, setId: string, field: 'reps' | 'weight', value: number): void {
-    const workout = this.routineDraft();
-    if (workout) {
-      const exercise = workout.exercises.find(e => e.id === exerciseId);
-      const set = exercise?.sets.find(s => s.id === setId);
-      if (set) {
-        const updatedSet = { ...set, [field]: value };
-        this.workoutService.updateSet(workout.id, exerciseId, updatedSet);
-      }
-    }
-  }
-
   onExerciseAction(event: ExerciseActionEvent): void {
-    switch (event.type) {
-      case 'set-change':
-        this.updateSet(event.exerciseId, event.data.setId, event.data.field, event.data.value);
-        break;
-      case 'set-type-click':
-        this.openSetTypeMenu(event.exerciseId, event.data.setId, event.data.event);
-        break;
-      case 'add-set':
-        this.addSetToExercise(event.exerciseId);
-        break;
+    if (this.setMutations.handle(event)) {
+      return;
+    }
+
+    if (event.type === 'set-type-click') {
+      this.openSetTypeMenu(event.exerciseId, event.data.setId, event.data.event);
     }
   }
 }

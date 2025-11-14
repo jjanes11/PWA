@@ -5,11 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { WorkoutService } from '../../services/workout.service';
-import { Workout, Exercise, Set } from '../../models/workout.models';
+import { Workout } from '../../models/workout.models';
 import { NavigationService } from '../../services/navigation.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { useSetTypeMenu } from '../../utils/set-type-menu';
+import { useExerciseSetMutations } from '../../utils/exercise-set-mutations';
 
 @Component({
   selector: 'app-edit-workout',
@@ -32,6 +33,15 @@ export class EditWorkoutComponent {
   workout = signal<Workout | null>(null);
   workoutTitle = signal('');
   workoutDescription = signal('');
+  private setMutations = useExerciseSetMutations(this.workoutService, {
+    getWorkout: () => this.workout(),
+    refreshWorkout: (workoutId: string) => {
+      const refreshedWorkout = this.workoutService.workouts().find(w => w.id === workoutId);
+      if (refreshedWorkout) {
+        this.workout.set(refreshedWorkout);
+      }
+    }
+  });
   
   private setTypeMenu = useSetTypeMenu();
   // Set Type Menu
@@ -142,33 +152,6 @@ export class EditWorkoutComponent {
     this.router.navigate(['/workout', workout.id]);
   }
 
-  updateSet(exercise: Exercise, set: Set, field: 'weight' | 'reps', value: number): void {
-    const workout = this.workout();
-    if (!workout) return;
-
-    const updatedSet = { ...set, [field]: value };
-    this.workoutService.updateSet(workout.id, exercise.id, updatedSet);
-    
-    // Refresh local workout
-    const refreshedWorkout = this.workoutService.workouts().find(w => w.id === workout.id);
-    if (refreshedWorkout) {
-      this.workout.set(refreshedWorkout);
-    }
-  }
-
-  addSet(exercise: Exercise): void {
-    const workout = this.workout();
-    if (!workout) return;
-
-    this.workoutService.addSetToExercise(workout.id, exercise.id);
-    
-    // Refresh local workout
-    const refreshedWorkout = this.workoutService.workouts().find(w => w.id === workout.id);
-    if (refreshedWorkout) {
-      this.workout.set(refreshedWorkout);
-    }
-  }
-
   addExercise(): void {
     const workout = this.workout();
     if (!workout) return;
@@ -186,19 +169,12 @@ export class EditWorkoutComponent {
     const exercise = workout.exercises.find(e => e.id === event.exerciseId);
     if (!exercise) return;
 
-    switch (event.type) {
-      case 'set-change':
-        const set = exercise.sets.find(s => s.id === event.data.setId);
-        if (set) {
-          this.updateSet(exercise, set, event.data.field, event.data.value);
-        }
-        break;
-      case 'set-type-click':
-        this.openSetTypeMenu(event.exerciseId, event.data.setId, event.data.event);
-        break;
-      case 'add-set':
-        this.addSet(exercise);
-        break;
+    if (this.setMutations.handle(event)) {
+      return;
+    }
+
+    if (event.type === 'set-type-click') {
+      this.openSetTypeMenu(event.exerciseId, event.data.setId, event.data.event);
     }
   }
 }

@@ -5,11 +5,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { WorkoutService } from '../../services/workout.service';
-import { WorkoutTemplate, ExerciseTemplate } from '../../models/workout.models';
+import { WorkoutTemplate } from '../../models/workout.models';
 import { NavigationService } from '../../services/navigation.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { useSetTypeMenu } from '../../utils/set-type-menu';
+import { useExerciseSetMutations } from '../../utils/exercise-set-mutations';
 
 @Component({
   selector: 'app-edit-routine',
@@ -23,6 +24,9 @@ export class EditRoutineComponent {
   private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
   private navigationService = inject(NavigationService);
+  private setMutations = useExerciseSetMutations(this.workoutService, {
+    getWorkout: () => this.currentWorkout()
+  });
 
   // Convert route params to signal
   private templateId = toSignal(
@@ -111,28 +115,6 @@ export class EditRoutineComponent {
     this.router.navigate(['/workouts']);
   }
 
-  updateSet(exerciseIndex: number, setIndex: number, field: 'reps' | 'weight', value: number): void {
-    const workout = this.currentWorkout();
-    if (workout) {
-      const exercise = workout.exercises[exerciseIndex];
-      const set = exercise?.sets[setIndex];
-      if (set) {
-        const updatedSet = { ...set, [field]: value };
-        this.workoutService.updateSet(workout.id, exercise.id, updatedSet);
-      }
-    }
-  }
-
-  addSet(exerciseIndex: number): void {
-    const workout = this.currentWorkout();
-    if (workout) {
-      const exercise = workout.exercises[exerciseIndex];
-      if (exercise) {
-        this.workoutService.addSetToExercise(workout.id, exercise.id);
-      }
-    }
-  }
-
   addExercise(): void {
     // Save current title to workout before navigating
     const workout = this.currentWorkout();
@@ -148,23 +130,12 @@ export class EditRoutineComponent {
     const workout = this.currentWorkout();
     if (!workout) return;
 
-    // Find exercise index
-    const exerciseIndex = workout.exercises.findIndex(e => e.id === event.exerciseId);
-    if (exerciseIndex === -1) return;
+    if (this.setMutations.handle(event)) {
+      return;
+    }
 
-    switch (event.type) {
-      case 'set-change':
-        const setIndex = workout.exercises[exerciseIndex].sets.findIndex(s => s.id === event.data.setId);
-        if (setIndex !== -1) {
-          this.updateSet(exerciseIndex, setIndex, event.data.field, event.data.value);
-        }
-        break;
-      case 'set-type-click':
-        this.openSetTypeMenu(event.exerciseId, event.data.setId, event.data.event);
-        break;
-      case 'add-set':
-        this.addSet(exerciseIndex);
-        break;
+    if (event.type === 'set-type-click') {
+      this.openSetTypeMenu(event.exerciseId, event.data.setId, event.data.event);
     }
   }
 }

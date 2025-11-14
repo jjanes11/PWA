@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { Exercise } from '../../models/workout.models';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
@@ -9,6 +9,7 @@ import { MenuItem } from '../card-menu/card-menu';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { useSetTypeMenu } from '../../utils/set-type-menu';
+import { useExerciseSetMutations } from '../../utils/exercise-set-mutations';
 
 @Component({
   selector: 'app-add-workout',
@@ -19,7 +20,9 @@ import { useSetTypeMenu } from '../../utils/set-type-menu';
 export class AddWorkoutComponent implements OnInit {
   private workoutService = inject(WorkoutService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  private setMutations = useExerciseSetMutations(this.workoutService, {
+    getWorkout: () => this.currentWorkout()
+  });
 
   currentWorkout = this.workoutService.currentWorkout;
   showDiscardDialog = signal(false);
@@ -111,37 +114,6 @@ export class AddWorkoutComponent implements OnInit {
     this.showDiscardDialog.set(false);
   }
 
-  addSetToExercise(exerciseId: string): void {
-    const workout = this.currentWorkout();
-    if (workout) {
-      this.workoutService.addSetToExercise(workout.id, exerciseId);
-    }
-  }
-
-  updateSet(exerciseId: string, setId: string, field: 'reps' | 'weight', value: number): void {
-    const workout = this.currentWorkout();
-    if (workout) {
-      const exercise = workout.exercises.find(e => e.id === exerciseId);
-      const set = exercise?.sets.find(s => s.id === setId);
-      if (set) {
-        const updatedSet = { ...set, [field]: value };
-        this.workoutService.updateSet(workout.id, exerciseId, updatedSet);
-      }
-    }
-  }
-
-  toggleSetComplete(exerciseId: string, setId: string): void {
-    const workout = this.currentWorkout();
-    if (workout) {
-      const exercise = workout.exercises.find(e => e.id === exerciseId);
-      const set = exercise?.sets.find(s => s.id === setId);
-      if (set) {
-        const updatedSet = { ...set, completed: !set.completed };
-        this.workoutService.updateSet(workout.id, exerciseId, updatedSet);
-      }
-    }
-  }
-
   handleMenuAction(exerciseId: string, action: string): void {
     this.selectedExerciseId.set(exerciseId);
     const workout = this.currentWorkout();
@@ -176,22 +148,16 @@ export class AddWorkoutComponent implements OnInit {
     const workout = this.currentWorkout();
     if (!workout) return;
 
+    if (this.setMutations.handle(event)) {
+      return;
+    }
+
     switch (event.type) {
       case 'menu':
         this.handleMenuAction(event.exerciseId, event.data);
         break;
-      case 'set-change':
-        const { setId, field, value } = event.data;
-        this.updateSet(event.exerciseId, setId, field, value);
-        break;
-      case 'set-complete':
-        this.toggleSetComplete(event.exerciseId, event.data.setId);
-        break;
       case 'set-type-click':
         this.openSetTypeMenu(event.exerciseId, event.data.setId, event.data.event);
-        break;
-      case 'add-set':
-        this.addSetToExercise(event.exerciseId);
         break;
     }
   }
