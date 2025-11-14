@@ -34,14 +34,25 @@ export class AddWorkoutComponent implements OnInit {
     }
   });
   private exerciseCardController = useExerciseCardController(this.workoutService, {
-    getWorkout: () => this.workoutContext.workout()
+    getWorkout: () => this.workoutContext.workout(),
+    onReplaceExercise: (exerciseId: string) => {
+      this.navigationContext.navigateWithReturn('/add-exercise', {
+        replaceExerciseId: exerciseId
+      });
+    },
+    onRemoveExercise: (exerciseId: string) => {
+      const workout = this.workoutContext.workout();
+      if (!workout) {
+        return;
+      }
+      this.workoutService.removeExerciseFromWorkout(workout.id, exerciseId);
+    }
   });
   discardGuard = useDiscardGuard({
     message: 'Are you sure you want to discard this workout?',
     confirmText: 'Discard Workout',
     onConfirm: () => this.handleDiscardConfirm()
   });
-  selectedExerciseId = signal<string | null>(null);
   draggedExerciseId = signal<string | null>(null);
   
   // Set Type Menu (via controller)
@@ -103,26 +114,6 @@ export class AddWorkoutComponent implements OnInit {
     this.discardGuard.open();
   }
 
-  handleMenuAction(exerciseId: string, action: string): void {
-    this.selectedExerciseId.set(exerciseId);
-    const workout = this.currentWorkout();
-    
-    switch (action) {
-      case 'replace':
-        if (exerciseId) {
-          this.navigationContext.navigateWithReturn('/add-exercise', {
-            replaceExerciseId: exerciseId
-          });
-        }
-        break;
-      case 'remove':
-        if (exerciseId && workout) {
-          this.workoutService.removeExerciseFromWorkout(workout.id, exerciseId);
-        }
-        break;
-    }
-  }
-
   onExerciseReorder(event: DragReorderEvent): void {
     const workout = this.currentWorkout();
     if (workout) {
@@ -131,18 +122,11 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {
-    const workout = this.currentWorkout();
-    if (!workout) return;
-
-    if (this.exerciseCardController.handleAction(event)) {
+    if (!this.currentWorkout()) {
       return;
     }
 
-    switch (event.type) {
-      case 'menu':
-        this.handleMenuAction(event.exerciseId, event.data);
-        break;
-    }
+    this.exerciseCardController.handleAction(event);
   }
 
   private handleDiscardConfirm(): void {
