@@ -132,6 +132,25 @@ export class WorkoutService {
     return draftWorkout;
   }
 
+  createRoutineDraft(name: string = 'New Routine'): Workout {
+    const now = new Date();
+    const draftWorkout: Workout = {
+      id: this.generateId(),
+      name,
+      date: now,
+      startTime: now,
+      exercises: [],
+      completed: false
+    };
+
+    const workouts = [...this._workouts(), draftWorkout];
+    this._workouts.set(workouts);
+    this._routineDraft.set(draftWorkout);
+    this.saveData();
+
+    return draftWorkout;
+  }
+
   updateWorkout(workout: Workout): void {
     const workouts = this._workouts().map(w => 
       w.id === workout.id ? workout : w

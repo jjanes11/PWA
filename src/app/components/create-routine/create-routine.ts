@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
-import { Workout } from '../../models/workout.models';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { NavigationService } from '../../services/navigation.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
@@ -60,18 +59,8 @@ export class CreateRoutineComponent implements OnInit {
         this.title = workout.name || '';
       }
     } else if (!this.routineDraft()) {
-      // Create a draft workout to hold routine exercises
-      const now = new Date();
-      const draftWorkout: Workout = {
-        id: this.workoutService['generateId'](),
-        name: 'New Routine',
-        date: now,
-        startTime: now,
-        exercises: [],
-        completed: false
-      };
-      this.workoutService['_workouts'].set([...this.workoutService['_workouts'](), draftWorkout]);
-      this.workoutService['_routineDraft'].set(draftWorkout);
+      const draftWorkout = this.workoutService.createRoutineDraft('New Routine');
+      this.title = draftWorkout.name;
     } else {
       // Restore title from existing workout
       this.title = this.routineDraft()?.name || '';
