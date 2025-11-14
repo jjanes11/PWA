@@ -7,9 +7,8 @@ import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { NavigationService } from '../../services/navigation.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
-import { useSetTypeMenu } from '../../utils/set-type-menu';
-import { useExerciseSetMutations } from '../../utils/exercise-set-mutations';
 import { useWorkoutContext } from '../../utils/workout-context';
+import { useExerciseCardController } from '../../utils/exercise-card-controller';
 
 @Component({
   selector: 'app-create-routine',
@@ -24,7 +23,7 @@ export class CreateRoutineComponent implements OnInit {
   private navigationService = inject(NavigationService);
   private workoutContext = useWorkoutContext('draft');
   routineDraft = this.workoutContext.workout; // Use routineDraft instead of currentWorkout
-  private setMutations = useExerciseSetMutations(this.workoutService, {
+  private exerciseCardController = useExerciseCardController(this.workoutService, {
     getWorkout: () => this.workoutContext.workout()
   });
   title: string = '';
@@ -32,17 +31,12 @@ export class CreateRoutineComponent implements OnInit {
   private returnUrl = signal<string>('/workouts');
   private sourceWorkoutId: string | null = null;
   
-  private setTypeMenu = useSetTypeMenu();
-  // Set Type Menu
-  showSetTypeMenu = this.setTypeMenu.isOpen;
-  selectedSet = this.setTypeMenu.selectedSet;
-
-  openSetTypeMenu(exerciseId: string, setId: string, event: Event): void {
-    this.setTypeMenu.open(exerciseId, setId, event);
-  }
+  // Set Type Menu (via controller)
+  showSetTypeMenu = this.exerciseCardController.showSetTypeMenu;
+  selectedSet = this.exerciseCardController.selectedSet;
 
   closeSetTypeMenu(): void {
-    this.setTypeMenu.close();
+    this.exerciseCardController.closeSetTypeMenu();
   }
 
   constructor() {
@@ -121,12 +115,8 @@ export class CreateRoutineComponent implements OnInit {
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {
-    if (this.setMutations.handle(event)) {
+    if (this.exerciseCardController.handleAction(event)) {
       return;
-    }
-
-    if (event.type === 'set-type-click') {
-      this.openSetTypeMenu(event.exerciseId, event.data.setId, event.data.event);
     }
   }
 }

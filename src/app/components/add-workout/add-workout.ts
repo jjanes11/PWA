@@ -2,14 +2,12 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
-import { Exercise } from '../../models/workout.models';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
 import { MenuItem } from '../card-menu/card-menu';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
-import { useSetTypeMenu } from '../../utils/set-type-menu';
-import { useExerciseSetMutations } from '../../utils/exercise-set-mutations';
+import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useWorkoutContext } from '../../utils/workout-context';
 
 @Component({
@@ -23,17 +21,16 @@ export class AddWorkoutComponent implements OnInit {
   private router = inject(Router);
   private workoutContext = useWorkoutContext('active');
   currentWorkout = this.workoutContext.workout;
-  private setMutations = useExerciseSetMutations(this.workoutService, {
+  private exerciseCardController = useExerciseCardController(this.workoutService, {
     getWorkout: () => this.workoutContext.workout()
   });
   showDiscardDialog = signal(false);
   selectedExerciseId = signal<string | null>(null);
   draggedExerciseId = signal<string | null>(null);
   
-  private setTypeMenu = useSetTypeMenu();
-  // Set Type Menu
-  showSetTypeMenu = this.setTypeMenu.isOpen;
-  selectedSet = this.setTypeMenu.selectedSet;
+  // Set Type Menu (via controller)
+  showSetTypeMenu = this.exerciseCardController.showSetTypeMenu;
+  selectedSet = this.exerciseCardController.selectedSet;
 
   menuItems: MenuItem[] = [
     {
@@ -50,12 +47,8 @@ export class AddWorkoutComponent implements OnInit {
   ];
   dragOverExerciseId = signal<string | null>(null);
   
-  openSetTypeMenu(exerciseId: string, setId: string, event: Event): void {
-    this.setTypeMenu.open(exerciseId, setId, event);
-  }
-
   closeSetTypeMenu(): void {
-    this.setTypeMenu.close();
+    this.exerciseCardController.closeSetTypeMenu();
   }
 
   ngOnInit(): void {
@@ -147,16 +140,13 @@ export class AddWorkoutComponent implements OnInit {
     const workout = this.currentWorkout();
     if (!workout) return;
 
-    if (this.setMutations.handle(event)) {
+    if (this.exerciseCardController.handleAction(event)) {
       return;
     }
 
     switch (event.type) {
       case 'menu':
         this.handleMenuAction(event.exerciseId, event.data);
-        break;
-      case 'set-type-click':
-        this.openSetTypeMenu(event.exerciseId, event.data.setId, event.data.event);
         break;
     }
   }
