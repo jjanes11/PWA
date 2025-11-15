@@ -1,4 +1,4 @@
-import { WorkoutService } from '../services/workout.service';
+import { WorkoutSessionService } from '../services/workout-session.service';
 import { ExerciseActionEvent } from '../components/exercise-card/exercise-card';
 import { SetTypeClickEvent } from '../components/sets-table/sets-table';
 import { useSetTypeMenu } from './set-type-menu';
@@ -18,7 +18,7 @@ export interface ExerciseCardController {
 }
 
 export function useExerciseCardController(
-  workoutService: WorkoutService,
+  workoutService: WorkoutSessionService,
   options: ExerciseCardControllerOptions
 ): ExerciseCardController {
   const setTypeMenu = useSetTypeMenu();

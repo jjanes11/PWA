@@ -1,7 +1,7 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
-import { WorkoutService } from '../../services/workout.service';
+import { WorkoutSessionService } from '../../services/workout-session.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs/operators';
@@ -140,7 +140,7 @@ import { filter, map, startWith } from 'rxjs/operators';
 })
 export class WorkoutInProgressDialog {
   private router = inject(Router);
-  private workoutService = inject(WorkoutService);
+  private workoutService = inject(WorkoutSessionService);
 
   showConfirmDialog = signal(false);
 
@@ -166,7 +166,7 @@ export class WorkoutInProgressDialog {
 
   // Only show dialog if workout service wants to show it AND we're not on a hidden route
   showDialog = computed(() => 
-    this.workoutService.showWorkoutInProgressDialog() && !this.shouldHideOnCurrentRoute()
+    this.workoutService.workoutInProgressDialog() && !this.shouldHideOnCurrentRoute()
   );
 
   resume(): void {

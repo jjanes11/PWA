@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { WorkoutService } from '../../services/workout.service';
+import { WorkoutSessionService } from '../../services/workout-session.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { DragReorderEvent } from '../../directives/draggable.directive';
 import { MenuItem } from '../card-menu/card-menu';
@@ -19,7 +19,7 @@ import { useWorkoutActions } from '../../utils/workout-actions';
   styleUrl: './add-workout.css'
 })
 export class AddWorkoutComponent implements OnInit {
-  private workoutService = inject(WorkoutService);
+  private workoutService = inject(WorkoutSessionService);
   private router = inject(Router);
   private editorContext = setupEditorContext({
     kind: 'active',
@@ -110,7 +110,7 @@ export class AddWorkoutComponent implements OnInit {
     const workout = this.currentWorkout();
     // Only show dialog if workout has exercises
     if (workout && workout.exercises.length > 0) {
-      this.workoutService.showWorkoutInProgressDialogMethod();
+      this.workoutService.showWorkoutInProgressDialog();
       this.router.navigateByUrl(this.navigationContext.origin());
     } else {
       // No exercises, perform cleanup and navigate back

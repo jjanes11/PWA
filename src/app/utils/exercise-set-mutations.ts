@@ -1,4 +1,4 @@
-import { WorkoutService } from '../services/workout.service';
+import { WorkoutSessionService } from '../services/workout-session.service';
 import { Workout, Set as WorkoutSet } from '../models/workout.models';
 import { ExerciseActionEvent } from '../components/exercise-card/exercise-card';
 import { SetChangeEvent, SetCompleteEvent } from '../components/sets-table/sets-table';
@@ -14,7 +14,7 @@ interface ResolveResult {
 }
 
 export function useExerciseSetMutations(
-  workoutService: WorkoutService,
+  workoutService: WorkoutSessionService,
   options: ExerciseSetMutationsOptions
 ) {
   const { getWorkout, refreshWorkout } = options;

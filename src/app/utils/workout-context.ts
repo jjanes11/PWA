@@ -1,6 +1,6 @@
 import { inject, Signal } from '@angular/core';
 import { Workout } from '../models/workout.models';
-import { WorkoutService } from '../services/workout.service';
+import { WorkoutSessionService } from '../services/workout-session.service';
 
 export type WorkoutContextKind = 'active' | 'draft';
 
@@ -11,7 +11,7 @@ export interface WorkoutContext {
 }
 
 export function useWorkoutContext(kind: WorkoutContextKind): WorkoutContext {
-  const workoutService = inject(WorkoutService);
+  const workoutService = inject(WorkoutSessionService);
   const workoutSignal = kind === 'active'
     ? workoutService.currentWorkout
     : workoutService.routineDraft;

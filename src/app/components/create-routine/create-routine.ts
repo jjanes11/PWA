@@ -2,7 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { WorkoutService } from '../../services/workout.service';
+import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutTemplateService } from '../../services/workout-template.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
@@ -20,7 +21,8 @@ import { useWorkoutActions } from '../../utils/workout-actions';
 })
 export class CreateRoutineComponent implements OnInit {
   private router = inject(Router);
-  private workoutService = inject(WorkoutService);
+  private workoutSession = inject(WorkoutSessionService);
+  private workoutTemplates = inject(WorkoutTemplateService);
   private editorContext = setupEditorContext({
     kind: 'draft',
     defaultOrigin: '/workouts',
@@ -32,7 +34,7 @@ export class CreateRoutineComponent implements OnInit {
   });
   private workoutContext = this.editorContext.workoutContext;
   routineDraft = this.workoutContext.workout; // Use routineDraft instead of currentWorkout
-  private exerciseCardController = useExerciseCardController(this.workoutService, {
+  private exerciseCardController = useExerciseCardController(this.workoutSession, {
     getWorkout: () => this.workoutContext.workout()
   });
   title: string = '';
@@ -73,7 +75,7 @@ export class CreateRoutineComponent implements OnInit {
   ngOnInit(): void {
     // If we have a source workout ID, create a draft from it
     if (this.sourceWorkoutId) {
-      const draftWorkout = this.workoutService.createDraftFromWorkout(this.sourceWorkoutId);
+      const draftWorkout = this.workoutSession.createDraftFromWorkout(this.sourceWorkoutId);
       if (draftWorkout) {
         this.workoutContext.setWorkout(draftWorkout);
         this.title = draftWorkout.name || '';
@@ -81,7 +83,7 @@ export class CreateRoutineComponent implements OnInit {
       }
     }
 
-    const draftWorkout = this.workoutContext.ensureFresh(() => this.workoutService.createRoutineDraft('New Routine'));
+    const draftWorkout = this.workoutContext.ensureFresh(() => this.workoutSession.createRoutineDraft('New Routine'));
     if (draftWorkout) {
       this.title = draftWorkout.name || '';
     }
@@ -103,7 +105,7 @@ export class CreateRoutineComponent implements OnInit {
       this.workoutActions.saveWorkout(updatedWorkout);
 
       // Save as template for routines
-      this.workoutService.saveAsTemplate(updatedWorkout);
+      this.workoutTemplates.saveFromWorkout(updatedWorkout);
 
       this.navigationContext.exit();
       return;
@@ -116,7 +118,7 @@ export class CreateRoutineComponent implements OnInit {
     const workout = this.routineDraft();
     if (workout && this.title.trim()) {
       const updatedWorkout = { ...workout, name: this.title.trim() };
-      this.workoutService.updateWorkout(updatedWorkout);
+      this.workoutSession.updateWorkout(updatedWorkout);
     }
     
     // Navigate to add-exercise and return to this page after adding

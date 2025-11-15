@@ -5,7 +5,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { WorkoutTemplate } from '../../models/workout.models';
-import { WorkoutService } from '../../services/workout.service';
+import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutTemplateService } from '../../services/workout-template.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, EditorButtonConfig, BottomButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
@@ -23,14 +24,15 @@ import { useWorkoutActions } from '../../utils/workout-actions';
 export class EditRoutineComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private workoutService = inject(WorkoutService);
+  private workoutSession = inject(WorkoutSessionService);
+  private workoutTemplates = inject(WorkoutTemplateService);
   private editorContext = setupEditorContext({
     kind: 'active',
     defaultOrigin: '/workouts'
   });
   private workoutContext = this.editorContext.workoutContext;
   currentWorkout = this.workoutContext.workout;
-  private exerciseCardController = useExerciseCardController(this.workoutService, {
+  private exerciseCardController = useExerciseCardController(this.workoutSession, {
     getWorkout: () => this.workoutContext.workout()
   });
   private navigationContext = this.editorContext.navigation;
@@ -80,7 +82,7 @@ export class EditRoutineComponent {
         return;
       }
 
-      const foundTemplate = this.workoutService.findTemplateById(id);
+      const foundTemplate = this.workoutTemplates.findTemplateById(id);
       
       if (!foundTemplate) {
         this.router.navigate(['/workouts']);
@@ -99,7 +101,7 @@ export class EditRoutineComponent {
         // First time loading, create new draft from template
         this.title = foundTemplate.name;
         
-        const draftWorkout = this.workoutService.instantiateWorkoutFromTemplate(foundTemplate);
+        const draftWorkout = this.workoutTemplates.startWorkoutFromTemplate(foundTemplate);
         this.workoutContext.setWorkout(draftWorkout);
       }
     });
@@ -122,10 +124,10 @@ export class EditRoutineComponent {
       this.workoutContext.setWorkout(updatedWorkout);
       
       // Delete old template
-      this.workoutService.deleteTemplate(template.id);
+      this.workoutTemplates.deleteTemplate(template.id);
       
       // Save the draft workout as the new template
-      this.workoutService.saveAsTemplate(updatedWorkout);
+      this.workoutTemplates.saveFromWorkout(updatedWorkout);
 
       this.navigationContext.exit();
       return;

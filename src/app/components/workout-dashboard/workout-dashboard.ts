@@ -1,7 +1,7 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { WorkoutService } from '../../services/workout.service';
+import { WorkoutSessionService } from '../../services/workout-session.service';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 
@@ -13,7 +13,7 @@ import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
   styleUrl: './workout-dashboard.css'
 })
 export class WorkoutDashboardComponent {
-  private workoutService = inject(WorkoutService);
+  private workoutService = inject(WorkoutSessionService);
   private router = inject(Router);
 
   workouts = this.workoutService.workouts;

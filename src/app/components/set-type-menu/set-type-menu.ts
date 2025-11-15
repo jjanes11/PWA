@@ -9,7 +9,7 @@ import {
   inject
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WorkoutService } from '../../services/workout.service';
+import { WorkoutSessionService } from '../../services/workout-session.service';
 import { BottomSheetDialog } from '../bottom-sheet-dialog/bottom-sheet-dialog';
 
 export type SetType = 'normal' | 'warmup' | 'failure' | 'drop';
@@ -27,7 +27,7 @@ export class SetTypeMenuComponent {
   @Input({ required: true }) setId!: string;
   @Output() closed = new EventEmitter<void>();
   
-  private workoutService = inject(WorkoutService);
+  private workoutService = inject(WorkoutSessionService);
   protected isOpen = signal(true); // Opens immediately when component is created
   
   // Static to track which menu is open globally (only one menu open at a time)

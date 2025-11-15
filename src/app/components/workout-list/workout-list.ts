@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { WorkoutService } from '../../services/workout.service';
+import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutTemplateService } from '../../services/workout-template.service';
 import { WorkoutTemplate } from '../../models/workout.models';
 import { NavigationService } from '../../services/navigation.service';
 import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
@@ -16,10 +17,11 @@ import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 })
 export class WorkoutListComponent {
   private router = inject(Router);
-  private workoutService = inject(WorkoutService);
+  private workoutSessionService = inject(WorkoutSessionService);
+  private workoutTemplateService = inject(WorkoutTemplateService);
   private navigationService = inject(NavigationService);
 
-  templates = this.workoutService.templates;
+  templates = this.workoutTemplateService.templates;
   showDeleteDialog = signal(false);
   showWorkoutInProgressDialog = signal(false);
   selectedTemplateId = signal<string | null>(null);
@@ -41,7 +43,7 @@ export class WorkoutListComponent {
   ];
 
   startNewWorkout(): void {
-    const currentWorkout = this.workoutService.currentWorkout();
+    const currentWorkout = this.workoutSessionService.currentWorkout();
     // Check if there's a workout in progress
     if (currentWorkout && currentWorkout.exercises.length > 0) {
       this.showWorkoutInProgressDialog.set(true);
@@ -53,17 +55,17 @@ export class WorkoutListComponent {
 
   resumeWorkout(): void {
     this.showWorkoutInProgressDialog.set(false);
-    this.workoutService.hideWorkoutInProgressDialog();
+    this.workoutSessionService.hideWorkoutInProgressDialog();
     this.router.navigate(['/workout/new']);
   }
 
   confirmStartNewWorkout(): void {
-    const currentWorkout = this.workoutService.currentWorkout();
+    const currentWorkout = this.workoutSessionService.currentWorkout();
     if (currentWorkout) {
-      this.workoutService.deleteWorkout(currentWorkout.id);
-      this.workoutService.setCurrentWorkout(null);
+      this.workoutSessionService.deleteWorkout(currentWorkout.id);
+      this.workoutSessionService.setCurrentWorkout(null);
     }
-    this.workoutService.hideWorkoutInProgressDialog();
+    this.workoutSessionService.hideWorkoutInProgressDialog();
     this.showWorkoutInProgressDialog.set(false);
     this.router.navigate(['/workout/new']);
   }
@@ -77,7 +79,7 @@ export class WorkoutListComponent {
   }
 
   startRoutine(template: WorkoutTemplate): void {
-    this.workoutService.instantiateWorkoutFromTemplate(template);
+    this.workoutTemplateService.startWorkoutFromTemplate(template);
     this.router.navigate(['/workout/new']);
   }
 
@@ -97,7 +99,7 @@ export class WorkoutListComponent {
   confirmDelete(): void {
     const templateId = this.selectedTemplateId();
     if (templateId) {
-      this.workoutService.deleteTemplate(templateId);
+      this.workoutTemplateService.deleteTemplate(templateId);
     }
     this.showDeleteDialog.set(false);
     this.selectedTemplateId.set(null);
@@ -108,6 +110,6 @@ export class WorkoutListComponent {
   }
 
   onTemplateReorder(event: DragReorderEvent): void {
-    this.workoutService.reorderTemplates(event.fromId, event.toId);
+    this.workoutTemplateService.reorderTemplates(event.fromId, event.toId);
   }
 }

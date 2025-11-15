@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
-import { WorkoutService } from '../../services/workout.service';
+import { WorkoutSessionService } from '../../services/workout-session.service';
 import { Workout } from '../../models/workout.models';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
@@ -22,7 +22,7 @@ import { useWorkoutActions } from '../../utils/workout-actions';
 export class EditWorkoutComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private workoutService = inject(WorkoutService);
+  private workoutService = inject(WorkoutSessionService);
   private editorContext = setupEditorContext({
     kind: 'active',
     defaultOrigin: '/home',

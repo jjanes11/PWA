@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ExerciseService, Exercise } from '../../services/exercise.service';
-import { WorkoutService } from '../../services/workout.service';
+import { WorkoutSessionService } from '../../services/workout-session.service';
 import { NavigationService } from '../../services/navigation.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { NavigationService } from '../../services/navigation.service';
 export class AddExercise {
   private router = inject(Router);
   private exerciseService = inject(ExerciseService);
-  private workoutService = inject(WorkoutService);
+  private workoutService = inject(WorkoutSessionService);
   private navigationService = inject(NavigationService);
   
   searchQuery = signal('');

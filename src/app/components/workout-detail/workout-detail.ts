@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
-import { WorkoutService } from '../../services/workout.service';
+import { WorkoutSessionService } from '../../services/workout-session.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { ExerciseCardComponent } from '../exercise-card/exercise-card';
 
@@ -14,7 +14,7 @@ import { ExerciseCardComponent } from '../exercise-card/exercise-card';
   styleUrl: './workout-detail.css',
 })
 export class WorkoutDetailComponent {
-  private workoutService = inject(WorkoutService);
+  private workoutService = inject(WorkoutSessionService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
