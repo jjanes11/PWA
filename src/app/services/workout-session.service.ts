@@ -9,6 +9,15 @@ import {
   workoutFromTemplate,
   cloneWorkoutForDraft
 } from '../utils/workout-entity.utils';
+import {
+  addExercise,
+  removeExercise,
+  replaceExercise,
+  reorderExercises,
+  addSet,
+  updateSet,
+  removeSet
+} from '../utils/workout-mutations';
 
 @Injectable({ providedIn: 'root' })
 export class WorkoutSessionService {
@@ -129,17 +138,11 @@ export class WorkoutSessionService {
     let createdExercise: Exercise | null = null;
 
     const updatedWorkout = this.store.updateWorkoutById(workoutId, workout => {
-      const exercise: Exercise = {
-        id: this.idService.generateId(),
-        name: exerciseName,
-        sets: []
-      };
-      createdExercise = exercise;
-
-      return {
-        ...workout,
-        exercises: [...workout.exercises, exercise]
-      };
+      const result = addExercise(workout, exerciseName, {
+        idFactory: () => this.idService.generateId()
+      });
+      createdExercise = result.exercise;
+      return result.workout;
     });
 
     if (!updatedWorkout || !createdExercise) {
@@ -150,63 +153,31 @@ export class WorkoutSessionService {
   }
 
   removeExerciseFromWorkout(workoutId: string, exerciseId: string): void {
-    this.store.updateWorkoutById(workoutId, workout => ({
-      ...workout,
-      exercises: workout.exercises.filter(e => e.id !== exerciseId)
-    }));
+    this.store.updateWorkoutById(workoutId, workout => removeExercise(workout, exerciseId));
   }
 
   replaceExerciseInWorkout(workoutId: string, exerciseId: string, newExerciseName: string): void {
-    this.store.updateWorkoutById(workoutId, workout => ({
-      ...workout,
-      exercises: workout.exercises.map(exercise =>
-        exercise.id === exerciseId ? { ...exercise, name: newExerciseName } : exercise
-      )
-    }));
+    this.store.updateWorkoutById(workoutId, workout =>
+      replaceExercise(workout, exerciseId, newExerciseName)
+    );
   }
 
   reorderExercises(workoutId: string, draggedExerciseId: string, targetExerciseId: string): void {
-    this.store.updateWorkoutById(workoutId, workout => {
-      const exercises = [...workout.exercises];
-      const draggedIndex = exercises.findIndex(e => e.id === draggedExerciseId);
-      const targetIndex = exercises.findIndex(e => e.id === targetExerciseId);
-
-      if (draggedIndex === -1 || targetIndex === -1) {
-        return workout;
-      }
-
-      const [draggedExercise] = exercises.splice(draggedIndex, 1);
-      exercises.splice(targetIndex, 0, draggedExercise);
-
-      return { ...workout, exercises };
-    });
+    this.store.updateWorkoutById(workoutId, workout =>
+      reorderExercises(workout, draggedExerciseId, targetExerciseId)
+    );
   }
 
   addSetToExercise(workoutId: string, exerciseId: string): WorkoutSet {
     let createdSet: WorkoutSet | null = null;
 
-    const updatedWorkout = this.store.updateWorkoutById(workoutId, workout => ({
-      ...workout,
-      exercises: workout.exercises.map(exercise => {
-        if (exercise.id !== exerciseId) {
-          return exercise;
-        }
-
-        const newSet: WorkoutSet = {
-          id: this.idService.generateId(),
-          reps: 0,
-          weight: 0,
-          completed: false
-        };
-
-        createdSet = newSet;
-
-        return {
-          ...exercise,
-          sets: [...exercise.sets, newSet]
-        };
-      })
-    }));
+    const updatedWorkout = this.store.updateWorkoutById(workoutId, workout => {
+      const result = addSet(workout, exerciseId, {
+        idFactory: () => this.idService.generateId()
+      });
+      createdSet = result.set;
+      return result.workout;
+    });
 
     if (!updatedWorkout || !createdSet) {
       throw new Error(`Workout ${workoutId} or exercise ${exerciseId} not found`);
@@ -216,33 +187,11 @@ export class WorkoutSessionService {
   }
 
   updateSet(workoutId: string, exerciseId: string, set: WorkoutSet): void {
-    this.store.updateWorkoutById(workoutId, workout => ({
-      ...workout,
-      exercises: workout.exercises.map(exercise =>
-        exercise.id === exerciseId
-          ? {
-              ...exercise,
-              sets: exercise.sets.map(existingSet =>
-                existingSet.id === set.id ? set : existingSet
-              )
-            }
-          : exercise
-      )
-    }));
+    this.store.updateWorkoutById(workoutId, workout => updateSet(workout, exerciseId, set));
   }
 
   removeSetFromExercise(workoutId: string, exerciseId: string, setId: string): void {
-    this.store.updateWorkoutById(workoutId, workout => ({
-      ...workout,
-      exercises: workout.exercises.map(exercise =>
-        exercise.id === exerciseId
-          ? {
-              ...exercise,
-              sets: exercise.sets.filter(existingSet => existingSet.id !== setId)
-            }
-          : exercise
-      )
-    }));
+    this.store.updateWorkoutById(workoutId, workout => removeSet(workout, exerciseId, setId));
   }
 
   showWorkoutInProgressDialog(): void {
