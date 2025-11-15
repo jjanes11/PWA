@@ -55,6 +55,34 @@ export class WorkoutStoreService {
     return this._routines();
   }
 
+  getWorkoutById(workoutId: string): Workout | null {
+    const active = this._activeWorkout();
+    if (active && active.id === workoutId) {
+      return active;
+    }
+
+    const draft = this._routineDraft();
+    if (draft && draft.id === workoutId) {
+      return draft;
+    }
+
+    return this._workouts().find(workout => workout.id === workoutId) ?? null;
+  }
+
+  replaceExistingWorkout(workout: Workout): void {
+    this.updateWorkoutById(workout.id, () => workout);
+  }
+
+  clearWorkoutReferences(workoutId: string): void {
+    if (this._activeWorkout()?.id === workoutId) {
+      this.clearActiveWorkout();
+    }
+
+    if (this._routineDraft()?.id === workoutId) {
+      this.clearRoutineDraft();
+    }
+  }
+
   commitWorkouts(
     workouts: Workout[],
     options?: CommitOptions
