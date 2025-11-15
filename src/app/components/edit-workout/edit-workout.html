@@ -1,29 +1,29 @@
-<div class="jacaona-edit-workout-container">
-  @if (workout(); as w) {
-    <!-- Top Bar -->
-    <div class="jacaona-top-bar">
-      <button class="jacaona-cancel-btn" (click)="cancel()">
-        Cancel
-      </button>
-      <h1 class="jacaona-page-title">Edit Workout</h1>
-      <button class="jacaona-save-btn" (click)="saveWorkout()">
-        Save
-      </button>
-    </div>
-
-    <!-- Main Content -->
-    <div class="jacaona-main-content">
-      <!-- Workout Title Input -->
+@if (workout(); as w) {
+  <app-workout-editor
+    [title]="'Edit Workout'"
+    [workout]="w"
+    [exerciseMode]="'edit'"
+    [showAddSetButton]="true"
+    [showCompleteColumn]="false"
+    [leftButton]="headerLeftButton"
+    [rightButton]="headerRightButton"
+    [bottomPrimary]="bottomPrimaryButton"
+    [emptyState]="emptyState"
+    (leftAction)="cancel()"
+    (rightAction)="saveWorkout()"
+    (bottomPrimaryAction)="addExercise()"
+    (exerciseAction)="onExerciseAction($event)"
+  >
+    <div editor-before-list class="jacaona-main-content">
       <div class="jacaona-input-section">
-        <input 
-          type="text" 
-          class="jacaona-title-input" 
+        <input
+          type="text"
+          class="jacaona-title-input"
           placeholder="Workout title"
           [(ngModel)]="workoutTitle"
         />
       </div>
 
-      <!-- Workout Summary (Non-editable) -->
       <div class="jacaona-summary-section">
         <div class="jacaona-stats-row">
           <div class="jacaona-stat-item">
@@ -41,68 +41,43 @@
         </div>
       </div>
 
-      <!-- Separator -->
       <div class="jacaona-separator"></div>
 
-      <!-- When Section -->
       <div class="jacaona-when-section">
         <div class="jacaona-section-title">When</div>
         <div class="jacaona-when-value">{{ workoutDateTime() }}</div>
       </div>
 
-      <!-- Separator -->
       <div class="jacaona-separator"></div>
 
-      <!-- Description Section -->
       <div class="jacaona-description-section">
         <div class="jacaona-section-title">Description</div>
-        <textarea 
-          class="jacaona-description-input" 
+        <textarea
+          class="jacaona-description-input"
           placeholder="How did your workout go? Leave some notes"
           [(ngModel)]="workoutDescription"
           rows="4"
         ></textarea>
       </div>
 
-      <!-- Separator -->
       <div class="jacaona-separator"></div>
 
-      <!-- Exercises Section -->
       <div class="jacaona-exercises-section">
         <div class="jacaona-section-title">Exercises</div>
-        
-        @for (exercise of w.exercises; track exercise.id) {
-          <app-exercise-card
-            [exercise]="exercise"
-            mode="edit"
-            [showAddSetButton]="true"
-            [showCompleteColumn]="false"
-            (action)="onExerciseAction($event)"
-          />
-        }
-
-        <!-- Add Exercise Button -->
-        <button class="jacaona-add-exercise-btn" (click)="addExercise()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-          </svg>
-          Add Exercise
-        </button>
       </div>
     </div>
-  } @else {
-    <div class="jacaona-loading">
-      <p>Loading workout...</p>
-    </div>
-  }
+  </app-workout-editor>
+} @else {
+  <div class="jacaona-loading">
+    <p>Loading workout...</p>
+  </div>
+}
 
-  <!-- Set Type Menu Overlay -->
-  @if (showSetTypeMenu() && selectedSet(); as setInfo) {
-    <app-set-type-menu
-      [workoutId]="workout()!.id"
-      [exerciseId]="setInfo.exerciseId"
-      [setId]="setInfo.setId"
-      (closed)="closeSetTypeMenu()">
-    </app-set-type-menu>
-  }
-</div>
+@if (showSetTypeMenu() && selectedSet(); as setInfo) {
+  <app-set-type-menu
+    [workoutId]="workout()!.id"
+    [exerciseId]="setInfo.exerciseId"
+    [setId]="setInfo.setId"
+    (closed)="closeSetTypeMenu()"
+  ></app-set-type-menu>
+}

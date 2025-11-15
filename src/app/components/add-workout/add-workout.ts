@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
-import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
+import { DragReorderEvent } from '../../directives/draggable.directive';
 import { MenuItem } from '../card-menu/card-menu';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
-import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
+import { ExerciseActionEvent } from '../exercise-card/exercise-card';
+import { WorkoutEditorComponent, BottomButtonConfig, EditorButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useWorkoutContext } from '../../utils/workout-context';
 import { useDiscardGuard } from '../../utils/discard-guard';
@@ -14,7 +15,7 @@ import { useNavigationContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-add-workout',
-  imports: [CommonModule, ConfirmationDialog, DraggableDirective, SetTypeMenuComponent, ExerciseCardComponent],
+  imports: [CommonModule, ConfirmationDialog, SetTypeMenuComponent, WorkoutEditorComponent],
   templateUrl: './add-workout.html',
   styleUrl: './add-workout.css'
 })
@@ -73,6 +74,32 @@ export class AddWorkoutComponent implements OnInit {
     }
   ];
   dragOverExerciseId = signal<string | null>(null);
+
+  headerLeftButton: EditorButtonConfig = {
+    variant: 'icon',
+    ariaLabel: 'Back',
+    iconPath: 'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20z'
+  };
+
+  headerRightButton: EditorButtonConfig = {
+    label: 'Finish'
+  };
+
+  bottomPrimaryButton: BottomButtonConfig = {
+    label: 'Add Exercise',
+    variant: 'primary'
+  };
+
+  bottomSecondaryButton: BottomButtonConfig = {
+    label: 'Discard Workout',
+    variant: 'danger'
+  };
+
+  emptyState: WorkoutEditorEmptyState = {
+    iconPath: 'M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z',
+    title: 'Get started',
+    message: 'Add your first exercise to build this workout.'
+  };
   
   closeSetTypeMenu(): void {
     this.exerciseCardController.closeSetTypeMenu();

@@ -1,13 +1,19 @@
-<div class="jacaona-create-routine-page">
-  <!-- Top Bar -->
-  <header class="jacaona-topbar">
-    <button class="jacaona-btn-link jacaona-cancel" (click)="cancel()">Cancel</button>
-    <h1 class="jacaona-title">Create Routine</h1>
-    <button class="jacaona-btn jacaona-btn-primary" (click)="save()">Save</button>
-  </header>
-
-  <!-- Main Content -->
-  <main class="jacaona-content">
+<app-workout-editor
+  [title]="'Create Routine'"
+  [workout]="routineDraft()"
+  [exerciseMode]="'edit'"
+  [showAddSetButton]="true"
+  [showCompleteColumn]="false"
+  [leftButton]="headerLeftButton"
+  [rightButton]="headerRightButton"
+  [bottomPrimary]="bottomPrimaryButton"
+  [emptyState]="emptyState"
+  (leftAction)="cancel()"
+  (rightAction)="save()"
+  (bottomPrimaryAction)="addExercise()"
+  (exerciseAction)="onExerciseAction($event)"
+>
+  <div editor-before-list class="jacaona-content">
     <div class="jacaona-field">
       <input
         class="jacaona-input-title"
@@ -17,52 +23,23 @@
         aria-label="Routine title"
       />
     </div>
+  </div>
+</app-workout-editor>
 
-    @if (!routineDraft()?.exercises || routineDraft()!.exercises.length === 0) {
-      <!-- Empty State -->
-      <div class="jacaona-empty-state">
-        <div class="jacaona-empty-icon">
-          <svg viewBox="0 0 24 24" width="56" height="56" fill="currentColor" aria-hidden="true">
-            <path d="M3 10h2v4H3v-4Zm3-3h2v10H6V7Zm12 0h-2v10h2V7Zm3 3h-2v4h2v-4ZM9 11h6v2H9v-2Z"/>
-          </svg>
-        </div>
-        <p class="jacaona-empty-hint">Get started by adding an exercise to your routine.</p>
-      </div>
-    } @else {
-      <!-- Exercises List -->
-      <div class="jacaona-exercises-container">
-        @for (exercise of routineDraft()!.exercises; track exercise.id) {
-          <app-exercise-card
-            [exercise]="exercise"
-            mode="edit"
-            [showAddSetButton]="true"
-            [showCompleteColumn]="false"
-            (action)="onExerciseAction($event)"
-          />
-        }
-      </div>
-    }
+<app-confirmation-dialog
+  [isVisible]="discardGuard.isVisible()"
+  [message]="discardGuard.message"
+  [confirmText]="discardGuard.confirmText"
+  [cancelText]="discardGuard.cancelText"
+  (confirmed)="discardGuard.confirm()"
+  (cancelled)="discardGuard.cancel()"
+></app-confirmation-dialog>
 
-    <button class="jacaona-btn jacaona-btn-primary jacaona-btn-full" (click)="addExercise()">+ Add exercise</button>
-  </main>
-
-  <!-- Set Type Menu Overlay -->
-  @if (showSetTypeMenu() && selectedSet(); as setInfo) {
-    <app-set-type-menu
-      [workoutId]="routineDraft()!.id"
-      [exerciseId]="setInfo.exerciseId"
-      [setId]="setInfo.setId"
-      (closed)="closeSetTypeMenu()">
-    </app-set-type-menu>
-  }
-
-  <!-- Discard Confirmation Dialog -->
-  <app-confirmation-dialog
-    [isVisible]="discardGuard.isVisible()"
-    [message]="discardGuard.message"
-    [confirmText]="discardGuard.confirmText"
-    [cancelText]="discardGuard.cancelText"
-    (confirmed)="discardGuard.confirm()"
-    (cancelled)="discardGuard.cancel()"
-  />
-</div>
+@if (showSetTypeMenu() && selectedSet(); as setInfo) {
+  <app-set-type-menu
+    [workoutId]="routineDraft()!.id"
+    [exerciseId]="setInfo.exerciseId"
+    [setId]="setInfo.setId"
+    (closed)="closeSetTypeMenu()"
+  ></app-set-type-menu>
+}

@@ -8,7 +8,8 @@ import { WorkoutService } from '../../services/workout.service';
 import { WorkoutTemplate } from '../../models/workout.models';
 import { NavigationService } from '../../services/navigation.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
-import { ExerciseCardComponent, ExerciseActionEvent } from '../exercise-card/exercise-card';
+import { ExerciseActionEvent } from '../exercise-card/exercise-card';
+import { WorkoutEditorComponent, EditorButtonConfig, BottomButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
 import { useWorkoutContext } from '../../utils/workout-context';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useNavigationContext } from '../../utils/navigation-context';
@@ -16,7 +17,7 @@ import { useNavigationContext } from '../../utils/navigation-context';
 @Component({
   selector: 'app-edit-routine',
   standalone: true,
-  imports: [CommonModule, FormsModule, SetTypeMenuComponent, ExerciseCardComponent],
+  imports: [CommonModule, FormsModule, SetTypeMenuComponent, WorkoutEditorComponent],
   templateUrl: './edit-routine.html',
   styleUrl: './edit-routine.css'
 })
@@ -52,6 +53,25 @@ export class EditRoutineComponent {
   // Set Type Menu (via controller)
   showSetTypeMenu = this.exerciseCardController.showSetTypeMenu;
   selectedSet = this.exerciseCardController.selectedSet;
+  headerLeftButton: EditorButtonConfig = {
+    label: 'Cancel',
+    variant: 'ghost'
+  };
+
+  headerRightButton: EditorButtonConfig = {
+    label: 'Update'
+  };
+
+  bottomPrimaryButton: BottomButtonConfig = {
+    label: '+ Add exercise',
+    variant: 'secondary'
+  };
+
+  emptyState: WorkoutEditorEmptyState = {
+    iconPath: 'M3 10h2v4H3v-4Zm3-3h2v10H6V7Zm12 0h-2v10h2V7Zm3 3h-2v4h2v-4ZM9 11h6v2H9v-2Z',
+    title: 'No exercises yet',
+    message: 'Add exercises to update this routine.'
+  };
 
   closeSetTypeMenu(): void {
     this.exerciseCardController.closeSetTypeMenu();
