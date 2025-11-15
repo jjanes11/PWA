@@ -6,13 +6,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { WorkoutService } from '../../services/workout.service';
 import { WorkoutTemplate } from '../../models/workout.models';
-import { NavigationService } from '../../services/navigation.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, EditorButtonConfig, BottomButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
-import { useWorkoutContext } from '../../utils/workout-context';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
-import { useNavigationContext } from '../../utils/navigation-context';
+import { setupEditorContext } from '../../utils/editor-context';
+import { useWorkoutActions } from '../../utils/workout-actions';
 
 @Component({
   selector: 'app-edit-routine',
@@ -25,22 +24,17 @@ export class EditRoutineComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
-  private navigationService = inject(NavigationService);
-  private workoutContext = useWorkoutContext('active');
+  private editorContext = setupEditorContext({
+    kind: 'active',
+    defaultOrigin: '/workouts'
+  });
+  private workoutContext = this.editorContext.workoutContext;
   currentWorkout = this.workoutContext.workout;
   private exerciseCardController = useExerciseCardController(this.workoutService, {
     getWorkout: () => this.workoutContext.workout()
   });
-  private navigationContext = useNavigationContext({
-    defaultOrigin: '/workouts',
-    cleanup: () => {
-      const workout = this.currentWorkout();
-      if (workout) {
-        this.workoutService.deleteWorkout(workout.id);
-        this.workoutContext.setWorkout(null);
-      }
-    }
-  });
+  private navigationContext = this.editorContext.navigation;
+  private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
 
   // Convert route params to signal
   private templateId = toSignal(
@@ -112,7 +106,7 @@ export class EditRoutineComponent {
   }
 
   cancel(): void {
-    this.navigationContext.exit();
+    this.workoutActions.discardWorkout();
   }
 
   update(): void {
@@ -120,14 +114,18 @@ export class EditRoutineComponent {
     const workout = this.currentWorkout();
     if (template && workout) {
       // Update the workout with the current title
-      workout.name = this.title.trim() || 'Untitled Routine';
-      this.workoutService.updateWorkout(workout);
+      const updatedWorkout = {
+        ...workout,
+        name: this.title.trim() || 'Untitled Routine'
+      };
+      this.workoutActions.saveWorkout(updatedWorkout);
+      this.workoutContext.setWorkout(updatedWorkout);
       
       // Delete old template
       this.workoutService.deleteTemplate(template.id);
       
       // Save the draft workout as the new template
-      this.workoutService.saveAsTemplate(workout);
+      this.workoutService.saveAsTemplate(updatedWorkout);
 
       this.navigationContext.exit();
       return;
@@ -140,7 +138,8 @@ export class EditRoutineComponent {
     const workout = this.currentWorkout();
     if (workout && this.title.trim()) {
       const updatedWorkout = { ...workout, name: this.title.trim() };
-      this.workoutService.updateWorkout(updatedWorkout);
+      this.workoutActions.saveWorkout(updatedWorkout);
+      this.workoutContext.setWorkout(updatedWorkout);
     }
     
     this.navigationContext.navigateWithReturn('/add-exercise');

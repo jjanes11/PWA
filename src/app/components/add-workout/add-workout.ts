@@ -10,6 +10,7 @@ import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, BottomButtonConfig, EditorButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { setupEditorContext } from '../../utils/editor-context';
+import { useWorkoutActions } from '../../utils/workout-actions';
 
 @Component({
   selector: 'app-add-workout',
@@ -32,6 +33,7 @@ export class AddWorkoutComponent implements OnInit {
   private workoutContext = this.editorContext.workoutContext;
   currentWorkout = this.workoutContext.workout;
   private navigationContext = this.editorContext.navigation;
+  private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
   private exerciseCardController = useExerciseCardController(this.workoutService, {
     getWorkout: () => this.workoutContext.workout(),
     onReplaceExercise: (exerciseId: string) => {
@@ -132,7 +134,7 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   discardWorkout(): void {
-    this.discardGuard.open();
+    this.workoutActions.discardWorkout();
   }
 
   onExerciseReorder(event: DragReorderEvent): void {

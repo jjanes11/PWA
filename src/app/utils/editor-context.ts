@@ -13,6 +13,7 @@ export interface EditorContext {
 
 export interface EditorContextOptions extends Partial<NavigationContextOptions> {
   kind: WorkoutContextKind;
+  cleanupMode?: 'delete-workout' | 'none';
   discardConfig?: {
     message: string;
     confirmText: string;
@@ -27,14 +28,17 @@ export function setupEditorContext(options: EditorContextOptions): EditorContext
   const navigationService = inject(NavigationService);
 
   const workoutContext = useWorkoutContext(options.kind);
+  const cleanupMode = options.cleanupMode ?? 'delete-workout';
 
   const navigation = useNavigationContext({
     defaultOrigin: options.defaultOrigin ?? '/workouts',
     cleanup: () => {
-      const workout = workoutContext.workout();
-      if (workout) {
-        workoutService.deleteWorkout(workout.id);
-        workoutContext.setWorkout(null);
+      if (cleanupMode === 'delete-workout') {
+        const workout = workoutContext.workout();
+        if (workout) {
+          workoutService.deleteWorkout(workout.id);
+          workoutContext.setWorkout(null);
+        }
       }
       options.cleanup?.();
     },

@@ -9,6 +9,7 @@ import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, EditorButtonConfig, BottomButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { setupEditorContext } from '../../utils/editor-context';
+import { useWorkoutActions } from '../../utils/workout-actions';
 
 @Component({
   selector: 'app-create-routine',
@@ -38,6 +39,7 @@ export class CreateRoutineComponent implements OnInit {
   private sourceWorkoutId: string | null = null;
   private navigationContext = this.editorContext.navigation;
   discardGuard = this.editorContext.discard!;
+  private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
   headerLeftButton: EditorButtonConfig = {
     label: 'Cancel',
     variant: 'ghost'
@@ -86,7 +88,7 @@ export class CreateRoutineComponent implements OnInit {
   }
 
   cancel(): void {
-    this.discardGuard.open();
+    this.workoutActions.discardWorkout();
   }
 
   save(): void {
@@ -97,10 +99,9 @@ export class CreateRoutineComponent implements OnInit {
         ...workout,
         name: this.title.trim() || 'Untitled Routine'
       };
-      
-      // Update the workout first
-      this.workoutService.updateWorkout(updatedWorkout);
-      
+      // Update workout via shared actions
+      this.workoutActions.saveWorkout(updatedWorkout);
+
       // Save as template for routines
       this.workoutService.saveAsTemplate(updatedWorkout);
 

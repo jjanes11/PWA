@@ -10,7 +10,8 @@ import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, EditorButtonConfig, BottomButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
-import { useNavigationContext } from '../../utils/navigation-context';
+import { setupEditorContext } from '../../utils/editor-context';
+import { useWorkoutActions } from '../../utils/workout-actions';
 
 @Component({
   selector: 'app-edit-workout',
@@ -22,9 +23,13 @@ export class EditWorkoutComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
-  private navigationContext = useNavigationContext({
-    defaultOrigin: '/home'
+  private editorContext = setupEditorContext({
+    kind: 'active',
+    defaultOrigin: '/home',
+    cleanupMode: 'none'
   });
+  private navigationContext = this.editorContext.navigation;
+  private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
 
   // Convert route params to signal
   private workoutId = toSignal(
@@ -147,7 +152,7 @@ export class EditWorkoutComponent {
   });
 
   cancel(): void {
-    this.navigationContext.exit({ skipCleanup: true });
+    this.workoutActions.discardWorkout({ skipCleanup: true });
   }
 
   saveWorkout(): void {
@@ -161,7 +166,7 @@ export class EditWorkoutComponent {
       notes: this.workoutDescription().trim()
     };
 
-    this.workoutService.updateWorkout(updatedWorkout);
+    this.workoutActions.saveWorkout(updatedWorkout);
     this.workout.set(updatedWorkout); // Update local signal
     this.navigationContext.exit({ skipCleanup: true });
   }

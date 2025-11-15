@@ -1,8 +1,8 @@
-import { Component, inject, computed, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
-import { Workout, WorkoutTemplate } from '../../models/workout.models';
+import { WorkoutTemplate } from '../../models/workout.models';
 import { NavigationService } from '../../services/navigation.service';
 import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
