@@ -31,7 +31,7 @@ export class EditRoutineComponent {
     defaultOrigin: '/workouts'
   });
   private workoutContext = this.editorContext.workoutContext;
-  currentWorkout = this.workoutContext.workout;
+  activeWorkout = this.workoutContext.workout;
   private exerciseCardController = useExerciseCardController(this.workoutSession, {
     getWorkout: () => this.workoutContext.workout()
   });
@@ -113,7 +113,7 @@ export class EditRoutineComponent {
 
   update(): void {
     const routine = this.routine();
-    const workout = this.currentWorkout();
+    const workout = this.activeWorkout();
     if (routine && workout) {
       // Update the workout with the current title
       const updatedWorkout = {
@@ -137,7 +137,7 @@ export class EditRoutineComponent {
 
   addExercise(): void {
     // Save current title to workout before navigating
-    const workout = this.currentWorkout();
+    const workout = this.activeWorkout();
     if (workout && this.title.trim()) {
       const updatedWorkout = { ...workout, name: this.title.trim() };
       this.workoutActions.saveWorkout(updatedWorkout);
@@ -148,7 +148,7 @@ export class EditRoutineComponent {
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {
-    const workout = this.currentWorkout();
+    const workout = this.activeWorkout();
     if (!workout) return;
 
     if (this.exerciseCardController.handleAction(event)) {

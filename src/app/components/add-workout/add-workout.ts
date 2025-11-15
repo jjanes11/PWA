@@ -31,7 +31,7 @@ export class AddWorkoutComponent implements OnInit {
     }
   });
   private workoutContext = this.editorContext.workoutContext;
-  currentWorkout = this.workoutContext.workout;
+  activeWorkout = this.workoutContext.workout;
   private navigationContext = this.editorContext.navigation;
   private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
   private exerciseCardController = useExerciseCardController(this.workoutService, {
@@ -107,7 +107,7 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   goBack(): void {
-    const workout = this.currentWorkout();
+    const workout = this.activeWorkout();
     // Only show dialog if workout has exercises
     if (workout && workout.exercises.length > 0) {
       this.workoutService.showWorkoutInProgressDialog();
@@ -119,7 +119,7 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   finishWorkout(): void {
-    const workout = this.currentWorkout();
+    const workout = this.activeWorkout();
     if (workout && workout.exercises.length > 0) {
       // Navigate to save workout page if there are exercises
       this.router.navigate(['/save-workout']);
@@ -138,14 +138,14 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   onExerciseReorder(event: DragReorderEvent): void {
-    const workout = this.currentWorkout();
+    const workout = this.activeWorkout();
     if (workout) {
       this.workoutService.reorderExercises(workout.id, event.fromId, event.toId);
     }
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {
-    if (!this.currentWorkout()) {
+    if (!this.activeWorkout()) {
       return;
     }
 

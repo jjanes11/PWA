@@ -14,13 +14,13 @@ export class SaveWorkoutComponent implements OnInit {
   private router = inject(Router);
   private workoutService = inject(WorkoutSessionService);
 
-  currentWorkout = this.workoutService.activeWorkout;
+  activeWorkout = this.workoutService.activeWorkout;
   workoutTitle = signal('');
   workoutDescription = signal('');
 
   // Computed workout stats
   workoutStats = computed(() => {
-    const workout = this.currentWorkout();
+    const workout = this.activeWorkout();
     if (!workout) {
       return { duration: 0, volume: 0, sets: 0 };
     }
@@ -64,7 +64,7 @@ export class SaveWorkoutComponent implements OnInit {
 
   // Current date and time for "When" section
   workoutDateTime = computed(() => {
-    const workout = this.currentWorkout();
+    const workout = this.activeWorkout();
     const date = workout?.startTime || new Date();
     return date.toLocaleDateString('en-US', {
       weekday: 'long',
@@ -77,9 +77,9 @@ export class SaveWorkoutComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    const workout = this.currentWorkout();
+    const workout = this.activeWorkout();
     if (!workout) {
-      // If no current workout, redirect to workouts page
+      // If no active workout, redirect to workouts page
       this.router.navigate(['/workouts']);
       return;
     }
@@ -93,7 +93,7 @@ export class SaveWorkoutComponent implements OnInit {
   }
 
   saveWorkout(): void {
-    const workout = this.currentWorkout();
+    const workout = this.activeWorkout();
     if (!workout) return;
 
     const endTime = new Date();

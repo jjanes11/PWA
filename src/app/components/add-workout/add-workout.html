@@ -1,6 +1,6 @@
 <app-workout-editor
   [title]="'Add Workout'"
-  [workout]="currentWorkout()"
+  [workout]="activeWorkout()"
   [exerciseMode]="'edit'"
   [showMenu]="true"
   [showAddSetButton]="true"
@@ -33,7 +33,7 @@
 
 @if (showSetTypeMenu() && selectedSet(); as setInfo) {
   <app-set-type-menu
-    [workoutId]="currentWorkout()!.id"
+    [workoutId]="activeWorkout()!.id"
     [exerciseId]="setInfo.exerciseId"
     [setId]="setInfo.setId"
     (closed)="closeSetTypeMenu()"

@@ -33,7 +33,7 @@ export class CreateRoutineComponent implements OnInit {
     }
   });
   private workoutContext = this.editorContext.workoutContext;
-  routineDraft = this.workoutContext.workout; // Use routineDraft instead of currentWorkout
+  routineDraft = this.workoutContext.workout; // Use routineDraft signal from context
   private exerciseCardController = useExerciseCardController(this.workoutSession, {
     getWorkout: () => this.workoutContext.workout()
   });

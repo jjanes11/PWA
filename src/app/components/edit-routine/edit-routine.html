@@ -1,6 +1,6 @@
 <app-workout-editor
   [title]="'Edit Routine'"
-  [workout]="currentWorkout()"
+  [workout]="activeWorkout()"
   [exerciseMode]="'edit'"
   [showAddSetButton]="true"
   [showCompleteColumn]="false"
@@ -27,7 +27,7 @@
 </app-workout-editor>
 
 @if (showSetTypeMenu() && selectedSet(); as setInfo) {
-  @if (currentWorkout(); as workout) {
+  @if (activeWorkout(); as workout) {
     <app-set-type-menu
       [workoutId]="workout.id"
       [exerciseId]="setInfo.exerciseId"

@@ -87,11 +87,11 @@ export class WorkoutDashboardComponent {
   });
 
   recentWorkouts = computed(() => {
-    const currentWorkoutId = this.workoutService.activeWorkout()?.id;
+    const activeWorkoutId = this.workoutService.activeWorkout()?.id;
     const routineDraftId = this.workoutService.routineDraft()?.id;
 
     return this.workouts()
-      .filter(w => w.id !== currentWorkoutId && w.id !== routineDraftId) // Exclude in-progress and draft workouts
+      .filter(w => w.id !== activeWorkoutId && w.id !== routineDraftId) // Exclude in-progress and draft workouts
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, 5);
   });

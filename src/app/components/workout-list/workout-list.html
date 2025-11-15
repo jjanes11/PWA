@@ -80,7 +80,6 @@
     (cancelled)="cancelDelete()"
   />
 
-  <!-- Workout In Progress Confirmation Dialog -->
   @if (showWorkoutInProgressDialog()) {
     <div class="jacaona-dialog-overlay" (click)="cancelStartNewWorkout()">
       <div class="jacaona-dialog" (click)="$event.stopPropagation()">

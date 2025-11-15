@@ -136,6 +136,7 @@ import { filter, map, startWith } from 'rxjs/operators';
       font-size: 14px;
       font-weight: var(--jacaona-font-weight-medium);
     }
+
   `]
 })
 export class WorkoutInProgressDialog {
