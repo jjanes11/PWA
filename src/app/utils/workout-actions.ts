@@ -12,7 +12,6 @@ export interface WorkoutActionsConfig {
 export interface WorkoutActions {
   saveWorkout: (workout: Workout | null | undefined) => void;
   discardWorkout: (options?: { skipCleanup?: boolean }) => void;
-  deleteWorkout: (workoutId: string) => void;
 }
 
 export function useWorkoutActions(config: WorkoutActionsConfig): WorkoutActions {
@@ -35,13 +34,8 @@ export function useWorkoutActions(config: WorkoutActionsConfig): WorkoutActions 
     }
   };
 
-  const deleteWorkout = (workoutId: string) => {
-    workoutService.deleteWorkout(workoutId);
-  };
-
   return {
     saveWorkout,
-    discardWorkout,
-    deleteWorkout
+    discardWorkout
   };
 }

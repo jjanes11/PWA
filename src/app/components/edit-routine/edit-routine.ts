@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
-import { WorkoutService } from '../../services/workout.service';
 import { WorkoutTemplate } from '../../models/workout.models';
+import { WorkoutService } from '../../services/workout.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, EditorButtonConfig, BottomButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
@@ -80,7 +80,7 @@ export class EditRoutineComponent {
         return;
       }
 
-      const foundTemplate = this.workoutService.templates().find(t => t.id === id);
+      const foundTemplate = this.workoutService.findTemplateById(id);
       
       if (!foundTemplate) {
         this.router.navigate(['/workouts']);
@@ -99,7 +99,7 @@ export class EditRoutineComponent {
         // First time loading, create new draft from template
         this.title = foundTemplate.name;
         
-        const draftWorkout = this.workoutService.createWorkoutFromTemplate(foundTemplate);
+        const draftWorkout = this.workoutService.instantiateWorkoutFromTemplate(foundTemplate);
         this.workoutContext.setWorkout(draftWorkout);
       }
     });

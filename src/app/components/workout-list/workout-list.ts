@@ -77,7 +77,7 @@ export class WorkoutListComponent {
   }
 
   startRoutine(template: WorkoutTemplate): void {
-    const workout = this.workoutService.createWorkoutFromTemplate(template);
+    this.workoutService.instantiateWorkoutFromTemplate(template);
     this.router.navigate(['/workout/new']);
   }
 

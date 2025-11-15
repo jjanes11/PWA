@@ -305,6 +305,18 @@ export class WorkoutService {
   }
 
   // Template Management
+  getTemplates(): readonly WorkoutTemplate[] {
+    return this._templates();
+  }
+
+  findTemplateById(templateId: string): WorkoutTemplate | undefined {
+    return this._templates().find(template => template.id === templateId);
+  }
+
+  instantiateWorkoutFromTemplate(template: WorkoutTemplate): Workout {
+    return this.createWorkoutFromTemplate(template);
+  }
+
   saveAsTemplate(workout: Workout): WorkoutTemplate {
     const template: WorkoutTemplate = {
       id: this.generateId(),
