@@ -1,5 +1,5 @@
 import { Injectable, Signal } from '@angular/core';
-import { Workout, Exercise, Set as WorkoutSet, WorkoutTemplate, WorkoutStats } from '../models/workout.models';
+import { Workout, Exercise, Set as WorkoutSet, Routine, WorkoutStats } from '../models/workout.models';
 import { WorkoutStoreService } from './workout-store.service';
 import { WorkoutStatsService } from './workout-stats.service';
 import { WorkoutUiService } from './workout-ui.service';
@@ -47,8 +47,8 @@ export class WorkoutSessionService {
     return workout;
   }
 
-  createWorkoutFromTemplate(template: WorkoutTemplate): Workout {
-    const workout = workoutFromTemplate(template, {
+  createWorkoutFromRoutine(routine: Routine): Workout {
+    const workout = workoutFromTemplate(routine, {
       idFactory: () => this.idService.generateId()
     });
     this.store.setCurrentWorkout(workout);
@@ -77,7 +77,7 @@ export class WorkoutSessionService {
   }
 
   clearRoutineDraft(): void {
-    this.store.setRoutineDraft(null);
+    this.store.clearRoutineDraft();
   }
 
   updateWorkout(workout: Workout): void {
@@ -274,11 +274,11 @@ export class WorkoutSessionService {
 
   private clearDraftWorkout(workoutId: string): void {
     if (this.store.currentWorkout()?.id === workoutId) {
-      this.store.setCurrentWorkout(null);
+      this.store.clearCurrentWorkout();
     }
 
     if (this.store.routineDraft()?.id === workoutId) {
-      this.store.setRoutineDraft(null);
+      this.store.clearRoutineDraft();
     }
   }
 }

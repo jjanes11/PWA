@@ -28,19 +28,19 @@ export interface Workout {
   notes?: string;
 }
 
-export interface WorkoutTemplate {
+export interface Routine {
   id: string;
   name: string;
-  exercises: ExerciseTemplate[];
+  exercises: RoutineExercise[];
 }
 
-export interface ExerciseTemplate {
+export interface RoutineExercise {
   id: string;
   name: string;
-  sets: SetTemplate[];
+  sets: RoutineSet[];
 }
 
-export interface SetTemplate {
+export interface RoutineSet {
   reps: number;
   weight: number;
   type?: SetType; // Set type (defaults to 'normal')

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Workout, WorkoutTemplate } from '../models/workout.models';
+import { Workout, Routine } from '../models/workout.models';
 import { WorkoutStoreService } from './workout-store.service';
 import { WorkoutSessionService } from './workout-session.service';
 import { IdService } from './id.service';
 
 @Injectable({ providedIn: 'root' })
-export class WorkoutTemplateService {
-  get templates() {
-    return this.store.templates;
+export class WorkoutRoutineService {
+  get routines() {
+    return this.store.routines;
   }
 
   constructor(
@@ -16,20 +16,20 @@ export class WorkoutTemplateService {
     private readonly idService: IdService
   ) {}
 
-  getTemplates(): WorkoutTemplate[] {
-    return this.store.getTemplates();
+  getRoutines(): Routine[] {
+    return this.store.getRoutines();
   }
 
-  findTemplateById(templateId: string): WorkoutTemplate | undefined {
-    return this.store.getTemplates().find(template => template.id === templateId);
+  findRoutineById(routineId: string): Routine | undefined {
+    return this.store.getRoutines().find(routine => routine.id === routineId);
   }
 
-  startWorkoutFromTemplate(template: WorkoutTemplate): Workout {
-    return this.session.createWorkoutFromTemplate(template);
+  startWorkoutFromRoutine(routine: Routine): Workout {
+    return this.session.createWorkoutFromRoutine(routine);
   }
 
-  saveFromWorkout(workout: Workout): WorkoutTemplate {
-    const template: WorkoutTemplate = {
+  saveFromWorkout(workout: Workout): Routine {
+    const routine: Routine = {
       id: this.idService.generateId(),
       name: workout.name,
       exercises: workout.exercises.map(exercise => ({
@@ -43,36 +43,36 @@ export class WorkoutTemplateService {
       }))
     };
 
-    const templates = [...this.store.getTemplates(), template];
-    this.store.commitTemplates(templates);
-    return template;
+    const routines = [...this.store.getRoutines(), routine];
+    this.store.commitRoutines(routines);
+    return routine;
   }
 
-  saveTemplateDirectly(template: WorkoutTemplate): void {
-    const templates = [...this.store.getTemplates(), template];
-    this.store.commitTemplates(templates);
+  saveRoutineDirectly(routine: Routine): void {
+    const routines = [...this.store.getRoutines(), routine];
+    this.store.commitRoutines(routines);
   }
 
-  updateTemplate(template: WorkoutTemplate): WorkoutTemplate | null {
-    return this.store.updateTemplateById(template.id, () => template);
+  updateRoutine(routine: Routine): Routine | null {
+    return this.store.updateRoutineById(routine.id, () => routine);
   }
 
-  deleteTemplate(templateId: string): void {
-    const templates = this.store.getTemplates().filter(t => t.id !== templateId);
-    this.store.commitTemplates(templates);
+  deleteRoutine(routineId: string): void {
+    const routines = this.store.getRoutines().filter(r => r.id !== routineId);
+    this.store.commitRoutines(routines);
   }
 
-  reorderTemplates(fromId: string, toId: string): void {
-    const templates = [...this.store.getTemplates()];
-    const fromIndex = templates.findIndex(t => t.id === fromId);
-    const toIndex = templates.findIndex(t => t.id === toId);
+  reorderRoutines(fromId: string, toId: string): void {
+    const routines = [...this.store.getRoutines()];
+    const fromIndex = routines.findIndex(r => r.id === fromId);
+    const toIndex = routines.findIndex(r => r.id === toId);
 
     if (fromIndex === -1 || toIndex === -1) {
       return;
     }
 
-    const [moved] = templates.splice(fromIndex, 1);
-    templates.splice(toIndex, 0, moved);
-    this.store.commitTemplates(templates);
+    const [moved] = routines.splice(fromIndex, 1);
+    routines.splice(toIndex, 0, moved);
+    this.store.commitRoutines(routines);
   }
 }

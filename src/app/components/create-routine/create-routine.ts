@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutSessionService } from '../../services/workout-session.service';
-import { WorkoutTemplateService } from '../../services/workout-template.service';
+import { WorkoutRoutineService } from '../../services/workout-template.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
@@ -22,7 +22,7 @@ import { useWorkoutActions } from '../../utils/workout-actions';
 export class CreateRoutineComponent implements OnInit {
   private router = inject(Router);
   private workoutSession = inject(WorkoutSessionService);
-  private workoutTemplates = inject(WorkoutTemplateService);
+  private workoutRoutineService = inject(WorkoutRoutineService);
   private editorContext = setupEditorContext({
     kind: 'draft',
     defaultOrigin: '/workouts',
@@ -105,7 +105,7 @@ export class CreateRoutineComponent implements OnInit {
       this.workoutActions.saveWorkout(updatedWorkout);
 
       // Save as template for routines
-      this.workoutTemplates.saveFromWorkout(updatedWorkout);
+      this.workoutRoutineService.saveFromWorkout(updatedWorkout);
 
       this.navigationContext.exit();
       return;

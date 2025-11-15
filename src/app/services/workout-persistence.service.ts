@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Workout, WorkoutTemplate } from '../models/workout.models';
+import { Workout, Routine } from '../models/workout.models';
 
 interface PersistenceConfig {
   workoutsKey: string;
-  templatesKey: string;
+  routinesKey: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class WorkoutPersistenceService {
   private readonly config: PersistenceConfig = {
     workoutsKey: 'workout-tracker-data',
-    templatesKey: 'workout-templates'
+    routinesKey: 'workout-templates'
   };
 
   saveWorkouts(workouts: Workout[]): void {
@@ -45,23 +45,23 @@ export class WorkoutPersistenceService {
     }
   }
 
-  saveTemplates(templates: WorkoutTemplate[]): void {
+  saveRoutines(routines: Routine[]): void {
     try {
-      localStorage.setItem(this.config.templatesKey, JSON.stringify(templates));
+      localStorage.setItem(this.config.routinesKey, JSON.stringify(routines));
     } catch (error) {
-      console.error('Failed to save templates:', error);
+      console.error('Failed to save routines:', error);
     }
   }
 
-  loadTemplates(): WorkoutTemplate[] {
+  loadRoutines(): Routine[] {
     try {
-      const data = localStorage.getItem(this.config.templatesKey);
+      const data = localStorage.getItem(this.config.routinesKey);
       if (!data) {
         return [];
       }
-      return JSON.parse(data) as WorkoutTemplate[];
+      return JSON.parse(data) as Routine[];
     } catch (error) {
-      console.error('Failed to load templates:', error);
+      console.error('Failed to load routines:', error);
       return [];
     }
   }

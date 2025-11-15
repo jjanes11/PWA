@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Workout, WorkoutTemplate } from '../models/workout.models';
+import { Workout, Routine } from '../models/workout.models';
 import { WorkoutPersistenceService } from './workout-persistence.service';
 
 interface CommitOptions {
@@ -11,12 +11,12 @@ export class WorkoutStoreService {
   private static readonly defaultCommitOptions = { persist: true } as const;
 
   private readonly _workouts = signal<Workout[]>([]);
-  private readonly _templates = signal<WorkoutTemplate[]>([]);
+  private readonly _routines = signal<Routine[]>([]);
   private readonly _currentWorkout = signal<Workout | null>(null);
   private readonly _routineDraft = signal<Workout | null>(null);
 
   readonly workouts = this._workouts.asReadonly();
-  readonly templates = this._templates.asReadonly();
+  readonly routines = this._routines.asReadonly();
   readonly currentWorkout = this._currentWorkout.asReadonly();
   readonly routineDraft = this._routineDraft.asReadonly();
   constructor(private readonly persistence: WorkoutPersistenceService) {
@@ -27,24 +27,32 @@ export class WorkoutStoreService {
     const workouts = this.persistence.loadWorkouts();
     this._workouts.set(workouts);
 
-    const templates = this.persistence.loadTemplates();
-    this._templates.set(templates);
+    const routines = this.persistence.loadRoutines();
+    this._routines.set(routines);
   }
 
   setCurrentWorkout(workout: Workout | null): void {
     this._currentWorkout.set(workout);
   }
 
+  clearCurrentWorkout(): void {
+    this._currentWorkout.set(null);
+  }
+
   setRoutineDraft(workout: Workout | null): void {
     this._routineDraft.set(workout);
+  }
+
+  clearRoutineDraft(): void {
+    this._routineDraft.set(null);
   }
 
   getWorkouts(): Workout[] {
     return this._workouts();
   }
 
-  getTemplates(): WorkoutTemplate[] {
-    return this._templates();
+  getRoutines(): Routine[] {
+    return this._routines();
   }
 
   commitWorkouts(
@@ -59,11 +67,11 @@ export class WorkoutStoreService {
     }
   }
 
-  commitTemplates(templates: WorkoutTemplate[], options?: CommitOptions): void {
+  commitRoutines(routines: Routine[], options?: CommitOptions): void {
     const { persist } = { ...WorkoutStoreService.defaultCommitOptions, ...options };
-    this._templates.set(templates);
+    this._routines.set(routines);
     if (persist) {
-      this.persistence.saveTemplates(templates);
+      this.persistence.saveRoutines(routines);
     }
   }
 
@@ -103,25 +111,25 @@ export class WorkoutStoreService {
     return null;
   }
 
-  updateTemplateById(
-    templateId: string,
-    mutate: (template: WorkoutTemplate) => WorkoutTemplate
-  ): WorkoutTemplate | null {
-    let updatedTemplate: WorkoutTemplate | null = null;
-    const templates = this._templates().map(template => {
-      if (template.id !== templateId) {
-        return template;
+  updateRoutineById(
+    routineId: string,
+    mutate: (routine: Routine) => Routine
+  ): Routine | null {
+    let updatedRoutine: Routine | null = null;
+    const routines = this._routines().map(routine => {
+      if (routine.id !== routineId) {
+        return routine;
       }
-      updatedTemplate = mutate(template);
-      return updatedTemplate;
+      updatedRoutine = mutate(routine);
+      return updatedRoutine;
     });
 
-    if (!updatedTemplate) {
+    if (!updatedRoutine) {
       return null;
     }
 
-    this.commitTemplates(templates);
-    return updatedTemplate;
+    this.commitRoutines(routines);
+    return updatedRoutine;
   }
 
 }

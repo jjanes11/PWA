@@ -1,9 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { WorkoutSessionService } from '../../services/workout-session.service';
-import { WorkoutTemplateService } from '../../services/workout-template.service';
-import { WorkoutTemplate } from '../../models/workout.models';
+import { WorkoutRoutineService } from '../../services/workout-template.service';
+import { Routine } from '../../models/workout.models';
 import { NavigationService } from '../../services/navigation.service';
 import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
@@ -18,15 +18,15 @@ import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 export class WorkoutListComponent {
   private router = inject(Router);
   private workoutSessionService = inject(WorkoutSessionService);
-  private workoutTemplateService = inject(WorkoutTemplateService);
+  private workoutRoutineService = inject(WorkoutRoutineService);
   private navigationService = inject(NavigationService);
 
-  templates = this.workoutTemplateService.templates;
+  routines = this.workoutRoutineService.routines;
   showDeleteDialog = signal(false);
   showWorkoutInProgressDialog = signal(false);
-  selectedTemplateId = signal<string | null>(null);
-  draggedTemplateId = signal<string | null>(null);
-  dragOverTemplateId = signal<string | null>(null);
+  selectedRoutineId = signal<string | null>(null);
+  draggedRoutineId = signal<string | null>(null);
+  dragOverRoutineId = signal<string | null>(null);
 
   menuItems: MenuItem[] = [
     {
@@ -78,17 +78,17 @@ export class WorkoutListComponent {
     this.navigationService.navigateWithReturnUrl('/routine/new', '/workouts');
   }
 
-  startRoutine(template: WorkoutTemplate): void {
-    this.workoutTemplateService.startWorkoutFromTemplate(template);
+  startRoutine(routine: Routine): void {
+    this.workoutRoutineService.startWorkoutFromRoutine(routine);
     this.router.navigate(['/workout/new']);
   }
 
-  handleMenuAction(templateId: string, action: string): void {
-    this.selectedTemplateId.set(templateId);
+  handleMenuAction(routineId: string, action: string): void {
+    this.selectedRoutineId.set(routineId);
     
     switch (action) {
       case 'edit':
-        this.router.navigate(['/routine/edit', templateId]);
+        this.router.navigate(['/routine/edit', routineId]);
         break;
       case 'delete':
         this.showDeleteDialog.set(true);
@@ -97,19 +97,19 @@ export class WorkoutListComponent {
   }
 
   confirmDelete(): void {
-    const templateId = this.selectedTemplateId();
-    if (templateId) {
-      this.workoutTemplateService.deleteTemplate(templateId);
+    const routineId = this.selectedRoutineId();
+    if (routineId) {
+      this.workoutRoutineService.deleteRoutine(routineId);
     }
     this.showDeleteDialog.set(false);
-    this.selectedTemplateId.set(null);
+    this.selectedRoutineId.set(null);
   }
 
   cancelDelete(): void {
     this.showDeleteDialog.set(false);
   }
 
-  onTemplateReorder(event: DragReorderEvent): void {
-    this.workoutTemplateService.reorderTemplates(event.fromId, event.toId);
+  onRoutineReorder(event: DragReorderEvent): void {
+    this.workoutRoutineService.reorderRoutines(event.fromId, event.toId);
   }
 }

@@ -25,35 +25,35 @@
     </button>
 
     <!-- Saved Routine Templates -->
-    @if (templates().length > 0) {
+    @if (routines().length > 0) {
       <div class="jacaona-saved-routines">
-        @for (template of templates(); track template.id) {
+        @for (routine of routines(); track routine.id) {
           <div 
             class="jacaona-routine-template-card"
-            [class.jacaona-drag-over]="dragOverTemplateId() === template.id"
+            [class.jacaona-drag-over]="dragOverRoutineId() === routine.id"
             draggable="true"
             appDraggable
-            [dragItemId]="template.id"
-            [draggedId]="draggedTemplateId"
-            [dragOverId]="dragOverTemplateId"
-            (dragReorder)="onTemplateReorder($event)"
+            [dragItemId]="routine.id"
+            [draggedId]="draggedRoutineId"
+            [dragOverId]="dragOverRoutineId"
+            (dragReorder)="onRoutineReorder($event)"
           >
             <div class="jacaona-routine-header">
               <div class="jacaona-routine-info">
-                <h3 class="jacaona-routine-name">{{ template.name }}</h3>
+                <h3 class="jacaona-routine-name">{{ routine.name }}</h3>
                 <div class="jacaona-routine-exercises">
-                  @for (exercise of template.exercises; track exercise.id; let i = $index) {
+                  @for (exercise of routine.exercises; track exercise.id; let i = $index) {
                     <span class="jacaona-exercise-name">{{ exercise.name }}</span>
-                    @if (i < template.exercises.length - 1) {
+                    @if (i < routine.exercises.length - 1) {
                       <span class="jacaona-exercise-separator">•</span>
                     }
                   }
                 </div>
               </div>
               <app-card-menu 
-                [menuId]="template.id"
+                [menuId]="routine.id"
                 [items]="menuItems"
-                (action)="handleMenuAction(template.id, $event)">
+                (action)="handleMenuAction(routine.id, $event)">
                 <button class="jacaona-routine-menu-btn">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
@@ -61,7 +61,7 @@
                 </button>
               </app-card-menu>
             </div>
-            <button class="jacaona-start-routine-btn" (click)="startRoutine(template)">
+            <button class="jacaona-start-routine-btn" (click)="startRoutine(routine)">
               Start Routine
             </button>
           </div>

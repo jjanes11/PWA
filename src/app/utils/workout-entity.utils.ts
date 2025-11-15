@@ -1,4 +1,4 @@
-import { Workout, WorkoutTemplate, Exercise, Set as WorkoutSet } from '../models/workout.models';
+import { Workout, Routine, Exercise, Set as WorkoutSet } from '../models/workout.models';
 
 type IdFactory = () => string;
 
@@ -28,12 +28,12 @@ export function createBaseWorkout(
 }
 
 export function workoutFromTemplate(
-  template: WorkoutTemplate,
+  routine: Routine,
   options: WorkoutCloneOptions
 ): Workout {
-  const baseWorkout = createBaseWorkout(template.name, options);
+  const baseWorkout = createBaseWorkout(routine.name, options);
 
-  const exercises: Exercise[] = template.exercises.map(exerciseTemplate => ({
+  const exercises: Exercise[] = routine.exercises.map(exerciseTemplate => ({
     id: options.idFactory(),
     name: exerciseTemplate.name,
     sets: exerciseTemplate.sets.map(setTemplate => ({
