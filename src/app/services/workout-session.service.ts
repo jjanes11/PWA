@@ -43,8 +43,6 @@ export class WorkoutSessionService {
     const workout = createBaseWorkout(name, {
       idFactory: () => this.idService.generateId()
     });
-    const workouts = [...this.store.getWorkoutsSnapshot(), workout];
-    this.store.commitWorkouts(workouts, workout);
     this.store.setCurrentWorkout(workout);
     return workout;
   }
@@ -53,15 +51,12 @@ export class WorkoutSessionService {
     const workout = workoutFromTemplate(template, {
       idFactory: () => this.idService.generateId()
     });
-
-    const workouts = [...this.store.getWorkoutsSnapshot(), workout];
-    this.store.commitWorkouts(workouts, workout);
     this.store.setCurrentWorkout(workout);
     return workout;
   }
 
   createDraftFromWorkout(workoutId: string): Workout | null {
-    const sourceWorkout = this.store.getWorkoutsSnapshot().find(w => w.id === workoutId);
+    const sourceWorkout = this.store.getWorkouts().find(w => w.id === workoutId);
     if (!sourceWorkout) {
       return null;
     }
@@ -69,8 +64,6 @@ export class WorkoutSessionService {
     const draftWorkout = cloneWorkoutForDraft(sourceWorkout, {
       idFactory: () => this.idService.generateId()
     });
-    const workouts = [...this.store.getWorkoutsSnapshot(), draftWorkout];
-    this.store.commitWorkouts(workouts, draftWorkout);
     this.store.setRoutineDraft(draftWorkout);
     return draftWorkout;
   }
@@ -79,22 +72,36 @@ export class WorkoutSessionService {
     const draftWorkout = createBaseWorkout(name, {
       idFactory: () => this.idService.generateId()
     });
-    const workouts = [...this.store.getWorkoutsSnapshot(), draftWorkout];
-    this.store.commitWorkouts(workouts, draftWorkout);
     this.store.setRoutineDraft(draftWorkout);
     return draftWorkout;
   }
 
   clearRoutineDraft(): void {
-    this.store.clearRoutineDraft();
+    this.store.setRoutineDraft(null);
   }
 
   updateWorkout(workout: Workout): void {
+    if (this.store.currentWorkout() && this.store.currentWorkout()!.id === workout.id) {
+      this.store.setCurrentWorkout(workout);
+      return;
+    }
+
+    if (this.store.routineDraft() && this.store.routineDraft()!.id === workout.id) {
+      this.store.setRoutineDraft(workout);
+      return;
+    }
+
     this.store.updateWorkoutById(workout.id, () => workout);
   }
 
+  saveCompletedWorkout(workout: Workout): void {
+    const updatedWorkouts = this.buildUpdatedWorkoutsSnapshot(workout);
+    this.store.commitWorkouts(updatedWorkouts);
+    this.clearDraftWorkout(workout.id);
+  }
+
   deleteWorkout(workoutId: string): void {
-    const workouts = this.store.getWorkoutsSnapshot().filter(w => w.id !== workoutId);
+    const workouts = this.store.getWorkouts().filter(w => w.id !== workoutId);
     this.store.commitWorkouts(workouts);
   }
 
@@ -254,5 +261,24 @@ export class WorkoutSessionService {
     const now = new Date();
     const start = new Date(workout.date);
     return Math.round((now.getTime() - start.getTime()) / (1000 * 60));
+  }
+
+  private buildUpdatedWorkoutsSnapshot(workout: Workout): Workout[] {
+    // If the workout already exists, replace it. Otherwise, add it.
+    const workouts = this.store.getWorkouts();
+    const existingIndex = workouts.findIndex(saved => saved.id === workout.id);
+    return existingIndex >= 0
+      ? workouts.map(saved => (saved.id === workout.id ? workout : saved))
+      : [...workouts, workout];
+  }
+
+  private clearDraftWorkout(workoutId: string): void {
+    if (this.store.currentWorkout()?.id === workoutId) {
+      this.store.setCurrentWorkout(null);
+    }
+
+    if (this.store.routineDraft()?.id === workoutId) {
+      this.store.setRoutineDraft(null);
+    }
   }
 }

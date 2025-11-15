@@ -16,12 +16,12 @@ export class WorkoutTemplateService {
     private readonly idService: IdService
   ) {}
 
-  getTemplatesSnapshot(): WorkoutTemplate[] {
-    return this.store.getTemplatesSnapshot();
+  getTemplates(): WorkoutTemplate[] {
+    return this.store.getTemplates();
   }
 
   findTemplateById(templateId: string): WorkoutTemplate | undefined {
-    return this.store.getTemplatesSnapshot().find(template => template.id === templateId);
+    return this.store.getTemplates().find(template => template.id === templateId);
   }
 
   startWorkoutFromTemplate(template: WorkoutTemplate): Workout {
@@ -43,13 +43,13 @@ export class WorkoutTemplateService {
       }))
     };
 
-    const templates = [...this.store.getTemplatesSnapshot(), template];
+    const templates = [...this.store.getTemplates(), template];
     this.store.commitTemplates(templates);
     return template;
   }
 
   saveTemplateDirectly(template: WorkoutTemplate): void {
-    const templates = [...this.store.getTemplatesSnapshot(), template];
+    const templates = [...this.store.getTemplates(), template];
     this.store.commitTemplates(templates);
   }
 
@@ -58,12 +58,12 @@ export class WorkoutTemplateService {
   }
 
   deleteTemplate(templateId: string): void {
-    const templates = this.store.getTemplatesSnapshot().filter(t => t.id !== templateId);
+    const templates = this.store.getTemplates().filter(t => t.id !== templateId);
     this.store.commitTemplates(templates);
   }
 
   reorderTemplates(fromId: string, toId: string): void {
-    const templates = [...this.store.getTemplatesSnapshot()];
+    const templates = [...this.store.getTemplates()];
     const fromIndex = templates.findIndex(t => t.id === fromId);
     const toIndex = templates.findIndex(t => t.id === toId);
 

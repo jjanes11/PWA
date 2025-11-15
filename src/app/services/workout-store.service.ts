@@ -2,6 +2,10 @@ import { Injectable, signal } from '@angular/core';
 import { Workout, WorkoutTemplate } from '../models/workout.models';
 import { WorkoutPersistenceService } from './workout-persistence.service';
 
+interface CommitOptions {
+  persist?: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class WorkoutStoreService {
   private static readonly defaultCommitOptions = { persist: true } as const;
@@ -19,30 +23,39 @@ export class WorkoutStoreService {
     this.restoreFromPersistence();
   }
 
-  getWorkoutsSnapshot(): Workout[] {
+  private restoreFromPersistence(): void {
+    const workouts = this.persistence.loadWorkouts();
+    this._workouts.set(workouts);
+
+    const templates = this.persistence.loadTemplates();
+    this._templates.set(templates);
+  }
+
+  setCurrentWorkout(workout: Workout | null): void {
+    this._currentWorkout.set(workout);
+  }
+
+  setRoutineDraft(workout: Workout | null): void {
+    this._routineDraft.set(workout);
+  }
+
+  getWorkouts(): Workout[] {
     return this._workouts();
   }
 
-  getTemplatesSnapshot(): WorkoutTemplate[] {
+  getTemplates(): WorkoutTemplate[] {
     return this._templates();
   }
 
   commitWorkouts(
     workouts: Workout[],
-    updatedWorkout?: Workout | null,
     options?: CommitOptions
   ): void {
     const { persist } = { ...WorkoutStoreService.defaultCommitOptions, ...options };
     this._workouts.set(workouts);
 
-    if (updatedWorkout) {
-      this.syncDerivedWorkouts(updatedWorkout);
-    } else {
-      this.ensureDerivedWorkoutsExist(workouts);
-    }
-
     if (persist) {
-      this.persistWorkouts(workouts);
+      this.persistence.saveWorkouts(workouts);
     }
   }
 
@@ -50,7 +63,7 @@ export class WorkoutStoreService {
     const { persist } = { ...WorkoutStoreService.defaultCommitOptions, ...options };
     this._templates.set(templates);
     if (persist) {
-      this.persistTemplates(templates);
+      this.persistence.saveTemplates(templates);
     }
   }
 
@@ -58,13 +71,9 @@ export class WorkoutStoreService {
     workoutId: string,
     mutate: (workout: Workout) => Workout
   ): Workout | null {
-    const currentWorkouts = this._workouts();
-    if (!this.ensureWorkoutExists(currentWorkouts, workoutId)) {
-      return null;
-    }
-
+    const savedWorkouts = this._workouts();
     let updatedWorkout: Workout | null = null;
-    const workouts = currentWorkouts.map(workout => {
+    const updatedWorkouts = savedWorkouts.map(workout => {
       if (workout.id !== workoutId) {
         return workout;
       }
@@ -72,12 +81,26 @@ export class WorkoutStoreService {
       return updatedWorkout;
     });
 
-    if (!updatedWorkout) {
-      return null;
+    if (updatedWorkout) {
+      this.commitWorkouts(updatedWorkouts);
+      return updatedWorkout;
     }
 
-    this.commitWorkouts(workouts, updatedWorkout);
-    return updatedWorkout;
+    const current = this._currentWorkout();
+    if (current && current.id === workoutId) {
+      const updatedCurrent = mutate(current);
+      this._currentWorkout.set(updatedCurrent);
+      return updatedCurrent;
+    }
+
+    const draft = this._routineDraft();
+    if (draft && draft.id === workoutId) {
+      const updatedDraft = mutate(draft);
+      this._routineDraft.set(updatedDraft);
+      return updatedDraft;
+    }
+
+    return null;
   }
 
   updateTemplateById(
@@ -101,64 +124,4 @@ export class WorkoutStoreService {
     return updatedTemplate;
   }
 
-  setCurrentWorkout(workout: Workout | null): void {
-    this._currentWorkout.set(workout);
-  }
-
-  setRoutineDraft(workout: Workout | null): void {
-    this._routineDraft.set(workout);
-  }
-
-  clearRoutineDraft(): void {
-    this._routineDraft.set(null);
-  }
-
-  private syncDerivedWorkouts(updatedWorkout: Workout): void {
-    if (this._currentWorkout()?.id === updatedWorkout.id) {
-      this._currentWorkout.set(updatedWorkout);
-    }
-
-    if (this._routineDraft()?.id === updatedWorkout.id) {
-      this._routineDraft.set(updatedWorkout);
-    }
-  }
-
-  private ensureDerivedWorkoutsExist(workouts: Workout[]): void {
-    const current = this._currentWorkout();
-    if (!this.ensureWorkoutExists(workouts, current?.id)) {
-      this._currentWorkout.set(null);
-    }
-
-    const draft = this._routineDraft();
-    if (!this.ensureWorkoutExists(workouts, draft?.id)) {
-      this._routineDraft.set(null);
-    }
-  }
-
-  private restoreFromPersistence(): void {
-    const workouts = this.persistence.loadWorkouts();
-    this._workouts.set(workouts);
-
-    const templates = this.persistence.loadTemplates();
-    this._templates.set(templates);
-  }
-
-  private ensureWorkoutExists(
-    workouts: Workout[],
-    workoutId: string | null | undefined
-  ): workoutId is string {
-    return !!workoutId && workouts.some(workout => workout.id === workoutId);
-  }
-
-  private persistWorkouts(workouts: Workout[]): void {
-    this.persistence.saveWorkouts(workouts);
-  }
-
-  private persistTemplates(templates: WorkoutTemplate[]): void {
-    this.persistence.saveTemplates(templates);
-  }
-}
-
-interface CommitOptions {
-  persist?: boolean;
 }
