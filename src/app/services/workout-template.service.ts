@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Workout, WorkoutTemplate } from '../models/workout.models';
 import { WorkoutStoreService } from './workout-store.service';
 import { WorkoutSessionService } from './workout-session.service';
+import { IdService } from './id.service';
 
 @Injectable({ providedIn: 'root' })
 export class WorkoutTemplateService {
@@ -11,7 +12,8 @@ export class WorkoutTemplateService {
 
   constructor(
     private readonly store: WorkoutStoreService,
-    private readonly session: WorkoutSessionService
+    private readonly session: WorkoutSessionService,
+    private readonly idService: IdService
   ) {}
 
   getTemplatesSnapshot(): WorkoutTemplate[] {
@@ -28,10 +30,10 @@ export class WorkoutTemplateService {
 
   saveFromWorkout(workout: Workout): WorkoutTemplate {
     const template: WorkoutTemplate = {
-      id: this.store.generateId(),
+      id: this.idService.generateId(),
       name: workout.name,
       exercises: workout.exercises.map(exercise => ({
-        id: this.store.generateId(),
+        id: this.idService.generateId(),
         name: exercise.name,
         sets: exercise.sets.map(set => ({
           reps: set.reps,

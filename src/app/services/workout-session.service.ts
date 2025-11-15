@@ -1,10 +1,23 @@
 import { Injectable, Signal } from '@angular/core';
 import { Workout, Exercise, Set as WorkoutSet, WorkoutTemplate, WorkoutStats } from '../models/workout.models';
 import { WorkoutStoreService } from './workout-store.service';
+import { WorkoutStatsService } from './workout-stats.service';
+import { WorkoutUiService } from './workout-ui.service';
+import { IdService } from './id.service';
+import {
+  createBaseWorkout,
+  workoutFromTemplate,
+  cloneWorkoutForDraft
+} from '../utils/workout-entity.utils';
 
 @Injectable({ providedIn: 'root' })
 export class WorkoutSessionService {
-  constructor(private readonly store: WorkoutStoreService) {}
+  constructor(
+    private readonly store: WorkoutStoreService,
+    private readonly statsService: WorkoutStatsService,
+    private readonly uiService: WorkoutUiService,
+    private readonly idService: IdService
+  ) {}
 
   get workouts(): Signal<Workout[]> {
     return this.store.workouts;
@@ -19,24 +32,17 @@ export class WorkoutSessionService {
   }
 
   get workoutInProgressDialog(): Signal<boolean> {
-    return this.store.showWorkoutInProgressDialog;
+    return this.uiService.workoutInProgressDialog;
   }
 
   get stats(): Signal<WorkoutStats> {
-    return this.store.stats;
+    return this.statsService.stats;
   }
 
   createWorkout(name: string): Workout {
-    const now = new Date();
-    const workout: Workout = {
-      id: this.store.generateId(),
-      name,
-      date: now,
-      startTime: now,
-      exercises: [],
-      completed: false
-    };
-
+    const workout = createBaseWorkout(name, {
+      idFactory: () => this.idService.generateId()
+    });
     const workouts = [...this.store.getWorkoutsSnapshot(), workout];
     this.store.commitWorkouts(workouts, workout);
     this.store.setCurrentWorkout(workout);
@@ -44,26 +50,14 @@ export class WorkoutSessionService {
   }
 
   createWorkoutFromTemplate(template: WorkoutTemplate): Workout {
-    const workout = this.createWorkout(template.name);
-    const exercises: Exercise[] = template.exercises.map(exerciseTemplate => ({
-      id: this.store.generateId(),
-      name: exerciseTemplate.name,
-      sets: exerciseTemplate.sets.map(setTemplate => ({
-        id: this.store.generateId(),
-        reps: setTemplate.reps,
-        weight: setTemplate.weight,
-        completed: false,
-        type: setTemplate.type
-      }))
-    }));
+    const workout = workoutFromTemplate(template, {
+      idFactory: () => this.idService.generateId()
+    });
 
-    const updatedWorkout: Workout = {
-      ...workout,
-      exercises
-    };
-
-    this.updateWorkout(updatedWorkout);
-    return updatedWorkout;
+    const workouts = [...this.store.getWorkoutsSnapshot(), workout];
+    this.store.commitWorkouts(workouts, workout);
+    this.store.setCurrentWorkout(workout);
+    return workout;
   }
 
   createDraftFromWorkout(workoutId: string): Workout | null {
@@ -72,28 +66,9 @@ export class WorkoutSessionService {
       return null;
     }
 
-    const now = new Date();
-    const draftWorkout: Workout = {
-      id: this.store.generateId(),
-      name: sourceWorkout.name,
-      date: now,
-      startTime: now,
-      exercises: sourceWorkout.exercises.map(exercise => ({
-        id: this.store.generateId(),
-        name: exercise.name,
-        sets: exercise.sets.map(set => ({
-          id: this.store.generateId(),
-          reps: set.reps,
-          weight: set.weight,
-          completed: false,
-          type: set.type,
-          restTime: set.restTime,
-          notes: set.notes
-        }))
-      })),
-      completed: false
-    };
-
+    const draftWorkout = cloneWorkoutForDraft(sourceWorkout, {
+      idFactory: () => this.idService.generateId()
+    });
     const workouts = [...this.store.getWorkoutsSnapshot(), draftWorkout];
     this.store.commitWorkouts(workouts, draftWorkout);
     this.store.setRoutineDraft(draftWorkout);
@@ -101,16 +76,9 @@ export class WorkoutSessionService {
   }
 
   createRoutineDraft(name: string = 'New Routine'): Workout {
-    const now = new Date();
-    const draftWorkout: Workout = {
-      id: this.store.generateId(),
-      name,
-      date: now,
-      startTime: now,
-      exercises: [],
-      completed: false
-    };
-
+    const draftWorkout = createBaseWorkout(name, {
+      idFactory: () => this.idService.generateId()
+    });
     const workouts = [...this.store.getWorkoutsSnapshot(), draftWorkout];
     this.store.commitWorkouts(workouts, draftWorkout);
     this.store.setRoutineDraft(draftWorkout);
@@ -151,7 +119,7 @@ export class WorkoutSessionService {
 
     const updatedWorkout = this.store.updateWorkoutById(workoutId, workout => {
       const exercise: Exercise = {
-        id: this.store.generateId(),
+        id: this.idService.generateId(),
         name: exerciseName,
         sets: []
       };
@@ -214,7 +182,7 @@ export class WorkoutSessionService {
         }
 
         const newSet: WorkoutSet = {
-          id: this.store.generateId(),
+          id: this.idService.generateId(),
           reps: 0,
           weight: 0,
           completed: false
@@ -267,11 +235,11 @@ export class WorkoutSessionService {
   }
 
   showWorkoutInProgressDialog(): void {
-    this.store.showWorkoutDialog();
+    this.uiService.showWorkoutInProgressDialog();
   }
 
   hideWorkoutInProgressDialog(): void {
-    this.store.hideWorkoutDialog();
+    this.uiService.hideWorkoutInProgressDialog();
   }
 
   getWorkoutsSignal(): Signal<Workout[]> {
