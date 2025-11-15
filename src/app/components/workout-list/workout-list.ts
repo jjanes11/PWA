@@ -43,7 +43,7 @@ export class WorkoutListComponent {
   ];
 
   startNewWorkout(): void {
-    const currentWorkout = this.workoutSessionService.currentWorkout();
+    const currentWorkout = this.workoutSessionService.activeWorkout();
     // Check if there's a workout in progress
     if (currentWorkout && currentWorkout.exercises.length > 0) {
       this.showWorkoutInProgressDialog.set(true);
@@ -60,10 +60,10 @@ export class WorkoutListComponent {
   }
 
   confirmStartNewWorkout(): void {
-    const currentWorkout = this.workoutSessionService.currentWorkout();
+    const currentWorkout = this.workoutSessionService.activeWorkout();
     if (currentWorkout) {
       this.workoutSessionService.deleteWorkout(currentWorkout.id);
-      this.workoutSessionService.setCurrentWorkout(null);
+      this.workoutSessionService.clearActiveWorkout();
     }
     this.workoutSessionService.hideWorkoutInProgressDialog();
     this.showWorkoutInProgressDialog.set(false);

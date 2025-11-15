@@ -62,9 +62,9 @@ export class AddExercise {
   selectExercise(exercise: Exercise): void {
     // In replace mode, immediately replace and navigate back
     if (this.isReplaceMode()) {
-      const currentWorkout = this.workoutService.currentWorkout();
+      const activeWorkout = this.workoutService.activeWorkout();
       const routineDraft = this.workoutService.routineDraft();
-      const targetWorkout = currentWorkout || routineDraft;
+      const targetWorkout = activeWorkout || routineDraft;
       const oldExerciseId = this.replaceExerciseId();
       
       if (targetWorkout && oldExerciseId) {
@@ -94,11 +94,11 @@ export class AddExercise {
 
   addSelectedExercises(): void {
     const selected = this.selectedExercises();
-    const currentWorkout = this.workoutService.currentWorkout();
+    const activeWorkout = this.workoutService.activeWorkout();
     const routineDraft = this.workoutService.routineDraft();
     
-    // Use whichever workout is available (currentWorkout or routineDraft)
-    const targetWorkout = currentWorkout || routineDraft;
+    // Use whichever workout is available (activeWorkout or routineDraft)
+    const targetWorkout = activeWorkout || routineDraft;
     
     if (selected.length > 0 && targetWorkout) {
       // Add each selected exercise to target workout

@@ -12,12 +12,12 @@ export class WorkoutStoreService {
 
   private readonly _workouts = signal<Workout[]>([]);
   private readonly _routines = signal<Routine[]>([]);
-  private readonly _currentWorkout = signal<Workout | null>(null);
+  private readonly _activeWorkout = signal<Workout | null>(null);
   private readonly _routineDraft = signal<Workout | null>(null);
 
   readonly workouts = this._workouts.asReadonly();
   readonly routines = this._routines.asReadonly();
-  readonly currentWorkout = this._currentWorkout.asReadonly();
+  readonly activeWorkout = this._activeWorkout.asReadonly();
   readonly routineDraft = this._routineDraft.asReadonly();
   constructor(private readonly persistence: WorkoutPersistenceService) {
     this.restoreFromPersistence();
@@ -31,12 +31,12 @@ export class WorkoutStoreService {
     this._routines.set(routines);
   }
 
-  setCurrentWorkout(workout: Workout | null): void {
-    this._currentWorkout.set(workout);
+  setActiveWorkout(workout: Workout | null): void {
+    this._activeWorkout.set(workout);
   }
 
-  clearCurrentWorkout(): void {
-    this._currentWorkout.set(null);
+  clearActiveWorkout(): void {
+    this._activeWorkout.set(null);
   }
 
   setRoutineDraft(workout: Workout | null): void {
@@ -94,11 +94,11 @@ export class WorkoutStoreService {
       return updatedWorkout;
     }
 
-    const current = this._currentWorkout();
-    if (current && current.id === workoutId) {
-      const updatedCurrent = mutate(current);
-      this._currentWorkout.set(updatedCurrent);
-      return updatedCurrent;
+    const active = this._activeWorkout();
+    if (active && active.id === workoutId) {
+      const updatedActive = mutate(active);
+      this._activeWorkout.set(updatedActive);
+      return updatedActive;
     }
 
     const draft = this._routineDraft();

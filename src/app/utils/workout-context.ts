@@ -13,12 +13,12 @@ export interface WorkoutContext {
 export function useWorkoutContext(kind: WorkoutContextKind): WorkoutContext {
   const workoutService = inject(WorkoutSessionService);
   const workoutSignal = kind === 'active'
-    ? workoutService.currentWorkout
+    ? workoutService.activeWorkout
     : workoutService.routineDraft;
 
   const setWorkout = (workout: Workout | null) => {
     if (kind === 'active') {
-      workoutService.setCurrentWorkout(workout);
+      workoutService.setActiveWorkout(workout);
     } else {
       workoutService.setRoutineDraft(workout);
     }

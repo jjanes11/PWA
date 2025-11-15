@@ -54,7 +54,7 @@ export class SetTypeMenuComponent {
 
   setSetType(type: SetType): void {
     const workout = this.workoutService.workouts().find(w => w.id === this.workoutId)
-      || this.workoutService.currentWorkout();
+      || this.workoutService.activeWorkout();
     
     if (workout) {
       const exercise = workout.exercises.find(e => e.id === this.exerciseId);

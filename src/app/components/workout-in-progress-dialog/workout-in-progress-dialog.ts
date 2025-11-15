@@ -179,10 +179,10 @@ export class WorkoutInProgressDialog {
   }
 
   confirmDiscard(): void {
-    const workout = this.workoutService.currentWorkout();
+    const workout = this.workoutService.activeWorkout();
     if (workout) {
       this.workoutService.deleteWorkout(workout.id);
-      this.workoutService.setCurrentWorkout(null);
+      this.workoutService.clearActiveWorkout();
     }
     this.workoutService.hideWorkoutInProgressDialog();
     this.showConfirmDialog.set(false);

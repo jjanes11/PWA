@@ -96,10 +96,10 @@ export class EditWorkoutComponent {
 
       this.navigationContext.setOrigin(`/workout/${foundWorkout.id}`);
 
-      // Clear currentWorkout if it's set to this workout (from add-exercise navigation)
-      const currentWorkout = this.workoutService.currentWorkout();
-      if (currentWorkout?.id === id) {
-        this.workoutService.setCurrentWorkout(null);
+      // Clear activeWorkout if it's set to this workout (from add-exercise navigation)
+      const activeWorkout = this.workoutService.activeWorkout();
+      if (activeWorkout?.id === id) {
+        this.workoutService.setActiveWorkout(null);
       }
     });
   }
@@ -175,8 +175,8 @@ export class EditWorkoutComponent {
     const workout = this.workout();
     if (!workout) return;
     
-    // Temporarily set as currentWorkout so add-exercise can add to it
-    this.workoutService.setCurrentWorkout(workout);
+    // Temporarily set as activeWorkout so add-exercise can add to it
+    this.workoutService.setActiveWorkout(workout);
     
     this.navigationContext.navigateWithReturn('/add-exercise');
   }

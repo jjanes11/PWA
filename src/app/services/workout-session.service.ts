@@ -23,8 +23,8 @@ export class WorkoutSessionService {
     return this.store.workouts;
   }
 
-  get currentWorkout(): Signal<Workout | null> {
-    return this.store.currentWorkout;
+  get activeWorkout(): Signal<Workout | null> {
+    return this.store.activeWorkout;
   }
 
   get routineDraft(): Signal<Workout | null> {
@@ -43,7 +43,7 @@ export class WorkoutSessionService {
     const workout = createBaseWorkout(name, {
       idFactory: () => this.idService.generateId()
     });
-    this.store.setCurrentWorkout(workout);
+    this.store.setActiveWorkout(workout);
     return workout;
   }
 
@@ -51,7 +51,7 @@ export class WorkoutSessionService {
     const workout = workoutFromTemplate(routine, {
       idFactory: () => this.idService.generateId()
     });
-    this.store.setCurrentWorkout(workout);
+    this.store.setActiveWorkout(workout);
     return workout;
   }
 
@@ -81,8 +81,8 @@ export class WorkoutSessionService {
   }
 
   updateWorkout(workout: Workout): void {
-    if (this.store.currentWorkout() && this.store.currentWorkout()!.id === workout.id) {
-      this.store.setCurrentWorkout(workout);
+    if (this.store.activeWorkout() && this.store.activeWorkout()!.id === workout.id) {
+      this.store.setActiveWorkout(workout);
       return;
     }
 
@@ -105,8 +105,12 @@ export class WorkoutSessionService {
     this.store.commitWorkouts(workouts);
   }
 
-  setCurrentWorkout(workout: Workout | null): void {
-    this.store.setCurrentWorkout(workout);
+  setActiveWorkout(workout: Workout | null): void {
+    this.store.setActiveWorkout(workout);
+  }
+
+  clearActiveWorkout(): void {
+    this.store.clearActiveWorkout();
   }
 
   setRoutineDraft(workout: Workout | null): void {
@@ -253,8 +257,8 @@ export class WorkoutSessionService {
     return this.workouts;
   }
 
-  getCurrentWorkoutSnapshot(): Workout | null {
-    return this.currentWorkout();
+  getActiveWorkoutSnapshot(): Workout | null {
+    return this.activeWorkout();
   }
 
   private calculateDuration(workout: Workout): number {
@@ -273,8 +277,8 @@ export class WorkoutSessionService {
   }
 
   private clearDraftWorkout(workoutId: string): void {
-    if (this.store.currentWorkout()?.id === workoutId) {
-      this.store.clearCurrentWorkout();
+    if (this.store.activeWorkout()?.id === workoutId) {
+      this.store.clearActiveWorkout();
     }
 
     if (this.store.routineDraft()?.id === workoutId) {

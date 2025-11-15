@@ -14,7 +14,7 @@ export class SaveWorkoutComponent implements OnInit {
   private router = inject(Router);
   private workoutService = inject(WorkoutSessionService);
 
-  currentWorkout = this.workoutService.currentWorkout;
+  currentWorkout = this.workoutService.activeWorkout;
   workoutTitle = signal('');
   workoutDescription = signal('');
 
