@@ -9,9 +9,7 @@ import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, BottomButtonConfig, EditorButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
-import { useWorkoutContext } from '../../utils/workout-context';
-import { useDiscardGuard } from '../../utils/discard-guard';
-import { useNavigationContext } from '../../utils/navigation-context';
+import { setupEditorContext } from '../../utils/editor-context';
 
 @Component({
   selector: 'app-add-workout',
@@ -22,18 +20,18 @@ import { useNavigationContext } from '../../utils/navigation-context';
 export class AddWorkoutComponent implements OnInit {
   private workoutService = inject(WorkoutService);
   private router = inject(Router);
-  private workoutContext = useWorkoutContext('active');
-  currentWorkout = this.workoutContext.workout;
-  private navigationContext = useNavigationContext({
+  private editorContext = setupEditorContext({
+    kind: 'active',
     defaultOrigin: '/workouts',
-    cleanup: () => {
-      const workout = this.currentWorkout();
-      if (workout) {
-        this.workoutService.deleteWorkout(workout.id);
-        this.workoutContext.setWorkout(null);
-      }
+    discardConfig: {
+      message: 'Are you sure you want to discard this workout?',
+      confirmText: 'Discard Workout',
+      onConfirm: () => this.handleDiscardConfirm()
     }
   });
+  private workoutContext = this.editorContext.workoutContext;
+  currentWorkout = this.workoutContext.workout;
+  private navigationContext = this.editorContext.navigation;
   private exerciseCardController = useExerciseCardController(this.workoutService, {
     getWorkout: () => this.workoutContext.workout(),
     onReplaceExercise: (exerciseId: string) => {
@@ -49,11 +47,7 @@ export class AddWorkoutComponent implements OnInit {
       this.workoutService.removeExerciseFromWorkout(workout.id, exerciseId);
     }
   });
-  discardGuard = useDiscardGuard({
-    message: 'Are you sure you want to discard this workout?',
-    confirmText: 'Discard Workout',
-    onConfirm: () => this.handleDiscardConfirm()
-  });
+  discardGuard = this.editorContext.discard!;
   draggedExerciseId = signal<string | null>(null);
   
   // Set Type Menu (via controller)

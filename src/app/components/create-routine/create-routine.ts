@@ -4,14 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
-import { NavigationService } from '../../services/navigation.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, EditorButtonConfig, BottomButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
-import { useWorkoutContext } from '../../utils/workout-context';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
-import { useDiscardGuard } from '../../utils/discard-guard';
-import { useNavigationContext } from '../../utils/navigation-context';
+import { setupEditorContext } from '../../utils/editor-context';
 
 @Component({
   selector: 'app-create-routine',
@@ -23,29 +20,24 @@ import { useNavigationContext } from '../../utils/navigation-context';
 export class CreateRoutineComponent implements OnInit {
   private router = inject(Router);
   private workoutService = inject(WorkoutService);
-  private navigationService = inject(NavigationService);
-  private workoutContext = useWorkoutContext('draft');
+  private editorContext = setupEditorContext({
+    kind: 'draft',
+    defaultOrigin: '/workouts',
+    discardConfig: {
+      message: 'Are you sure you want to discard the routine?',
+      confirmText: 'Discard Routine',
+      onConfirm: () => this.handleDiscardConfirm()
+    }
+  });
+  private workoutContext = this.editorContext.workoutContext;
   routineDraft = this.workoutContext.workout; // Use routineDraft instead of currentWorkout
   private exerciseCardController = useExerciseCardController(this.workoutService, {
     getWorkout: () => this.workoutContext.workout()
   });
   title: string = '';
   private sourceWorkoutId: string | null = null;
-  private navigationContext = useNavigationContext({
-    defaultOrigin: '/workouts',
-    cleanup: () => {
-      const workout = this.routineDraft();
-      if (workout) {
-        this.workoutService.deleteWorkout(workout.id);
-        this.workoutContext.setWorkout(null);
-      }
-    }
-  });
-  discardGuard = useDiscardGuard({
-    message: 'Are you sure you want to discard the routine?',
-    confirmText: 'Discard Routine',
-    onConfirm: () => this.handleDiscardConfirm()
-  });
+  private navigationContext = this.editorContext.navigation;
+  discardGuard = this.editorContext.discard!;
   headerLeftButton: EditorButtonConfig = {
     label: 'Cancel',
     variant: 'ghost'
@@ -74,10 +66,7 @@ export class CreateRoutineComponent implements OnInit {
     this.exerciseCardController.closeSetTypeMenu();
   }
 
-  constructor() {
-    // Get return URL and source workout ID from navigation service
-    this.sourceWorkoutId = this.navigationService.getSourceWorkoutId();
-  }
+  constructor() {}
 
   ngOnInit(): void {
     // If we have a source workout ID, create a draft from it
