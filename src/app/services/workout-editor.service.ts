@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Exercise, Set as WorkoutSet, Workout } from '../models/workout.models';
 import { WorkoutStoreService, WorkoutMutationOutcome } from './workout-store.service';
 import { IdService } from './id.service';
+import { WorkoutMutationError } from '../models/workout-errors';
 import {
   addExercise,
   removeExercise,
@@ -32,11 +33,11 @@ export class WorkoutEditorService {
           derived: result.exercise
         };
       },
-      `Workout ${workoutId} not found`
+      WorkoutMutationError.workoutNotFound(workoutId)
     );
 
     if (!outcome.derived) {
-      throw new Error(`Failed to add exercise to workout ${workoutId}`);
+      throw WorkoutMutationError.mutationFailed('addExerciseToWorkout', { workoutId });
     }
 
     return outcome.derived;
@@ -73,11 +74,14 @@ export class WorkoutEditorService {
           derived: result.set
         };
       },
-      `Workout ${workoutId} or exercise ${exerciseId} not found`
+      WorkoutMutationError.exerciseNotFound(workoutId, exerciseId)
     );
 
     if (!outcome.derived) {
-      throw new Error(`Failed to add set to exercise ${exerciseId} in workout ${workoutId}`);
+      throw WorkoutMutationError.mutationFailed('addSetToExercise', {
+        workoutId,
+        exerciseId
+      });
     }
 
     return outcome.derived;
@@ -108,11 +112,11 @@ export class WorkoutEditorService {
   private mutateWorkout<T>(
     workoutId: string,
     mutator: (workout: Workout) => WorkoutMutationOutcome<T>,
-    errorMessage = `Workout ${workoutId} not found`
+    error: WorkoutMutationError = WorkoutMutationError.workoutNotFound(workoutId)
   ): WorkoutMutationOutcome<T> {
     const outcome = this.store.mutateWorkout(workoutId, mutator);
     if (!outcome) {
-      throw new Error(errorMessage);
+      throw error;
     }
 
     return outcome;
