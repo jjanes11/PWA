@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ExerciseService, Exercise } from '../../services/exercise.service';
 import { WorkoutSessionService } from '../../services/workout-session.service';
-import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { NavigationService } from '../../services/navigation.service';
 
 @Component({
@@ -17,7 +16,6 @@ export class AddExercise {
   private router = inject(Router);
   private exerciseService = inject(ExerciseService);
   private workoutSession = inject(WorkoutSessionService);
-  private workoutEditor = inject(WorkoutEditorService);
   private navigationService = inject(NavigationService);
   
   searchQuery = signal('');
@@ -70,7 +68,7 @@ export class AddExercise {
       const oldExerciseId = this.replaceExerciseId();
       
       if (targetWorkout && oldExerciseId) {
-        this.workoutEditor.replaceExerciseInWorkout(targetWorkout.id, oldExerciseId, exercise.name);
+        this.workoutSession.replaceExerciseInWorkout(targetWorkout.id, oldExerciseId, exercise.name);
         this.router.navigate([this.returnUrl()]);
       }
     } else {
@@ -104,16 +102,13 @@ export class AddExercise {
     
     if (selected.length > 0 && targetWorkout) {
       // Add each selected exercise to target workout
-      selected.forEach(selectedExercise => {
-        const exercise = this.workoutEditor.addExerciseToWorkout(targetWorkout.id, selectedExercise.name);
-        
-        // Add 3 default sets with 0 reps and weight
-        for (let i = 0; i < 3; i++) {
-          this.workoutEditor.addSetToExercise(targetWorkout.id, exercise.id);
-        }
-      });
+      const createdExercises = this.workoutSession.addExercisesWithDefaults(
+        targetWorkout.id,
+        selected.map(exercise => exercise.name),
+        3
+      );
       
-      console.log('Added exercises to workout:', selected);
+      console.log('Added exercises to workout:', createdExercises);
       this.router.navigate([this.returnUrl()]);
     }
   }

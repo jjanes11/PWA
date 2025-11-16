@@ -83,6 +83,12 @@ export class WorkoutEditorService {
     return outcome.derived;
   }
 
+  addDefaultSets(workoutId: string, exerciseId: string, count: number): void {
+    for (let i = 0; i < count; i++) {
+      this.addSetToExercise(workoutId, exerciseId);
+    }
+  }
+
   updateSet(workoutId: string, exerciseId: string, set: WorkoutSet): void {
     this.mutateWorkout<void>(workoutId, workout => ({
       workout: updateSet(workout, exerciseId, set)
