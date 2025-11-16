@@ -1,4 +1,4 @@
-import { WorkoutSessionService } from '../services/workout-session.service';
+import { WorkoutEditorService } from '../services/workout-editor.service';
 import { ExerciseActionEvent } from '../components/exercise-card/exercise-card';
 import { SetTypeClickEvent } from '../components/sets-table/sets-table';
 import { useSetTypeMenu } from './set-type-menu';
@@ -18,11 +18,11 @@ export interface ExerciseCardController {
 }
 
 export function useExerciseCardController(
-  workoutService: WorkoutSessionService,
+  workoutEditor: WorkoutEditorService,
   options: ExerciseCardControllerOptions
 ): ExerciseCardController {
   const setTypeMenu = useSetTypeMenu();
-  const setMutations = useExerciseSetMutations(workoutService, options);
+  const setMutations = useExerciseSetMutations(workoutEditor, options);
 
   function handleAction(event: ExerciseActionEvent): boolean {
     if (setMutations.handle(event)) {
@@ -53,7 +53,7 @@ export function useExerciseCardController(
             return true;
           }
 
-          workoutService.removeExerciseFromWorkout(workout.id, event.exerciseId);
+          workoutEditor.removeExerciseFromWorkout(workout.id, event.exerciseId);
           options.refreshWorkout?.(workout.id);
           return true;
         }

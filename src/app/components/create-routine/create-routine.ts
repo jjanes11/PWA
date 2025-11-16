@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { WorkoutRoutineService } from '../../services/workout-template.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
@@ -22,6 +23,7 @@ import { useWorkoutActions } from '../../utils/workout-actions';
 export class CreateRoutineComponent implements OnInit {
   private router = inject(Router);
   private workoutSession = inject(WorkoutSessionService);
+  private workoutEditor = inject(WorkoutEditorService);
   private workoutRoutineService = inject(WorkoutRoutineService);
   private editorContext = setupEditorContext({
     kind: 'draft',
@@ -34,7 +36,7 @@ export class CreateRoutineComponent implements OnInit {
   });
   private workoutContext = this.editorContext.workoutContext;
   routineDraft = this.workoutContext.workout; // Use routineDraft signal from context
-  private exerciseCardController = useExerciseCardController(this.workoutSession, {
+  private exerciseCardController = useExerciseCardController(this.workoutEditor, {
     getWorkout: () => this.workoutContext.workout()
   });
   title: string = '';

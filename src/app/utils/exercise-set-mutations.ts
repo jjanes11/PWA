@@ -1,4 +1,4 @@
-import { WorkoutSessionService } from '../services/workout-session.service';
+import { WorkoutEditorService } from '../services/workout-editor.service';
 import { Workout, Set as WorkoutSet } from '../models/workout.models';
 import { ExerciseActionEvent } from '../components/exercise-card/exercise-card';
 import { SetChangeEvent, SetCompleteEvent } from '../components/sets-table/sets-table';
@@ -14,7 +14,7 @@ interface ResolveResult {
 }
 
 export function useExerciseSetMutations(
-  workoutService: WorkoutSessionService,
+  workoutEditor: WorkoutEditorService,
   options: ExerciseSetMutationsOptions
 ) {
   const { getWorkout, refreshWorkout } = options;
@@ -48,7 +48,7 @@ export function useExerciseSetMutations(
       return;
     }
 
-    workoutService.addSetToExercise(workout.id, exerciseId);
+    workoutEditor.addSetToExercise(workout.id, exerciseId);
     ensureRefresh(workout.id);
   }
 
@@ -65,7 +65,7 @@ export function useExerciseSetMutations(
 
     const { workout, set } = result;
     const updatedSet: WorkoutSet = { ...set!, [field]: value };
-    workoutService.updateSet(workout.id, exerciseId, updatedSet);
+    workoutEditor.updateSet(workout.id, exerciseId, updatedSet);
     ensureRefresh(workout.id);
   }
 
@@ -81,7 +81,7 @@ export function useExerciseSetMutations(
 
     const { workout, set } = result;
     const updatedSet: WorkoutSet = { ...set!, completed };
-    workoutService.updateSet(workout.id, exerciseId, updatedSet);
+    workoutEditor.updateSet(workout.id, exerciseId, updatedSet);
     ensureRefresh(workout.id);
   }
 

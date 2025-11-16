@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ExerciseService, Exercise } from '../../services/exercise.service';
 import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { NavigationService } from '../../services/navigation.service';
 
 @Component({
@@ -15,7 +16,8 @@ import { NavigationService } from '../../services/navigation.service';
 export class AddExercise {
   private router = inject(Router);
   private exerciseService = inject(ExerciseService);
-  private workoutService = inject(WorkoutSessionService);
+  private workoutSession = inject(WorkoutSessionService);
+  private workoutEditor = inject(WorkoutEditorService);
   private navigationService = inject(NavigationService);
   
   searchQuery = signal('');
@@ -62,13 +64,13 @@ export class AddExercise {
   selectExercise(exercise: Exercise): void {
     // In replace mode, immediately replace and navigate back
     if (this.isReplaceMode()) {
-      const activeWorkout = this.workoutService.activeWorkout();
-      const routineDraft = this.workoutService.routineDraft();
+      const activeWorkout = this.workoutSession.activeWorkout();
+      const routineDraft = this.workoutSession.routineDraft();
       const targetWorkout = activeWorkout || routineDraft;
       const oldExerciseId = this.replaceExerciseId();
       
       if (targetWorkout && oldExerciseId) {
-        this.workoutService.replaceExerciseInWorkout(targetWorkout.id, oldExerciseId, exercise.name);
+        this.workoutEditor.replaceExerciseInWorkout(targetWorkout.id, oldExerciseId, exercise.name);
         this.router.navigate([this.returnUrl()]);
       }
     } else {
@@ -94,8 +96,8 @@ export class AddExercise {
 
   addSelectedExercises(): void {
     const selected = this.selectedExercises();
-    const activeWorkout = this.workoutService.activeWorkout();
-    const routineDraft = this.workoutService.routineDraft();
+    const activeWorkout = this.workoutSession.activeWorkout();
+    const routineDraft = this.workoutSession.routineDraft();
     
     // Use whichever workout is available (activeWorkout or routineDraft)
     const targetWorkout = activeWorkout || routineDraft;
@@ -103,11 +105,11 @@ export class AddExercise {
     if (selected.length > 0 && targetWorkout) {
       // Add each selected exercise to target workout
       selected.forEach(selectedExercise => {
-        const exercise = this.workoutService.addExerciseToWorkout(targetWorkout.id, selectedExercise.name);
+        const exercise = this.workoutEditor.addExerciseToWorkout(targetWorkout.id, selectedExercise.name);
         
         // Add 3 default sets with 0 reps and weight
         for (let i = 0; i < 3; i++) {
-          this.workoutService.addSetToExercise(targetWorkout.id, exercise.id);
+          this.workoutEditor.addSetToExercise(targetWorkout.id, exercise.id);
         }
       });
       

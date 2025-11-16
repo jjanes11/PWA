@@ -6,6 +6,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { Routine } from '../../models/workout.models';
 import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { WorkoutRoutineService } from '../../services/workout-template.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
@@ -25,6 +26,7 @@ export class EditRoutineComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private workoutSession = inject(WorkoutSessionService);
+  private workoutEditor = inject(WorkoutEditorService);
   private workoutRoutineService = inject(WorkoutRoutineService);
   private editorContext = setupEditorContext({
     kind: 'active',
@@ -32,7 +34,7 @@ export class EditRoutineComponent {
   });
   private workoutContext = this.editorContext.workoutContext;
   activeWorkout = this.workoutContext.workout;
-  private exerciseCardController = useExerciseCardController(this.workoutSession, {
+  private exerciseCardController = useExerciseCardController(this.workoutEditor, {
     getWorkout: () => this.workoutContext.workout()
   });
   private navigationContext = this.editorContext.navigation;

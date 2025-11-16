@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { Workout } from '../../models/workout.models';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
@@ -22,7 +23,8 @@ import { useWorkoutActions } from '../../utils/workout-actions';
 export class EditWorkoutComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private workoutService = inject(WorkoutSessionService);
+  private workoutSession = inject(WorkoutSessionService);
+  private workoutEditor = inject(WorkoutEditorService);
   private editorContext = setupEditorContext({
     kind: 'active',
     defaultOrigin: '/home',
@@ -40,10 +42,10 @@ export class EditWorkoutComponent {
   workout = signal<Workout | null>(null);
   workoutTitle = signal('');
   workoutDescription = signal('');
-  private exerciseCardController = useExerciseCardController(this.workoutService, {
+  private exerciseCardController = useExerciseCardController(this.workoutEditor, {
     getWorkout: () => this.workout(),
     refreshWorkout: (workoutId: string) => {
-      const refreshedWorkout = this.workoutService.workouts().find(w => w.id === workoutId);
+      const refreshedWorkout = this.workoutSession.workouts().find(w => w.id === workoutId);
       if (refreshedWorkout) {
         this.workout.set(refreshedWorkout);
       }
@@ -83,7 +85,7 @@ export class EditWorkoutComponent {
         return;
       }
 
-      const foundWorkout = this.workoutService.workouts().find(w => w.id === id);
+      const foundWorkout = this.workoutSession.workouts().find(w => w.id === id);
       if (!foundWorkout) {
         this.router.navigate(['/home']);
         return;
@@ -97,9 +99,9 @@ export class EditWorkoutComponent {
       this.navigationContext.setOrigin(`/workout/${foundWorkout.id}`);
 
       // Clear activeWorkout if it's set to this workout (from add-exercise navigation)
-      const activeWorkout = this.workoutService.activeWorkout();
+      const activeWorkout = this.workoutSession.activeWorkout();
       if (activeWorkout?.id === id) {
-        this.workoutService.setActiveWorkout(null);
+        this.workoutSession.setActiveWorkout(null);
       }
     });
   }
@@ -176,7 +178,7 @@ export class EditWorkoutComponent {
     if (!workout) return;
     
     // Temporarily set as activeWorkout so add-exercise can add to it
-    this.workoutService.setActiveWorkout(workout);
+    this.workoutSession.setActiveWorkout(workout);
     
     this.navigationContext.navigateWithReturn('/add-exercise');
   }

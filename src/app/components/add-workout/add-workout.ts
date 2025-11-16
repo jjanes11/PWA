@@ -2,6 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { DragReorderEvent } from '../../directives/draggable.directive';
 import { MenuItem } from '../card-menu/card-menu';
@@ -19,7 +20,8 @@ import { useWorkoutActions } from '../../utils/workout-actions';
   styleUrl: './add-workout.css'
 })
 export class AddWorkoutComponent implements OnInit {
-  private workoutService = inject(WorkoutSessionService);
+  private workoutSession = inject(WorkoutSessionService);
+  private workoutEditor = inject(WorkoutEditorService);
   private router = inject(Router);
   private editorContext = setupEditorContext({
     kind: 'active',
@@ -34,7 +36,7 @@ export class AddWorkoutComponent implements OnInit {
   activeWorkout = this.workoutContext.workout;
   private navigationContext = this.editorContext.navigation;
   private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
-  private exerciseCardController = useExerciseCardController(this.workoutService, {
+  private exerciseCardController = useExerciseCardController(this.workoutEditor, {
     getWorkout: () => this.workoutContext.workout(),
     onReplaceExercise: (exerciseId: string) => {
       this.navigationContext.navigateWithReturn('/add-exercise', {
@@ -46,7 +48,7 @@ export class AddWorkoutComponent implements OnInit {
       if (!workout) {
         return;
       }
-      this.workoutService.removeExerciseFromWorkout(workout.id, exerciseId);
+      this.workoutEditor.removeExerciseFromWorkout(workout.id, exerciseId);
     }
   });
   discardGuard = this.editorContext.discard!;
@@ -103,14 +105,14 @@ export class AddWorkoutComponent implements OnInit {
 
   ngOnInit(): void {
     // Create a new workout if none exists
-    this.workoutContext.ensureFresh(() => this.workoutService.createWorkout('New Workout'));
+    this.workoutContext.ensureFresh(() => this.workoutSession.createWorkout('New Workout'));
   }
 
   goBack(): void {
     const workout = this.activeWorkout();
     // Only show dialog if workout has exercises
     if (workout && workout.exercises.length > 0) {
-      this.workoutService.showWorkoutInProgressDialog();
+      this.workoutSession.showWorkoutInProgressDialog();
       this.router.navigateByUrl(this.navigationContext.origin());
     } else {
       // No exercises, perform cleanup and navigate back
@@ -140,7 +142,7 @@ export class AddWorkoutComponent implements OnInit {
   onExerciseReorder(event: DragReorderEvent): void {
     const workout = this.activeWorkout();
     if (workout) {
-      this.workoutService.reorderExercises(workout.id, event.fromId, event.toId);
+      this.workoutEditor.reorderExercises(workout.id, event.fromId, event.toId);
     }
   }
 

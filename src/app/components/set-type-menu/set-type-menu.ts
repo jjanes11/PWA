@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { BottomSheetDialog } from '../bottom-sheet-dialog/bottom-sheet-dialog';
 
 export type SetType = 'normal' | 'warmup' | 'failure' | 'drop';
@@ -28,6 +29,7 @@ export class SetTypeMenuComponent {
   @Output() closed = new EventEmitter<void>();
   
   private workoutService = inject(WorkoutSessionService);
+  private workoutEditor = inject(WorkoutEditorService);
   protected isOpen = signal(true); // Opens immediately when component is created
   
   // Static to track which menu is open globally (only one menu open at a time)
@@ -62,7 +64,7 @@ export class SetTypeMenuComponent {
       
       if (set) {
         const updatedSet = { ...set, type };
-        this.workoutService.updateSet(this.workoutId, this.exerciseId, updatedSet);
+        this.workoutEditor.updateSet(this.workoutId, this.exerciseId, updatedSet);
       }
     }
     
@@ -70,7 +72,7 @@ export class SetTypeMenuComponent {
   }
 
   removeSet(): void {
-    this.workoutService.removeSetFromExercise(this.workoutId, this.exerciseId, this.setId);
+    this.workoutEditor.removeSetFromExercise(this.workoutId, this.exerciseId, this.setId);
     this.closeMenu();
   }
 }

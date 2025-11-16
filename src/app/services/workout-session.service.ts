@@ -1,6 +1,6 @@
 import { Injectable, Signal } from '@angular/core';
-import { Workout, Exercise, Set as WorkoutSet, Routine, WorkoutStats } from '../models/workout.models';
-import { WorkoutStoreService, WorkoutMutationOutcome } from './workout-store.service';
+import { Workout, Routine, WorkoutStats } from '../models/workout.models';
+import { WorkoutStoreService } from './workout-store.service';
 import { WorkoutStatsService } from './workout-stats.service';
 import { WorkoutUiService } from './workout-ui.service';
 import { IdService } from './id.service';
@@ -9,15 +9,6 @@ import {
   workoutFromTemplate,
   cloneWorkoutForDraft
 } from '../utils/workout-entity.utils';
-import {
-  addExercise,
-  removeExercise,
-  replaceExercise,
-  reorderExercises,
-  addSet,
-  updateSet,
-  removeSet
-} from '../utils/workout-mutations';
 
 @Injectable({ providedIn: 'root' })
 export class WorkoutSessionService {
@@ -49,17 +40,13 @@ export class WorkoutSessionService {
   }
 
   createWorkout(name: string): Workout {
-    const workout = createBaseWorkout(name, {
-      idFactory: () => this.idService.generateId()
-    });
+    const workout = createBaseWorkout(name, this.withGeneratedIds());
     this.store.setActiveWorkout(workout);
     return workout;
   }
 
   createWorkoutFromRoutine(routine: Routine): Workout {
-    const workout = workoutFromTemplate(routine, {
-      idFactory: () => this.idService.generateId()
-    });
+    const workout = workoutFromTemplate(routine, this.withGeneratedIds());
     this.store.setActiveWorkout(workout);
     return workout;
   }
@@ -70,17 +57,13 @@ export class WorkoutSessionService {
       return null;
     }
 
-    const draftWorkout = cloneWorkoutForDraft(sourceWorkout, {
-      idFactory: () => this.idService.generateId()
-    });
+    const draftWorkout = cloneWorkoutForDraft(sourceWorkout, this.withGeneratedIds());
     this.store.setRoutineDraft(draftWorkout);
     return draftWorkout;
   }
 
   createRoutineDraft(name: string = 'New Routine'): Workout {
-    const draftWorkout = createBaseWorkout(name, {
-      idFactory: () => this.idService.generateId()
-    });
+    const draftWorkout = createBaseWorkout(name, this.withGeneratedIds());
     this.store.setRoutineDraft(draftWorkout);
     return draftWorkout;
   }
@@ -124,69 +107,6 @@ export class WorkoutSessionService {
     }));
   }
 
-  addExerciseToWorkout(workoutId: string, exerciseName: string): Exercise {
-    return this.mutateWorkout(
-      workoutId,
-      workout => addExercise(workout, exerciseName, {
-        idFactory: () => this.idService.generateId()
-      }),
-      `Workout ${workoutId} not found`
-    );
-  }
-
-  removeExerciseFromWorkout(workoutId: string, exerciseId: string): void {
-    this.mutateWorkout(workoutId, workout => ({
-      workout: removeExercise(workout, exerciseId)
-    }));
-  }
-
-  replaceExerciseInWorkout(workoutId: string, exerciseId: string, newExerciseName: string): void {
-    this.mutateWorkout(workoutId, workout => ({
-      workout: replaceExercise(workout, exerciseId, newExerciseName)
-    }));
-  }
-
-  reorderExercises(workoutId: string, draggedExerciseId: string, targetExerciseId: string): void {
-    this.mutateWorkout(workoutId, workout => ({
-      workout: reorderExercises(workout, draggedExerciseId, targetExerciseId)
-    }));
-  }
-
-  addSetToExercise(workoutId: string, exerciseId: string): WorkoutSet {
-    return this.mutateWorkout(
-      workoutId,
-      workout => addSet(workout, exerciseId, {
-        idFactory: () => this.idService.generateId()
-      }),
-      `Workout ${workoutId} or exercise ${exerciseId} not found`
-    );
-  }
-
-  updateSet(workoutId: string, exerciseId: string, set: WorkoutSet): void {
-    this.mutateWorkout(workoutId, workout => ({
-      workout: updateSet(workout, exerciseId, set)
-    }));
-  }
-
-  removeSetFromExercise(workoutId: string, exerciseId: string, setId: string): void {
-    this.mutateWorkout(workoutId, workout => ({
-      workout: removeSet(workout, exerciseId, setId)
-    }));
-  }
-
-  private mutateWorkout<T>(
-    workoutId: string,
-    mutator: (workout: Workout) => WorkoutMutationOutcome<T>,
-    errorMessage = `Workout ${workoutId} not found`
-  ): T {
-    const outcome = this.store.mutateWorkout(workoutId, mutator);
-    if (!outcome) {
-      throw new Error(errorMessage);
-    }
-
-    return outcome.derived as T;
-  }
-
   showWorkoutInProgressDialog(): void {
     this.uiService.showWorkoutInProgressDialog();
   }
@@ -201,6 +121,16 @@ export class WorkoutSessionService {
 
   getActiveWorkoutSnapshot(): Workout | null {
     return this.activeWorkout();
+  }
+
+  getWorkoutSnapshot(workoutId: string): Workout | null {
+    return this.store.getWorkoutById(workoutId);
+  }
+
+  private withGeneratedIds(): Parameters<typeof createBaseWorkout>[1] {
+    return {
+      idFactory: () => this.idService.generateId()
+    };
   }
 
   private calculateDuration(workout: Workout): number {
