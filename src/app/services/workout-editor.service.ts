@@ -3,15 +3,7 @@ import { Exercise, Set as WorkoutSet, Workout } from '../models/workout.models';
 import { WorkoutStoreService, WorkoutMutationOutcome } from './workout-store.service';
 import { IdService } from './id.service';
 import { WorkoutMutationError } from '../models/workout-errors';
-import {
-  addExercise,
-  removeExercise,
-  replaceExercise,
-  reorderExercises,
-  addSet,
-  updateSet,
-  removeSet
-} from '../utils/workout-mutations';
+import { exerciseMutations, setMutations } from '../utils/workout-mutations';
 
 @Injectable({ providedIn: 'root' })
 export class WorkoutEditorService {
@@ -24,7 +16,7 @@ export class WorkoutEditorService {
     const outcome = this.mutateWorkout(
       workoutId,
       workout => {
-        const result = addExercise(workout, exerciseName, {
+        const result = exerciseMutations.add(workout, exerciseName, {
           idFactory: () => this.idService.generateId()
         });
 
@@ -45,19 +37,19 @@ export class WorkoutEditorService {
 
   removeExerciseFromWorkout(workoutId: string, exerciseId: string): void {
     this.mutateWorkout<void>(workoutId, workout => ({
-      workout: removeExercise(workout, exerciseId)
+      workout: exerciseMutations.remove(workout, exerciseId)
     }));
   }
 
   replaceExerciseInWorkout(workoutId: string, exerciseId: string, newExerciseName: string): void {
     this.mutateWorkout<void>(workoutId, workout => ({
-      workout: replaceExercise(workout, exerciseId, newExerciseName)
+      workout: exerciseMutations.replace(workout, exerciseId, newExerciseName)
     }));
   }
 
   reorderExercises(workoutId: string, draggedExerciseId: string, targetExerciseId: string): void {
     this.mutateWorkout<void>(workoutId, workout => ({
-      workout: reorderExercises(workout, draggedExerciseId, targetExerciseId)
+      workout: exerciseMutations.reorder(workout, draggedExerciseId, targetExerciseId)
     }));
   }
 
@@ -65,7 +57,7 @@ export class WorkoutEditorService {
     const outcome = this.mutateWorkout(
       workoutId,
       workout => {
-        const result = addSet(workout, exerciseId, {
+        const result = setMutations.add(workout, exerciseId, {
           idFactory: () => this.idService.generateId()
         });
 
@@ -95,13 +87,13 @@ export class WorkoutEditorService {
 
   updateSet(workoutId: string, exerciseId: string, set: WorkoutSet): void {
     this.mutateWorkout<void>(workoutId, workout => ({
-      workout: updateSet(workout, exerciseId, set)
+      workout: setMutations.update(workout, exerciseId, set)
     }));
   }
 
   removeSetFromExercise(workoutId: string, exerciseId: string, setId: string): void {
     this.mutateWorkout<void>(workoutId, workout => ({
-      workout: removeSet(workout, exerciseId, setId)
+      workout: setMutations.remove(workout, exerciseId, setId)
     }));
   }
 
