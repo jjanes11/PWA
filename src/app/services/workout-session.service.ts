@@ -1,6 +1,6 @@
 import { Injectable, Signal } from '@angular/core';
 import { Workout, Exercise, Set as WorkoutSet, Routine, WorkoutStats } from '../models/workout.models';
-import { WorkoutStoreService } from './workout-store.service';
+import { WorkoutStoreService, WorkoutMutationOutcome } from './workout-store.service';
 import { WorkoutStatsService } from './workout-stats.service';
 import { WorkoutUiService } from './workout-ui.service';
 import { IdService } from './id.service';
@@ -125,63 +125,66 @@ export class WorkoutSessionService {
   }
 
   addExerciseToWorkout(workoutId: string, exerciseName: string): Exercise {
-    let createdExercise: Exercise | null = null;
-
-    const updatedWorkout = this.store.updateWorkoutById(workoutId, workout => {
-      const result = addExercise(workout, exerciseName, {
+    return this.mutateWorkout(
+      workoutId,
+      workout => addExercise(workout, exerciseName, {
         idFactory: () => this.idService.generateId()
-      });
-      createdExercise = result.exercise;
-      return result.workout;
-    });
-
-    if (!updatedWorkout || !createdExercise) {
-      throw new Error(`Workout ${workoutId} not found`);
-    }
-
-    return createdExercise;
+      }),
+      `Workout ${workoutId} not found`
+    );
   }
 
   removeExerciseFromWorkout(workoutId: string, exerciseId: string): void {
-    this.store.updateWorkoutById(workoutId, workout => removeExercise(workout, exerciseId));
+    this.mutateWorkout(workoutId, workout => ({
+      workout: removeExercise(workout, exerciseId)
+    }));
   }
 
   replaceExerciseInWorkout(workoutId: string, exerciseId: string, newExerciseName: string): void {
-    this.store.updateWorkoutById(workoutId, workout =>
-      replaceExercise(workout, exerciseId, newExerciseName)
-    );
+    this.mutateWorkout(workoutId, workout => ({
+      workout: replaceExercise(workout, exerciseId, newExerciseName)
+    }));
   }
 
   reorderExercises(workoutId: string, draggedExerciseId: string, targetExerciseId: string): void {
-    this.store.updateWorkoutById(workoutId, workout =>
-      reorderExercises(workout, draggedExerciseId, targetExerciseId)
-    );
+    this.mutateWorkout(workoutId, workout => ({
+      workout: reorderExercises(workout, draggedExerciseId, targetExerciseId)
+    }));
   }
 
   addSetToExercise(workoutId: string, exerciseId: string): WorkoutSet {
-    let createdSet: WorkoutSet | null = null;
-
-    const updatedWorkout = this.store.updateWorkoutById(workoutId, workout => {
-      const result = addSet(workout, exerciseId, {
+    return this.mutateWorkout(
+      workoutId,
+      workout => addSet(workout, exerciseId, {
         idFactory: () => this.idService.generateId()
-      });
-      createdSet = result.set;
-      return result.workout;
-    });
-
-    if (!updatedWorkout || !createdSet) {
-      throw new Error(`Workout ${workoutId} or exercise ${exerciseId} not found`);
-    }
-
-    return createdSet;
+      }),
+      `Workout ${workoutId} or exercise ${exerciseId} not found`
+    );
   }
 
   updateSet(workoutId: string, exerciseId: string, set: WorkoutSet): void {
-    this.store.updateWorkoutById(workoutId, workout => updateSet(workout, exerciseId, set));
+    this.mutateWorkout(workoutId, workout => ({
+      workout: updateSet(workout, exerciseId, set)
+    }));
   }
 
   removeSetFromExercise(workoutId: string, exerciseId: string, setId: string): void {
-    this.store.updateWorkoutById(workoutId, workout => removeSet(workout, exerciseId, setId));
+    this.mutateWorkout(workoutId, workout => ({
+      workout: removeSet(workout, exerciseId, setId)
+    }));
+  }
+
+  private mutateWorkout<T>(
+    workoutId: string,
+    mutator: (workout: Workout) => WorkoutMutationOutcome<T>,
+    errorMessage = `Workout ${workoutId} not found`
+  ): T {
+    const outcome = this.store.mutateWorkout(workoutId, mutator);
+    if (!outcome) {
+      throw new Error(errorMessage);
+    }
+
+    return outcome.derived as T;
   }
 
   showWorkoutInProgressDialog(): void {

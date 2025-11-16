@@ -73,6 +73,20 @@ export class WorkoutStoreService {
     this.updateWorkoutById(workout.id, () => workout);
   }
 
+  mutateWorkout<T>(
+    workoutId: string,
+    mutator: (workout: Workout) => WorkoutMutationOutcome<T>
+  ): WorkoutMutationOutcome<T> | null {
+    const existingWorkout = this.getWorkoutById(workoutId);
+    if (!existingWorkout) {
+      return null;
+    }
+
+    const outcome = mutator(existingWorkout);
+    this.replaceExistingWorkout(outcome.workout);
+    return outcome;
+  }
+
   clearWorkoutReferences(workoutId: string): void {
     if (this._activeWorkout()?.id === workoutId) {
       this.clearActiveWorkout();
@@ -160,4 +174,9 @@ export class WorkoutStoreService {
     return updatedRoutine;
   }
 
+}
+
+export interface WorkoutMutationOutcome<T> {
+  workout: Workout;
+  derived?: T;
 }
