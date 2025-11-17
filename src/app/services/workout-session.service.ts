@@ -1,16 +1,23 @@
 import { Injectable, Signal } from '@angular/core';
 import { Workout, Routine, WorkoutStats, Exercise } from '../models/workout.models';
-import { WorkoutStoreService } from './workout-store.service';
+import { WorkoutLifecycleService } from './workout-lifecycle.service';
+import { WorkoutPersistenceManagerService } from './workout-persistence-manager.service';
 import { WorkoutStatsService } from './workout-stats.service';
 import { WorkoutUiService } from './workout-ui.service';
 import { IdService } from './id.service';
 import { WorkoutEditorService } from './workout-editor.service';
 import { createBaseWorkout, workoutFromTemplate, cloneWorkoutForDraft } from '../utils/workout-entity.utils';
 
+/**
+ * High-level façade for workout session orchestration.
+ * Coordinates between lifecycle, persistence, editing, and UI services.
+ * Does not access WorkoutStoreService directly.
+ */
 @Injectable({ providedIn: 'root' })
 export class WorkoutSessionService {
   constructor(
-    private readonly store: WorkoutStoreService,
+    private readonly lifecycle: WorkoutLifecycleService,
+    private readonly persistence: WorkoutPersistenceManagerService,
     private readonly statsService: WorkoutStatsService,
     private readonly uiService: WorkoutUiService,
     private readonly idService: IdService,
@@ -18,15 +25,15 @@ export class WorkoutSessionService {
   ) {}
 
   get workouts(): Signal<Workout[]> {
-    return this.store.workoutsSignal();
+    return this.persistence.workoutsSignal();
   }
 
   get activeWorkout(): Signal<Workout | null> {
-    return this.store.activeWorkoutSignal();
+    return this.lifecycle.activeWorkoutSignal();
   }
 
   get routineDraft(): Signal<Workout | null> {
-    return this.store.routineDraftSignal();
+    return this.lifecycle.routineDraftSignal();
   }
 
   get workoutInProgressDialog(): Signal<boolean> {
@@ -39,72 +46,71 @@ export class WorkoutSessionService {
 
   createWorkout(name: string): Workout {
     const workout = createBaseWorkout(name, this.withGeneratedIds());
-    this.store.setActiveWorkout(workout);
+    this.lifecycle.setActiveWorkout(workout);
     return workout;
   }
 
   createWorkoutFromRoutine(routine: Routine): Workout {
     const workout = workoutFromTemplate(routine, this.withGeneratedIds());
-    this.store.setActiveWorkout(workout);
+    this.lifecycle.setActiveWorkout(workout);
     return workout;
   }
 
   createDraftFromWorkout(workoutId: string): Workout | null {
-    const sourceWorkout = this.store.findWorkoutById(workoutId);
+    const sourceWorkout = this.persistence.findWorkoutById(workoutId);
     if (!sourceWorkout) {
       return null;
     }
 
     const draftWorkout = cloneWorkoutForDraft(sourceWorkout, this.withGeneratedIds());
-    this.store.setRoutineDraft(draftWorkout);
+    this.lifecycle.setRoutineDraft(draftWorkout);
     return draftWorkout;
   }
 
   createRoutineDraft(name: string = 'New Routine'): Workout {
     const draftWorkout = createBaseWorkout(name, this.withGeneratedIds());
-    this.store.setRoutineDraft(draftWorkout);
+    this.lifecycle.setRoutineDraft(draftWorkout);
     return draftWorkout;
   }
 
   clearRoutineDraft(): void {
-    this.store.clearRoutineDraft();
+    this.lifecycle.clearRoutineDraft();
   }
 
   saveWorkout(workout: Workout): void {
-    this.store.saveWorkout(workout);
+    this.persistence.saveWorkout(workout);
   }
 
   finishActiveWorkout(workout: Workout): void {
-    this.store.saveWorkout(workout);
-    this.store.clearWorkoutReferences(workout.id);
+    this.persistence.finishWorkout(workout);
   }
 
   deleteWorkout(workoutId: string): void {
-    this.store.deleteWorkout(workoutId);
+    this.persistence.deleteWorkout(workoutId);
   }
 
   setActiveWorkout(workout: Workout | null): void {
-    this.store.setActiveWorkout(workout);
+    this.lifecycle.setActiveWorkout(workout);
   }
 
   clearActiveWorkout(): void {
-    this.store.clearActiveWorkout();
+    this.lifecycle.clearActiveWorkout();
   }
 
   setRoutineDraft(workout: Workout | null): void {
-    this.store.setRoutineDraft(workout);
+    this.lifecycle.setRoutineDraft(workout);
   }
 
   updateDraft(workout: Workout): void {
-    this.store.setRoutineDraft(workout);
+    this.lifecycle.setRoutineDraft(workout);
   }
 
   updateActiveWorkout(workout: Workout): void {
-    this.store.setActiveWorkout(workout);
+    this.lifecycle.setActiveWorkout(workout);
   }
 
   completeWorkout(workoutId: string): void {
-    this.store.updateWorkout(workoutId, workout => ({
+    this.persistence.updateWorkout(workoutId, workout => ({
       ...workout,
       completed: true,
       duration: this.calculateDuration(workout)
@@ -124,11 +130,11 @@ export class WorkoutSessionService {
   }
 
   getActiveWorkoutSnapshot(): Workout | null {
-    return this.activeWorkout();
+    return this.lifecycle.getActiveWorkoutSnapshot();
   }
 
   getWorkoutSnapshot(workoutId: string): Workout | null {
-    return this.store.findWorkoutById(workoutId);
+    return this.persistence.findWorkoutById(workoutId);
   }
 
   addExercisesWithDefaults(

@@ -2,12 +2,14 @@ import { Injectable, Signal, signal } from '@angular/core';
 import { Workout, Routine } from '../models/workout.models';
 import { WorkoutPersistenceService } from './workout-persistence.service';
 
+/**
+ * Repository for workout and routine persistence.
+ * Manages only persisted data - no session state.
+ */
 @Injectable({ providedIn: 'root' })
 export class WorkoutStoreService {
   private readonly workouts = signal<Workout[]>([]);
   private readonly routines = signal<Routine[]>([]);
-  private readonly activeWorkout = signal<Workout | null>(null);
-  private readonly routineDraft = signal<Workout | null>(null);
 
   constructor(private readonly persistence: WorkoutPersistenceService) {
     this.restoreFromPersistence();
@@ -21,14 +23,6 @@ export class WorkoutStoreService {
     return this.routines.asReadonly();
   }
 
-  activeWorkoutSignal(): Signal<Workout | null> {
-    return this.activeWorkout.asReadonly();
-  }
-
-  routineDraftSignal(): Signal<Workout | null> {
-    return this.routineDraft.asReadonly();
-  }
-
   listWorkouts(): Workout[] {
     return this.workouts();
   }
@@ -38,21 +32,21 @@ export class WorkoutStoreService {
   }
 
   findWorkoutById(workoutId: string): Workout | null {
-    const active = this.activeWorkout();
-    if (active?.id === workoutId) {
-      return active;
-    }
-
-    const draft = this.routineDraft();
-    if (draft?.id === workoutId) {
-      return draft;
-    }
-
     return this.workouts().find(workout => workout.id === workoutId) ?? null;
   }
 
   findRoutineById(routineId: string): Routine | null {
     return this.routines().find(routine => routine.id === routineId) ?? null;
+  }
+
+  private setWorkouts(workouts: Workout[]): void {
+    this.workouts.set(workouts);
+    this.persistence.saveWorkouts(workouts);
+  }
+
+  private setRoutines(routines: Routine[]): void {
+    this.routines.set(routines);
+    this.persistence.saveRoutines(routines);
   }
 
   saveWorkout(workout: Workout): void {
@@ -70,11 +64,9 @@ export class WorkoutStoreService {
     workoutId: string,
     mutate: (workout: Workout) => Workout
   ): Workout | null {
-    // Try persisted workouts first
-    const workouts = this.workouts();
     let updated: Workout | null = null;
     
-    const next = workouts.map(workout => {
+    const next = this.workouts().map(workout => {
       if (workout.id === workoutId) {
         updated = mutate(workout);
         return updated;
@@ -87,29 +79,12 @@ export class WorkoutStoreService {
       return updated;
     }
 
-    // Try active workout
-    const active = this.activeWorkout();
-    if (active?.id === workoutId) {
-      const updatedActive = mutate(active);
-      this.activeWorkout.set(updatedActive);
-      return updatedActive;
-    }
-
-    // Try routine draft
-    const draft = this.routineDraft();
-    if (draft?.id === workoutId) {
-      const updatedDraft = mutate(draft);
-      this.routineDraft.set(updatedDraft);
-      return updatedDraft;
-    }
-
     return null;
   }
 
   deleteWorkout(workoutId: string): void {
     const remaining = this.workouts().filter(w => w.id !== workoutId);
     this.setWorkouts(remaining);
-    this.clearWorkoutReferences(workoutId);
   }
 
   mutateWorkout<T>(
@@ -168,48 +143,12 @@ export class WorkoutStoreService {
     this.setRoutines(routines);
   }
 
-  setActiveWorkout(workout: Workout | null): void {
-    this.activeWorkout.set(workout);
-  }
-
-  clearActiveWorkout(): void {
-    this.activeWorkout.set(null);
-  }
-
-  setRoutineDraft(workout: Workout | null): void {
-    this.routineDraft.set(workout);
-  }
-
-  clearRoutineDraft(): void {
-    this.routineDraft.set(null);
-  }
-
-  clearWorkoutReferences(workoutId: string): void {
-    if (this.activeWorkout()?.id === workoutId) {
-      this.clearActiveWorkout();
-    }
-
-    if (this.routineDraft()?.id === workoutId) {
-      this.clearRoutineDraft();
-    }
-  }
-
   private restoreFromPersistence(): void {
     const workouts = this.persistence.loadWorkouts();
     this.workouts.set(workouts);
 
     const routines = this.persistence.loadRoutines();
     this.routines.set(routines);
-  }
-
-  private setWorkouts(workouts: Workout[]): void {
-    this.workouts.set(workouts);
-    this.persistence.saveWorkouts(workouts);
-  }
-
-  private setRoutines(routines: Routine[]): void {
-    this.routines.set(routines);
-    this.persistence.saveRoutines(routines);
   }
 }
 
