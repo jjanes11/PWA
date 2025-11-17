@@ -1,6 +1,6 @@
 import { Injectable, Signal, signal } from '@angular/core';
 import { Workout } from '../models/workout.models';
-import { WorkoutStoreService } from './workout-store.service';
+import { DataStoreService } from './data-store.service';
 
 /**
  * Manages workout lifecycle state (active workout, routine drafts).
@@ -11,7 +11,7 @@ export class WorkoutLifecycleService {
   private readonly activeWorkout = signal<Workout | null>(null);
   private readonly routineDraft = signal<Workout | null>(null);
 
-  constructor(private readonly store: WorkoutStoreService) {}
+  constructor(private readonly store: DataStoreService) {}
 
   activeWorkoutSignal(): Signal<Workout | null> {
     return this.activeWorkout.asReadonly();

@@ -10,7 +10,7 @@ import { createBaseWorkout, workoutFromTemplate, cloneWorkoutForDraft } from '..
 /**
  * High-level façade for workout session orchestration.
  * Coordinates between lifecycle, persistence, editing, and UI services.
- * Does not access WorkoutStoreService directly.
+ * Does not access DataStoreService directly.
  */
 @Injectable({ providedIn: 'root' })
 export class WorkoutSessionService {

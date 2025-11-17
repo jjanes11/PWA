@@ -9,8 +9,8 @@ interface PersistenceConfig {
 @Injectable({ providedIn: 'root' })
 export class WorkoutPersistenceService {
   private readonly config: PersistenceConfig = {
-    workoutsKey: 'workout-tracker-data',
-    routinesKey: 'workout-templates'
+    workoutsKey: 'workout-data',
+    routinesKey: 'routine-data'
   };
 
   saveWorkouts(workouts: Workout[]): void {

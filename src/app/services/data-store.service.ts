@@ -3,11 +3,11 @@ import { Workout, Routine } from '../models/workout.models';
 import { WorkoutPersistenceService } from './workout-persistence.service';
 
 /**
- * Repository for workout and routine persistence.
- * Manages only persisted data - no session state.
+ * Central repository for all persisted application data.
+ * Manages workouts and routines - no session state.
  */
 @Injectable({ providedIn: 'root' })
-export class WorkoutStoreService {
+export class DataStoreService {
   private readonly workouts = signal<Workout[]>([]);
   private readonly routines = signal<Routine[]>([]);
 

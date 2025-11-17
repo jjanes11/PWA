@@ -1,6 +1,6 @@
 import { Injectable, Signal } from '@angular/core';
 import { Workout } from '../models/workout.models';
-import { WorkoutStoreService } from './workout-store.service';
+import { DataStoreService } from './data-store.service';
 import { WorkoutLifecycleService } from './workout-lifecycle.service';
 
 /**
@@ -10,7 +10,7 @@ import { WorkoutLifecycleService } from './workout-lifecycle.service';
 @Injectable({ providedIn: 'root' })
 export class WorkoutPersistenceManagerService {
   constructor(
-    private readonly store: WorkoutStoreService,
+    private readonly store: DataStoreService,
     private readonly lifecycle: WorkoutLifecycleService
   ) {}
 

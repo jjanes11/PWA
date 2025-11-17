@@ -1,6 +1,6 @@
 import { Injectable, Signal } from '@angular/core';
 import { Routine } from '../models/workout.models';
-import { WorkoutStoreService } from './workout-store.service';
+import { DataStoreService } from './data-store.service';
 
 /**
  * Handles routine template persistence operations.
@@ -8,7 +8,7 @@ import { WorkoutStoreService } from './workout-store.service';
  */
 @Injectable({ providedIn: 'root' })
 export class RoutinePersistenceService {
-  constructor(private readonly store: WorkoutStoreService) {}
+  constructor(private readonly store: DataStoreService) {}
 
   routinesSignal(): Signal<Routine[]> {
     return this.store.routinesSignal();

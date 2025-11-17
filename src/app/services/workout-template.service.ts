@@ -5,7 +5,7 @@ import { WorkoutSessionService } from './workout-session.service';
 import { generateId } from '../utils/id-generator';
 
 /**
- * High-level service for routine template management.
+ * High-level service for routine management.
  * Coordinates routine operations through persistence service.
  */
 @Injectable({ providedIn: 'root' })

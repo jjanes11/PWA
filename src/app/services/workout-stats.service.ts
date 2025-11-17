@@ -1,12 +1,12 @@
 import { Injectable, Signal, computed } from '@angular/core';
-import { WorkoutStats } from '../models/workout.models';
-import { WorkoutStoreService } from './workout-store.service';
+import { Workout, WorkoutStats } from '../models/workout.models';
+import { DataStoreService } from './data-store.service';
 
 @Injectable({ providedIn: 'root' })
 export class WorkoutStatsService {
   readonly stats: Signal<WorkoutStats>;
 
-  constructor(private readonly store: WorkoutStoreService) {
+  constructor(private readonly store: DataStoreService) {
     const workouts = this.store.workoutsSignal();
     this.stats = computed(() => {
       const completed = workouts().filter(w => w.completed);
