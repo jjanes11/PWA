@@ -49,80 +49,91 @@ export class DataStoreService {
     this.storage.saveRoutines(routines);
   }
 
-  saveWorkout(workout: Workout): void {
-    const current = this.workouts();
-    const index = current.findIndex(w => w.id === workout.id);
-    
+  // Generic save/update helper
+  private saveEntity<T extends { id: string }>(
+    entities: T[],
+    entity: T,
+    setter: (entities: T[]) => void
+  ): void {
+    const index = entities.findIndex(e => e.id === entity.id);
     const updated = index >= 0
-      ? current.map(w => w.id === workout.id ? workout : w)
-      : [...current, workout];
+      ? entities.map(e => e.id === entity.id ? entity : e)
+      : [...entities, entity];
+    setter(updated);
+  }
+
+  // Generic update helper
+  private updateEntity<T extends { id: string }>(
+    entities: T[],
+    entityId: string,
+    mutate: (entity: T) => T,
+    setter: (entities: T[]) => void
+  ): T | null {
+    let updated: T | null = null;
     
-    this.setWorkouts(updated);
+    const next = entities.map(entity => {
+      if (entity.id === entityId) {
+        updated = mutate(entity);
+        return updated;
+      }
+      return entity;
+    });
+
+    if (updated) {
+      setter(next);
+    }
+
+    return updated;
+  }
+
+  // Generic delete helper
+  private deleteEntity<T extends { id: string }>(
+    entities: T[],
+    entityId: string,
+    setter: (entities: T[]) => void
+  ): void {
+    const remaining = entities.filter(e => e.id !== entityId);
+    setter(remaining);
+  }
+
+  saveWorkout(workout: Workout): void {
+    this.saveEntity(this.workouts(), workout, (workouts) => this.setWorkouts(workouts));
   }
 
   updateWorkout(
     workoutId: string,
     mutate: (workout: Workout) => Workout
   ): Workout | null {
-    let updated: Workout | null = null;
-    
-    const next = this.workouts().map(workout => {
-      if (workout.id === workoutId) {
-        updated = mutate(workout);
-        return updated;
-      }
-      return workout;
-    });
-
-    if (updated) {
-      this.setWorkouts(next);
-      return updated;
-    }
-
-    return null;
+    return this.updateEntity(
+      this.workouts(),
+      workoutId,
+      mutate,
+      (workouts) => this.setWorkouts(workouts)
+    );
   }
 
   deleteWorkout(workoutId: string): void {
-    const remaining = this.workouts().filter(w => w.id !== workoutId);
-    this.setWorkouts(remaining);
+    this.deleteEntity(this.workouts(), workoutId, (workouts) => this.setWorkouts(workouts));
   }
 
   saveRoutine(routine: Routine): void {
-    const current = this.routines();
-    const index = current.findIndex(r => r.id === routine.id);
-    
-    const updated = index >= 0
-      ? current.map(r => r.id === routine.id ? routine : r)
-      : [...current, routine];
-    
-    this.setRoutines(updated);
+    this.saveEntity(this.routines(), routine, (routines) => this.setRoutines(routines));
   }
 
   updateRoutine(
     routineId: string,
     mutate: (routine: Routine) => Routine
   ): Routine | null {
-    let updated: Routine | null = null;
-    
-    const next = this.routines().map(routine => {
-      if (routine.id === routineId) {
-        updated = mutate(routine);
-        return updated;
-      }
-      return routine;
-    });
-
-    if (!updated) {
-      return null;
-    }
-
-    this.setRoutines(next);
-    return updated;
+    return this.updateEntity(
+      this.routines(),
+      routineId,
+      mutate,
+      (routines) => this.setRoutines(routines)
+    );
   }
 
   deleteRoutine(routineId: string): void {
-    const remaining = this.routines().filter(r => r.id !== routineId);
-    this.setRoutines(remaining);
+    this.deleteEntity(this.routines(), routineId, (routines) => this.setRoutines(routines));
   }
 
   replaceAllRoutines(routines: Routine[]): void {
