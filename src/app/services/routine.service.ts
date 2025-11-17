@@ -23,10 +23,6 @@ export class RoutineService {
     return this.store.routinesSignal();
   }
 
-  get routines() {
-    return this.store.routinesSignal();
-  }
-
   listRoutines(): Routine[] {
     return this.store.listRoutines();
   }
@@ -36,7 +32,7 @@ export class RoutineService {
   }
 
   // Routine draft access
-  get routineDraft(): Signal<Workout | null> {
+  routineDraftSignal(): Signal<Workout | null> {
     return this.routineDraftService.routineDraftSignal();
   }
 

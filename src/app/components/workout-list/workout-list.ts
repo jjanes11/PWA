@@ -26,7 +26,7 @@ export class WorkoutListComponent {
   private pendingAction: (() => void) | null = null;
 
   workouts = this.workoutService.workoutsSignal();
-  routines = this.routineService.routines;
+  routines = this.routineService.routinesSignal();
   showDeleteDialog = signal(false);
   showWorkoutInProgressDialog = signal(false);
   selectedRoutineId = signal<string | null>(null);

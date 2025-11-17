@@ -4,11 +4,11 @@ import { DataStoreService } from './data-store.service';
 
 @Injectable({ providedIn: 'root' })
 export class WorkoutStatsService {
-  readonly stats: Signal<WorkoutStats>;
+  readonly statsSignal: Signal<WorkoutStats>;
 
   constructor(private readonly store: DataStoreService) {
     const workouts = this.store.workoutsSignal();
-    this.stats = computed(() => {
+    this.statsSignal = computed(() => {
       const completed = workouts().filter(w => w.completed);
 
       const totalExercises = completed.reduce((sum, w) => sum + w.exercises.length, 0);

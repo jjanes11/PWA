@@ -30,12 +30,12 @@ export class WorkoutService {
   }
 
   // Stats
-  get stats(): Signal<WorkoutStats> {
-    return this.statsService.stats;
+  statsSignal(): Signal<WorkoutStats> {
+    return this.statsService.statsSignal;
   }
 
   // Active workout access
-  get activeWorkout(): Signal<Workout | null> {
+  activeWorkoutSignal(): Signal<Workout | null> {
     return this.activeWorkoutService.activeWorkoutSignal();
   }
 

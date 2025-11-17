@@ -4,7 +4,7 @@ import { StorageService } from './storage.service';
 
 /**
  * Central repository for all persisted application data.
- * Manages workouts and routines - no session state.
+ * Manages workouts and routines.
  */
 @Injectable({ providedIn: 'root' })
 export class DataStoreService {
