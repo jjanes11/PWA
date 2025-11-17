@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Workout } from '../../models/workout.models';
+import { Workout, Routine } from '../../models/workout.models';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { WorkoutService } from '../../services/workout.service';
 import { RoutineService } from '../../services/routine.service';
@@ -11,7 +11,7 @@ import { NavigationService } from '../../services/navigation.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
-import { WorkoutEditorComponent, EditorButtonConfig, BottomButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
+import { ExerciseListEditorComponent, EditorButtonConfig, BottomButtonConfig, ExerciseListEditorEmptyState } from '../exercise-list-editor/exercise-list-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useDiscardGuard } from '../../utils/discard-guard';
 import { useNavigationContext } from '../../utils/navigation-context';
@@ -19,7 +19,7 @@ import { useNavigationContext } from '../../utils/navigation-context';
 @Component({
   selector: 'app-create-routine',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConfirmationDialog, SetTypeMenuComponent, WorkoutEditorComponent],
+  imports: [CommonModule, FormsModule, ConfirmationDialog, SetTypeMenuComponent, ExerciseListEditorComponent],
   templateUrl: './create-routine.html',
   styleUrl: './create-routine.css'
 })
@@ -53,7 +53,10 @@ export class CreateRoutineComponent implements OnInit {
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
     getWorkout: () => this.routineDraft(),
     onWorkoutUpdated: (workout) => {
-      this.routineDraftService.setRoutineDraft(workout);
+      // Routine drafts are stored as Workout type
+      if ('date' in workout) {
+        this.routineDraftService.setRoutineDraft(workout);
+      }
     }
   });
   
@@ -71,7 +74,7 @@ export class CreateRoutineComponent implements OnInit {
     variant: 'primary'
   };
 
-  emptyState: WorkoutEditorEmptyState = {
+  emptyState: ExerciseListEditorEmptyState = {
     iconPath: 'M3 10h2v4H3v-4Zm3-3h2v10H6V7Zm12 0h-2v10h2V7Zm3 3h-2v4h2v-4ZM9 11h6v2H9v-2Z',
     title: 'No exercises yet',
     message: 'Add exercises to build your routine.'
@@ -85,8 +88,8 @@ export class CreateRoutineComponent implements OnInit {
     this.exerciseCardController.closeSetTypeMenu();
   }
 
-  onWorkoutUpdated(workout: Workout): void {
-    this.routineDraftService.setRoutineDraft(workout);
+  onWorkoutUpdated(workout: Workout | Routine): void {
+    this.routineDraftService.setRoutineDraft(workout as Workout);
   }
 
   constructor() {}

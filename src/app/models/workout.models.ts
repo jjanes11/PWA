@@ -31,19 +31,7 @@ export interface Workout {
 export interface Routine {
   id: string;
   name: string;
-  exercises: RoutineExercise[];
-}
-
-export interface RoutineExercise {
-  id: string;
-  name: string;
-  sets: RoutineSet[];
-}
-
-export interface RoutineSet {
-  reps: number;
-  weight: number;
-  type?: SetType; // Set type (defaults to 'normal')
+  exercises: Exercise[]; // Same structure as Workout
 }
 
 export interface WorkoutStats {

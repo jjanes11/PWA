@@ -1,11 +1,11 @@
-import { Exercise, Set as WorkoutSet, Workout } from '../models/workout.models';
+import { Exercise, Set as WorkoutSet, Workout, Routine } from '../models/workout.models';
 import { generateId } from './id-generator';
 
 export const exerciseMutations = {
-  add(
-    workout: Workout,
+  add<T extends Workout | Routine>(
+    workout: T,
     exerciseName: string,
-  ): { workout: Workout; exercise: Exercise } {
+  ): { workout: T; exercise: Exercise } {
     const exercise: Exercise = {
       id: generateId(),
       name: exerciseName,
@@ -16,28 +16,28 @@ export const exerciseMutations = {
       workout: {
         ...workout,
         exercises: [...workout.exercises, exercise]
-      },
+      } as T,
       exercise
     };
   },
 
-  remove(workout: Workout, exerciseId: string): Workout {
+  remove<T extends Workout | Routine>(workout: T, exerciseId: string): T {
     return {
       ...workout,
       exercises: workout.exercises.filter(exercise => exercise.id !== exerciseId)
-    };
+    } as T;
   },
 
-  replace(workout: Workout, exerciseId: string, newName: string): Workout {
+  replace<T extends Workout | Routine>(workout: T, exerciseId: string, newName: string): T {
     return {
       ...workout,
       exercises: workout.exercises.map(exercise =>
         exercise.id === exerciseId ? { ...exercise, name: newName } : exercise
       )
-    };
+    } as T;
   },
 
-  reorder(workout: Workout, draggedExerciseId: string, targetExerciseId: string): Workout {
+  reorder<T extends Workout | Routine>(workout: T, draggedExerciseId: string, targetExerciseId: string): T {
     const exercises = [...workout.exercises];
     const draggedIndex = exercises.findIndex(exercise => exercise.id === draggedExerciseId);
     const targetIndex = exercises.findIndex(exercise => exercise.id === targetExerciseId);
@@ -49,15 +49,15 @@ export const exerciseMutations = {
     const [draggedExercise] = exercises.splice(draggedIndex, 1);
     exercises.splice(targetIndex, 0, draggedExercise);
 
-    return { ...workout, exercises };
+    return { ...workout, exercises } as T;
   }
 } as const;
 
 export const setMutations = {
-  add(
-    workout: Workout,
+  add<T extends Workout | Routine>(
+    workout: T,
     exerciseId: string,
-  ): { workout: Workout; set: WorkoutSet | null } {
+  ): { workout: T; set: WorkoutSet | null } {
     let createdSet: WorkoutSet | null = null;
 
     const exercises = workout.exercises.map(exercise => {
@@ -81,12 +81,12 @@ export const setMutations = {
     });
 
     return {
-      workout: createdSet ? { ...workout, exercises } : workout,
+      workout: createdSet ? { ...workout, exercises } as T : workout,
       set: createdSet
     };
   },
 
-  update(workout: Workout, exerciseId: string, updatedSet: WorkoutSet): Workout {
+  update<T extends Workout | Routine>(workout: T, exerciseId: string, updatedSet: WorkoutSet): T {
     return {
       ...workout,
       exercises: workout.exercises.map(exercise =>
@@ -99,10 +99,10 @@ export const setMutations = {
             }
           : exercise
       )
-    };
+    } as T;
   },
 
-  remove(workout: Workout, exerciseId: string, setId: string): Workout {
+  remove<T extends Workout | Routine>(workout: T, exerciseId: string, setId: string): T {
     return {
       ...workout,
       exercises: workout.exercises.map(exercise =>
@@ -113,6 +113,6 @@ export const setMutations = {
             }
           : exercise
       )
-    };
+    } as T;
   }
 } as const;

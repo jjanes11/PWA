@@ -11,7 +11,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { BottomSheetDialog } from '../bottom-sheet-dialog/bottom-sheet-dialog';
-import { Workout } from '../../models/workout.models';
+import { Workout, Routine } from '../../models/workout.models';
 
 export type SetType = 'normal' | 'warmup' | 'failure' | 'drop';
 
@@ -23,10 +23,10 @@ export type SetType = 'normal' | 'warmup' | 'failure' | 'drop';
   styleUrl: './set-type-menu.css'
 })
 export class SetTypeMenuComponent {
-  @Input({ required: true }) workout!: Workout;
+  @Input({ required: true }) workout!: Workout | Routine;
   @Input({ required: true }) exerciseId!: string;
   @Input({ required: true }) setId!: string;
-  @Output() workoutUpdated = new EventEmitter<Workout>();
+  @Output() workoutUpdated = new EventEmitter<Workout | Routine>();
   @Output() closed = new EventEmitter<void>();
   
   private workoutEditor = inject(WorkoutEditorService);

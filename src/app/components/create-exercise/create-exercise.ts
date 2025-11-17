@@ -12,7 +12,6 @@ import { NavigationService } from '../../services/navigation.service';
   styleUrl: './create-exercise.css'
 })
 export class CreateExercise {
-  private router = inject(Router);
   private exerciseService = inject(ExerciseService);
   private navigationService = inject(NavigationService);
   

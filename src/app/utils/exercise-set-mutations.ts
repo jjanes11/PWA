@@ -1,15 +1,15 @@
 import { WorkoutEditorService } from '../services/workout-editor.service';
-import { Workout, Set as WorkoutSet } from '../models/workout.models';
+import { Workout, Routine, Set as WorkoutSet } from '../models/workout.models';
 import { ExerciseActionEvent } from '../components/exercise-card/exercise-card';
 import { SetChangeEvent, SetCompleteEvent } from '../components/sets-table/sets-table';
 
 export interface ExerciseSetMutationsOptions {
-  getWorkout: () => Workout | null;
-  onWorkoutUpdated: (workout: Workout) => void;
+  getWorkout: () => Workout | Routine | null;
+  onWorkoutUpdated: (workout: Workout | Routine) => void;
 }
 
 interface ResolveResult {
-  workout: Workout;
+  workout: Workout | Routine;
   set?: WorkoutSet;
 }
 

@@ -27,7 +27,8 @@ export class StorageService {
   }
 
   loadRoutines(): Routine[] {
-    return this.load<Routine>(this.config.routinesKey, 'routines');
+    const routines = this.load<Routine>(this.config.routinesKey, 'routines');
+    return routines.map(this.hydrateRoutine);
   }
 
   private save<T>(key: string, data: T[], entityName: string): void {
@@ -54,6 +55,20 @@ export class StorageService {
       date: new Date(workout.date),
       startTime: workout.startTime ? new Date(workout.startTime) : undefined,
       endTime: workout.endTime ? new Date(workout.endTime) : undefined
+    };
+  }
+
+  private hydrateRoutine(routine: Routine): Routine {
+    // Ensure all sets have unique IDs
+    return {
+      ...routine,
+      exercises: routine.exercises.map(exercise => ({
+        ...exercise,
+        sets: exercise.sets.map(set => ({
+          ...set,
+          id: set.id || crypto.randomUUID()
+        }))
+      }))
     };
   }
 }

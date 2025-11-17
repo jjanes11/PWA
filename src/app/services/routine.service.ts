@@ -49,9 +49,11 @@ export class RoutineService {
         id: generateId(),
         name: exercise.name,
         sets: exercise.sets.map(set => ({
+          id: generateId(),
           reps: set.reps,
           weight: set.weight,
-          type: set.type
+          type: set.type,
+          completed: false
         }))
       }))
     };

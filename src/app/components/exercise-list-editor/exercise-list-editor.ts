@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, WritableSignal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Workout, Exercise } from '../../models/workout.models';
+import { Workout, Routine, Exercise } from '../../models/workout.models';
 import { ExerciseCardComponent, ExerciseActionEvent, ExerciseCardMode } from '../exercise-card/exercise-card';
 import { MenuItem } from '../card-menu/card-menu';
 import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
@@ -19,23 +19,23 @@ export interface BottomButtonConfig {
   disabled?: boolean;
 }
 
-export interface WorkoutEditorEmptyState {
+export interface ExerciseListEditorEmptyState {
   iconPath?: string;
   title?: string;
   message?: string;
 }
 
 @Component({
-  selector: 'app-workout-editor',
+  selector: 'app-exercise-list-editor',
   standalone: true,
   imports: [CommonModule, ExerciseCardComponent, DraggableDirective],
-  templateUrl: './workout-editor.html',
-  styleUrl: './workout-editor.css'
+  templateUrl: './exercise-list-editor.html',
+  styleUrl: './exercise-list-editor.css'
 })
-export class WorkoutEditorComponent {
+export class ExerciseListEditorComponent {
   @Input() title?: string;
   @Input() subtitle?: string;
-  @Input() workout: Workout | null = null;
+  @Input() workout: Workout | Routine | null = null;
   @Input() exerciseMode: ExerciseCardMode = 'edit';
   @Input() showMenu = false;
   @Input() showAddSetButton = false;
@@ -48,7 +48,7 @@ export class WorkoutEditorComponent {
   @Input() rightButton?: EditorButtonConfig;
   @Input() bottomPrimary?: BottomButtonConfig;
   @Input() bottomSecondary?: BottomButtonConfig;
-  @Input() emptyState?: WorkoutEditorEmptyState;
+  @Input() emptyState?: ExerciseListEditorEmptyState;
   @Input() loading = false;
   @Input() exerciseTrackBy: (exercise: Exercise) => string = (exercise) => exercise.id;
 

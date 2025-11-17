@@ -1,5 +1,5 @@
 @if (workout(); as w) {
-  <app-workout-editor
+  <app-exercise-list-editor
     [title]="'Edit Workout'"
     [workout]="w"
     [exerciseMode]="'edit'"
@@ -66,7 +66,7 @@
         <div class="jacaona-section-title">Exercises</div>
       </div>
     </div>
-  </app-workout-editor>
+  </app-exercise-list-editor>
 } @else {
   <div class="jacaona-loading">
     <p>Loading workout...</p>

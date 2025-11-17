@@ -1,4 +1,4 @@
-<app-workout-editor
+<app-exercise-list-editor
   [title]="'Add Workout'"
   [workout]="activeWorkout()"
   [exerciseMode]="'edit'"
@@ -20,7 +20,7 @@
   (exerciseReorder)="onExerciseReorder($event)"
   (bottomPrimaryAction)="addExercise()"
   (bottomSecondaryAction)="discardWorkout()"
-></app-workout-editor>
+></app-exercise-list-editor>
 
 <app-confirmation-dialog
   [isVisible]="discardGuard.isVisible()"

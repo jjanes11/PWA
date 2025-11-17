@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Workout } from '../../models/workout.models';
+import { Workout, Routine } from '../../models/workout.models';
 import { WorkoutService } from '../../services/workout.service';
 import { ActiveWorkoutService } from '../../services/active-workout.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
@@ -12,14 +12,14 @@ import { DragReorderEvent } from '../../directives/draggable.directive';
 import { MenuItem } from '../card-menu/card-menu';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
-import { WorkoutEditorComponent, BottomButtonConfig, EditorButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
+import { ExerciseListEditorComponent, BottomButtonConfig, EditorButtonConfig, ExerciseListEditorEmptyState } from '../exercise-list-editor/exercise-list-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useDiscardGuard } from '../../utils/discard-guard';
 import { useNavigationContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-add-workout',
-  imports: [CommonModule, ConfirmationDialog, SetTypeMenuComponent, WorkoutEditorComponent],
+  imports: [CommonModule, ConfirmationDialog, SetTypeMenuComponent, ExerciseListEditorComponent],
   templateUrl: './add-workout.html',
   styleUrl: './add-workout.css'
 })
@@ -53,7 +53,10 @@ export class AddWorkoutComponent implements OnInit {
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
     getWorkout: () => this.activeWorkout(),
     onWorkoutUpdated: (workout) => {
-      this.activeWorkoutService.setActiveWorkout(workout);
+      // Only workouts can be active, not routines
+      if ('date' in workout) {
+        this.activeWorkoutService.setActiveWorkout(workout);
+      }
     },
     onReplaceExercise: (exerciseId: string) => {
       const workout = this.activeWorkout();
@@ -106,7 +109,7 @@ export class AddWorkoutComponent implements OnInit {
     variant: 'danger'
   };
 
-  emptyState: WorkoutEditorEmptyState = {
+  emptyState: ExerciseListEditorEmptyState = {
     iconPath: 'M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z',
     title: 'Get started',
     message: 'Add your first exercise to build this workout.'
@@ -116,8 +119,8 @@ export class AddWorkoutComponent implements OnInit {
     this.exerciseCardController.closeSetTypeMenu();
   }
 
-  onWorkoutUpdated(workout: Workout): void {
-    this.activeWorkoutService.setActiveWorkout(workout);
+  onWorkoutUpdated(workout: Workout | Routine): void {
+    this.activeWorkoutService.setActiveWorkout(workout as Workout);
   }
 
   ngOnInit(): void {

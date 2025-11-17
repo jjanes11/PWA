@@ -1,38 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Exercise, Set as WorkoutSet, Workout } from '../models/workout.models';
+import { Exercise, Set as WorkoutSet, Workout, Routine } from '../models/workout.models';
 import { WorkoutMutationError } from '../models/workout-errors';
 import { exerciseMutations, setMutations } from '../utils/workout-mutations';
 
 @Injectable({ providedIn: 'root' })
 export class WorkoutEditorService {
-  addExerciseToWorkout(workout: Workout, exerciseName: string): { workout: Workout; exercise: Exercise } {
+  addExerciseToWorkout<T extends Workout | Routine>(workout: T, exerciseName: string): { workout: T; exercise: Exercise } {
     const result = exerciseMutations.add(workout, exerciseName);
-    return { workout: result.workout, exercise: result.exercise };
+    return { workout: result.workout as T, exercise: result.exercise };
   }
 
-  removeExerciseFromWorkout(workout: Workout, exerciseId: string): Workout {
-    return exerciseMutations.remove(workout, exerciseId);
+  removeExerciseFromWorkout<T extends Workout | Routine>(workout: T, exerciseId: string): T {
+    return exerciseMutations.remove(workout, exerciseId) as T;
   }
 
-  replaceExerciseInWorkout(workout: Workout, exerciseId: string, newExerciseName: string): Workout {
-    return exerciseMutations.replace(workout, exerciseId, newExerciseName);
+  replaceExerciseInWorkout<T extends Workout | Routine>(workout: T, exerciseId: string, newExerciseName: string): T {
+    return exerciseMutations.replace(workout, exerciseId, newExerciseName) as T;
   }
 
-  reorderExercises(workout: Workout, draggedExerciseId: string, targetExerciseId: string): Workout {
-    return exerciseMutations.reorder(workout, draggedExerciseId, targetExerciseId);
+  reorderExercises<T extends Workout | Routine>(workout: T, draggedExerciseId: string, targetExerciseId: string): T {
+    return exerciseMutations.reorder(workout, draggedExerciseId, targetExerciseId) as T;
   }
 
-  addSetToExercise(workout: Workout, exerciseId: string): { workout: Workout; set: WorkoutSet } {
+  addSetToExercise<T extends Workout | Routine>(workout: T, exerciseId: string): { workout: T; set: WorkoutSet } {
     const result = setMutations.add(workout, exerciseId);
 
     if (!result.set) {
       throw WorkoutMutationError.exerciseNotFound(workout.id, exerciseId);
     }
 
-    return { workout: result.workout, set: result.set };
+    return { workout: result.workout as T, set: result.set };
   }
 
-  addDefaultSets(workout: Workout, exerciseId: string, count: number): Workout {
+  addDefaultSets<T extends Workout | Routine>(workout: T, exerciseId: string, count: number): T {
     let current = workout;
     for (let i = 0; i < count; i++) {
       const result = this.addSetToExercise(current, exerciseId);
@@ -41,11 +41,11 @@ export class WorkoutEditorService {
     return current;
   }
 
-  updateSet(workout: Workout, exerciseId: string, set: WorkoutSet): Workout {
-    return setMutations.update(workout, exerciseId, set);
+  updateSet<T extends Workout | Routine>(workout: T, exerciseId: string, set: WorkoutSet): T {
+    return setMutations.update(workout, exerciseId, set) as T;
   }
 
-  removeSetFromExercise(workout: Workout, exerciseId: string, setId: string): Workout {
-    return setMutations.remove(workout, exerciseId, setId);
+  removeSetFromExercise<T extends Workout | Routine>(workout: T, exerciseId: string, setId: string): T {
+    return setMutations.remove(workout, exerciseId, setId) as T;
   }
 }
