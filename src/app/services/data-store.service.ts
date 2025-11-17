@@ -23,14 +23,6 @@ export class DataStoreService {
     return this.routines.asReadonly();
   }
 
-  listWorkouts(): Workout[] {
-    return this.workouts();
-  }
-
-  listRoutines(): Routine[] {
-    return this.routines();
-  }
-
   findWorkoutById(workoutId: string): Workout | null {
     return this.workouts().find(workout => workout.id === workoutId) ?? null;
   }

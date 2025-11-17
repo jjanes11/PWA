@@ -45,7 +45,8 @@ export function useWorkoutContext(kind: WorkoutContextKind): WorkoutContext {
       return null;
     }
 
-    const latest = workoutService.listWorkouts().find(w => w.id === current!.id);
+    // Fetch latest from persisted storage to ensure we have the most recent data
+    const latest = workoutService.workoutsSignal()().find(w => w.id === current!.id);
     if (latest && latest !== current) {
       setWorkout(latest);
       return latest;

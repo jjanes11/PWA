@@ -25,10 +25,6 @@ export class WorkoutService {
     return this.store.workoutsSignal();
   }
 
-  listWorkouts(): Workout[] {
-    return this.store.listWorkouts();
-  }
-
   // Stats
   statsSignal(): Signal<WorkoutStats> {
     return this.statsService.statsSignal;
@@ -84,7 +80,14 @@ export class WorkoutService {
   }
 
   finishWorkout(workout: Workout): void {
-    this.store.saveWorkout(workout);
+    const completed = {
+      ...workout,
+      completed: true,
+      duration: workout.duration || this.calculateDuration(workout)
+    };
+    
+    this.store.saveWorkout(completed);
+    
     if (this.activeWorkoutService.getActiveWorkout()?.id === workout.id) {
       this.activeWorkoutService.clearActiveWorkout();
     }
@@ -95,19 +98,6 @@ export class WorkoutService {
     if (this.activeWorkoutService.getActiveWorkout()?.id === workoutId) {
       this.activeWorkoutService.clearActiveWorkout();
     }
-  }
-
-  completeWorkout(workoutId: string): void {
-    const workout = this.findWorkoutById(workoutId);
-    if (!workout) return;
-
-    const completed = {
-      ...workout,
-      completed: true,
-      duration: this.calculateDuration(workout)
-    };
-    
-    this.store.saveWorkout(completed);
   }
 
   // Workout editing with WorkoutEditorService
@@ -130,13 +120,7 @@ export class WorkoutService {
       createdExercises.push(result.exercise);
     });
 
-    // Update active workout or persisted
-    if (this.activeWorkoutService.getActiveWorkout()?.id === workoutId) {
-      this.activeWorkoutService.updateActiveWorkout(updatedWorkout);
-    } else {
-      this.store.saveWorkout(updatedWorkout);
-    }
-
+    this.applyWorkoutUpdate(workoutId, updatedWorkout);
     return createdExercises;
   }
 
@@ -147,11 +131,14 @@ export class WorkoutService {
     }
 
     const updatedWorkout = this.editor.replaceExerciseInWorkout(workout, exerciseId, newExerciseName);
-    
+    this.applyWorkoutUpdate(workoutId, updatedWorkout);
+  }
+
+  private applyWorkoutUpdate(workoutId: string, workout: Workout): void {
     if (this.activeWorkoutService.getActiveWorkout()?.id === workoutId) {
-      this.activeWorkoutService.updateActiveWorkout(updatedWorkout);
+      this.activeWorkoutService.updateActiveWorkout(workout);
     } else {
-      this.store.saveWorkout(updatedWorkout);
+      this.store.saveWorkout(workout);
     }
   }
 

@@ -83,7 +83,7 @@ export class EditWorkoutComponent {
         return;
       }
 
-      const foundWorkout = this.workoutService.listWorkouts().find((w: Workout) => w.id === id);
+      const foundWorkout = this.workoutService.workoutsSignal()().find((w: Workout) => w.id === id);
       if (!foundWorkout) {
         this.router.navigate(['/home']);
         return;

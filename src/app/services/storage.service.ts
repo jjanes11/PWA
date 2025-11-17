@@ -14,55 +14,46 @@ export class StorageService {
   };
 
   saveWorkouts(workouts: Workout[]): void {
-    try {
-      localStorage.setItem(this.config.workoutsKey, JSON.stringify(workouts));
-    } catch (error) {
-      console.error('Failed to save workout data:', error);
-    }
+    this.save(this.config.workoutsKey, workouts, 'workout data');
   }
 
   loadWorkouts(): Workout[] {
-    try {
-      const data = localStorage.getItem(this.config.workoutsKey);
-      if (!data) {
-        return [];
-      }
-
-      const workouts = JSON.parse(data) as Workout[];
-      workouts.forEach(workout => {
-        workout.date = new Date(workout.date);
-        if (workout.startTime) {
-          workout.startTime = new Date(workout.startTime);
-        }
-        if (workout.endTime) {
-          workout.endTime = new Date(workout.endTime);
-        }
-      });
-      return workouts;
-    } catch (error) {
-      console.error('Failed to load workout data:', error);
-      return [];
-    }
+    const workouts = this.load<Workout>(this.config.workoutsKey, 'workout data');
+    return workouts.map(this.hydrateWorkoutDates);
   }
 
   saveRoutines(routines: Routine[]): void {
-    try {
-      localStorage.setItem(this.config.routinesKey, JSON.stringify(routines));
-    } catch (error) {
-      console.error('Failed to save routines:', error);
-    }
+    this.save(this.config.routinesKey, routines, 'routines');
   }
 
   loadRoutines(): Routine[] {
+    return this.load<Routine>(this.config.routinesKey, 'routines');
+  }
+
+  private save<T>(key: string, data: T[], entityName: string): void {
     try {
-      const data = localStorage.getItem(this.config.routinesKey);
-      if (!data) {
-        return [];
-      }
-      return JSON.parse(data) as Routine[];
+      localStorage.setItem(key, JSON.stringify(data));
     } catch (error) {
-      console.error('Failed to load routines:', error);
+      console.error(`Failed to save ${entityName}:`, error);
+    }
+  }
+
+  private load<T>(key: string, entityName: string): T[] {
+    try {
+      const data = localStorage.getItem(key);
+      return data ? JSON.parse(data) as T[] : [];
+    } catch (error) {
+      console.error(`Failed to load ${entityName}:`, error);
       return [];
     }
+  }
+
+  private hydrateWorkoutDates(workout: Workout): Workout {
+    return {
+      ...workout,
+      date: new Date(workout.date),
+      startTime: workout.startTime ? new Date(workout.startTime) : undefined,
+      endTime: workout.endTime ? new Date(workout.endTime) : undefined
+    };
   }
 }

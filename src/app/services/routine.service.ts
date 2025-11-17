@@ -23,10 +23,6 @@ export class RoutineService {
     return this.store.routinesSignal();
   }
 
-  listRoutines(): Routine[] {
-    return this.store.listRoutines();
-  }
-
   findRoutineById(routineId: string): Routine | null {
     return this.store.findRoutineById(routineId);
   }
@@ -38,32 +34,6 @@ export class RoutineService {
 
   getRoutineDraft(): Workout | null {
     return this.routineDraftService.getRoutineDraft();
-  }
-
-  // Create routine drafts
-  createRoutineDraft(name: string = 'New Routine'): Workout {
-    const draft = createBaseWorkout(name);
-    this.routineDraftService.setRoutineDraft(draft);
-    return draft;
-  }
-
-  createDraftFromWorkout(workoutId: string): Workout | null {
-    const sourceWorkout = this.workoutService.findWorkoutById(workoutId);
-    if (!sourceWorkout) {
-      return null;
-    }
-
-    const draft = cloneWorkoutForDraft(sourceWorkout);
-    this.routineDraftService.setRoutineDraft(draft);
-    return draft;
-  }
-
-  setRoutineDraft(draft: Workout | null): void {
-    this.routineDraftService.setRoutineDraft(draft);
-  }
-
-  clearRoutineDraft(): void {
-    this.routineDraftService.clearRoutineDraft();
   }
 
   // Start workout from routine
@@ -88,6 +58,7 @@ export class RoutineService {
     };
 
     this.store.saveRoutine(routine);
+    this.routineDraftService.clearRoutineDraft();
     return routine;
   }
 
@@ -95,16 +66,12 @@ export class RoutineService {
     this.store.saveRoutine(routine);
   }
 
-  updateRoutine(routine: Routine): Routine | null {
-    return this.store.updateRoutine(routine.id, () => routine);
-  }
-
   deleteRoutine(routineId: string): void {
     this.store.deleteRoutine(routineId);
   }
 
   reorderRoutines(fromId: string, toId: string): void {
-    const routines = [...this.store.listRoutines()];
+    const routines = [...this.store.routinesSignal()()];
     const fromIndex = routines.findIndex(r => r.id === fromId);
     const toIndex = routines.findIndex(r => r.id === toId);
 
