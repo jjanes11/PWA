@@ -21,12 +21,17 @@ export class AddExercise {
   searchQuery = signal('');
   selectedExercises = signal<Exercise[]>([]);
   private returnUrl = signal<string>('/workout/new');
+  private workoutId = signal<string | null>(null);
   isReplaceMode = signal(false);
   replaceExerciseId = signal<string | null>(null);
 
   constructor() {
     // Get return URL from navigation service
     this.returnUrl.set(this.navigationService.getReturnUrl('/workout/new'));
+
+    // Get workout ID from navigation state
+    const workoutId = this.navigationService.getWorkoutId();
+    this.workoutId.set(workoutId);
 
     // Check if we're in replace mode
     const replaceId = this.navigationService.getReplaceExerciseId();
@@ -62,13 +67,11 @@ export class AddExercise {
   selectExercise(exercise: Exercise): void {
     // In replace mode, immediately replace and navigate back
     if (this.isReplaceMode()) {
-      const activeWorkout = this.workoutSession.activeWorkout();
-      const routineDraft = this.workoutSession.routineDraft();
-      const targetWorkout = activeWorkout || routineDraft;
+      const workoutId = this.workoutId();
       const oldExerciseId = this.replaceExerciseId();
       
-      if (targetWorkout && oldExerciseId) {
-        this.workoutSession.replaceExerciseInWorkout(targetWorkout.id, oldExerciseId, exercise.name);
+      if (workoutId && oldExerciseId) {
+        this.workoutSession.replaceExerciseInWorkout(workoutId, oldExerciseId, exercise.name);
         this.router.navigate([this.returnUrl()]);
       }
     } else {
@@ -94,16 +97,12 @@ export class AddExercise {
 
   addSelectedExercises(): void {
     const selected = this.selectedExercises();
-    const activeWorkout = this.workoutSession.activeWorkout();
-    const routineDraft = this.workoutSession.routineDraft();
+    const workoutId = this.workoutId();
     
-    // Use whichever workout is available (activeWorkout or routineDraft)
-    const targetWorkout = activeWorkout || routineDraft;
-    
-    if (selected.length > 0 && targetWorkout) {
+    if (selected.length > 0 && workoutId) {
       // Add each selected exercise to target workout
       const createdExercises = this.workoutSession.addExercisesWithDefaults(
-        targetWorkout.id,
+        workoutId,
         selected.map(exercise => exercise.name),
         3
       );

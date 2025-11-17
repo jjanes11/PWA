@@ -87,20 +87,6 @@ export class WorkoutStoreService {
     this.setWorkouts(remaining);
   }
 
-  mutateWorkout<T>(
-    workoutId: string,
-    mutator: (workout: Workout) => WorkoutMutationOutcome<T>
-  ): WorkoutMutationOutcome<T> | null {
-    const existingWorkout = this.findWorkoutById(workoutId);
-    if (!existingWorkout) {
-      return null;
-    }
-
-    const outcome = mutator(existingWorkout);
-    this.updateWorkout(workoutId, () => outcome.workout);
-    return outcome;
-  }
-
   saveRoutine(routine: Routine): void {
     const current = this.routines();
     const index = current.findIndex(r => r.id === routine.id);
@@ -150,9 +136,4 @@ export class WorkoutStoreService {
     const routines = this.persistence.loadRoutines();
     this.routines.set(routines);
   }
-}
-
-export interface WorkoutMutationOutcome<T> {
-  workout: Workout;
-  derived?: T;
 }

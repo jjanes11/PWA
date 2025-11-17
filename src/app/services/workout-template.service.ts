@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Workout, Routine } from '../models/workout.models';
 import { RoutinePersistenceService } from './routine-persistence.service';
 import { WorkoutSessionService } from './workout-session.service';
-import { IdService } from './id.service';
+import { generateId } from '../utils/id-generator';
 
 /**
  * High-level service for routine template management.
@@ -16,8 +16,7 @@ export class WorkoutRoutineService {
 
   constructor(
     private readonly routinePersistence: RoutinePersistenceService,
-    private readonly session: WorkoutSessionService,
-    private readonly idService: IdService
+    private readonly session: WorkoutSessionService
   ) {}
 
   getRoutines(): Routine[] {
@@ -34,10 +33,10 @@ export class WorkoutRoutineService {
 
   saveFromWorkout(workout: Workout): Routine {
     const routine: Routine = {
-      id: this.idService.generateId(),
+      id: generateId(),
       name: workout.name,
       exercises: workout.exercises.map(exercise => ({
-        id: this.idService.generateId(),
+        id: generateId(),
         name: exercise.name,
         sets: exercise.sets.map(set => ({
           reps: set.reps,

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
-import { Routine } from '../../models/workout.models';
+import { Routine, Workout } from '../../models/workout.models';
 import { WorkoutSessionService } from '../../services/workout-session.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { WorkoutRoutineService } from '../../services/workout-template.service';
@@ -35,7 +35,10 @@ export class EditRoutineComponent {
   private workoutContext = this.editorContext.workoutContext;
   activeWorkout = this.workoutContext.workout;
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
-    getWorkout: () => this.workoutContext.workout()
+    getWorkout: () => this.workoutContext.workout(),
+    onWorkoutUpdated: (workout) => {
+      this.workoutSession.updateActiveWorkout(workout);
+    }
   });
   private navigationContext = this.editorContext.navigation;
   private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
@@ -73,6 +76,10 @@ export class EditRoutineComponent {
 
   closeSetTypeMenu(): void {
     this.exerciseCardController.closeSetTypeMenu();
+  }
+
+  onWorkoutUpdated(workout: Workout): void {
+    this.workoutSession.updateActiveWorkout(workout);
   }
 
   constructor() {
@@ -146,7 +153,11 @@ export class EditRoutineComponent {
       this.workoutContext.setWorkout(updatedWorkout);
     }
     
-    this.navigationContext.navigateWithReturn('/add-exercise');
+    if (workout) {
+      this.navigationContext.navigateWithReturn('/add-exercise', {
+        workoutId: workout.id
+      });
+    }
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {

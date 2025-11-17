@@ -48,6 +48,27 @@ export class NavigationService {
   }
 
   /**
+   * Get the workout ID from navigation state or history state
+   * Used to identify which workout to add exercises to
+   * @returns The workout ID being edited, or null if not available
+   */
+  getWorkoutId(): string | null {
+    const navigation = this.router.currentNavigation();
+    const state = navigation?.extras?.state;
+    
+    if (state && state['workoutId']) {
+      return state['workoutId'];
+    }
+    
+    const historyState = history.state;
+    if (historyState && historyState['workoutId']) {
+      return historyState['workoutId'];
+    }
+    
+    return null;
+  }
+
+  /**
    * Get the source workout ID from navigation state or history state
    * Used when creating a routine from an existing workout
    * @returns The source workout ID, or null if creating from scratch

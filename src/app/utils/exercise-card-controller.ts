@@ -53,8 +53,8 @@ export function useExerciseCardController(
             return true;
           }
 
-          workoutEditor.removeExerciseFromWorkout(workout.id, event.exerciseId);
-          options.refreshWorkout?.(workout.id);
+          const updatedWorkout = workoutEditor.removeExerciseFromWorkout(workout, event.exerciseId);
+          options.onWorkoutUpdated(updatedWorkout);
           return true;
         }
         default:

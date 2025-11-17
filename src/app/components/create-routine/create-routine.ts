@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Workout } from '../../models/workout.models';
 import { WorkoutSessionService } from '../../services/workout-session.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { WorkoutRoutineService } from '../../services/workout-template.service';
@@ -37,7 +38,10 @@ export class CreateRoutineComponent implements OnInit {
   private workoutContext = this.editorContext.workoutContext;
   routineDraft = this.workoutContext.workout; // Use routineDraft signal from context
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
-    getWorkout: () => this.workoutContext.workout()
+    getWorkout: () => this.workoutContext.workout(),
+    onWorkoutUpdated: (workout) => {
+      this.workoutSession.updateDraft(workout);
+    }
   });
   title: string = '';
   private sourceWorkoutId: string | null = null;
@@ -70,6 +74,10 @@ export class CreateRoutineComponent implements OnInit {
 
   closeSetTypeMenu(): void {
     this.exerciseCardController.closeSetTypeMenu();
+  }
+
+  onWorkoutUpdated(workout: Workout): void {
+    this.workoutSession.updateDraft(workout);
   }
 
   constructor() {}
@@ -124,7 +132,11 @@ export class CreateRoutineComponent implements OnInit {
     }
     
     // Navigate to add-exercise and return to this page after adding
-    this.navigationContext.navigateWithReturn('/add-exercise');
+    if (workout) {
+      this.navigationContext.navigateWithReturn('/add-exercise', {
+        workoutId: workout.id
+      });
+    }
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {

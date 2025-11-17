@@ -9,9 +9,9 @@ import {
   inject
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WorkoutSessionService } from '../../services/workout-session.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { BottomSheetDialog } from '../bottom-sheet-dialog/bottom-sheet-dialog';
+import { Workout } from '../../models/workout.models';
 
 export type SetType = 'normal' | 'warmup' | 'failure' | 'drop';
 
@@ -23,12 +23,12 @@ export type SetType = 'normal' | 'warmup' | 'failure' | 'drop';
   styleUrl: './set-type-menu.css'
 })
 export class SetTypeMenuComponent {
-  @Input({ required: true }) workoutId!: string;
+  @Input({ required: true }) workout!: Workout;
   @Input({ required: true }) exerciseId!: string;
   @Input({ required: true }) setId!: string;
+  @Output() workoutUpdated = new EventEmitter<Workout>();
   @Output() closed = new EventEmitter<void>();
   
-  private workoutService = inject(WorkoutSessionService);
   private workoutEditor = inject(WorkoutEditorService);
   protected isOpen = signal(true); // Opens immediately when component is created
   
@@ -55,24 +55,21 @@ export class SetTypeMenuComponent {
   }
 
   setSetType(type: SetType): void {
-    const workout = this.workoutService.workouts().find(w => w.id === this.workoutId)
-      || this.workoutService.activeWorkout();
+    const exercise = this.workout.exercises.find(e => e.id === this.exerciseId);
+    const set = exercise?.sets.find(s => s.id === this.setId);
     
-    if (workout) {
-      const exercise = workout.exercises.find(e => e.id === this.exerciseId);
-      const set = exercise?.sets.find(s => s.id === this.setId);
-      
-      if (set) {
-        const updatedSet = { ...set, type };
-        this.workoutEditor.updateSet(this.workoutId, this.exerciseId, updatedSet);
-      }
+    if (set) {
+      const updatedSet = { ...set, type };
+      const updatedWorkout = this.workoutEditor.updateSet(this.workout, this.exerciseId, updatedSet);
+      this.workoutUpdated.emit(updatedWorkout);
     }
     
     this.closeMenu();
   }
 
   removeSet(): void {
-    this.workoutEditor.removeSetFromExercise(this.workoutId, this.exerciseId, this.setId);
+    const updatedWorkout = this.workoutEditor.removeSetFromExercise(this.workout, this.exerciseId, this.setId);
+    this.workoutUpdated.emit(updatedWorkout);
     this.closeMenu();
   }
 }

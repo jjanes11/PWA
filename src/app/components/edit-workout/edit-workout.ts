@@ -44,11 +44,9 @@ export class EditWorkoutComponent {
   workoutDescription = signal('');
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
     getWorkout: () => this.workout(),
-    refreshWorkout: (workoutId: string) => {
-      const refreshedWorkout = this.workoutSession.workouts().find(w => w.id === workoutId);
-      if (refreshedWorkout) {
-        this.workout.set(refreshedWorkout);
-      }
+    onWorkoutUpdated: (updatedWorkout) => {
+      this.workout.set(updatedWorkout);
+      this.workoutSession.saveWorkout(updatedWorkout);
     }
   });
   
@@ -91,15 +89,18 @@ export class EditWorkoutComponent {
         return;
       }
 
-      // Update local signals
-      this.workout.set(foundWorkout);
-      this.workoutTitle.set(foundWorkout.name);
-      this.workoutDescription.set(foundWorkout.notes || '');
+      // Check if there's an activeWorkout with this ID (e.g., after adding exercises)
+      const activeWorkout = this.workoutSession.activeWorkout();
+      const workoutToUse = (activeWorkout?.id === id ? activeWorkout : foundWorkout)!;
+
+      // Update local signals with potentially updated workout
+      this.workout.set(workoutToUse);
+      this.workoutTitle.set(workoutToUse.name);
+      this.workoutDescription.set(workoutToUse.notes || '');
 
       this.navigationContext.setOrigin(`/workout/${foundWorkout.id}`);
 
-      // Clear activeWorkout if it's set to this workout (from add-exercise navigation)
-      const activeWorkout = this.workoutSession.activeWorkout();
+      // Clear activeWorkout after using it
       if (activeWorkout?.id === id) {
         this.workoutSession.setActiveWorkout(null);
       }
@@ -108,6 +109,11 @@ export class EditWorkoutComponent {
   
   closeSetTypeMenu(): void {
     this.exerciseCardController.closeSetTypeMenu();
+  }
+
+  onWorkoutUpdated(workout: Workout): void {
+    this.workout.set(workout);
+    this.workoutSession.saveWorkout(workout);
   }
 
   // Computed workout stats
@@ -177,10 +183,9 @@ export class EditWorkoutComponent {
     const workout = this.workout();
     if (!workout) return;
     
-    // Temporarily set as activeWorkout so add-exercise can add to it
-    this.workoutSession.setActiveWorkout(workout);
-    
-    this.navigationContext.navigateWithReturn('/add-exercise');
+    this.navigationContext.navigateWithReturn('/add-exercise', {
+      workoutId: workout.id
+    });
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {

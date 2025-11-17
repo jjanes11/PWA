@@ -1,17 +1,13 @@
 import { Exercise, Set as WorkoutSet, Workout } from '../models/workout.models';
-
-export interface MutationIdFactory {
-  idFactory: () => string;
-}
+import { generateId } from './id-generator';
 
 export const exerciseMutations = {
   add(
     workout: Workout,
     exerciseName: string,
-    options: MutationIdFactory
   ): { workout: Workout; exercise: Exercise } {
     const exercise: Exercise = {
-      id: options.idFactory(),
+      id: generateId(),
       name: exerciseName,
       sets: []
     };
@@ -61,7 +57,6 @@ export const setMutations = {
   add(
     workout: Workout,
     exerciseId: string,
-    options: MutationIdFactory
   ): { workout: Workout; set: WorkoutSet | null } {
     let createdSet: WorkoutSet | null = null;
 
@@ -71,7 +66,7 @@ export const setMutations = {
       }
 
       const newSet: WorkoutSet = {
-        id: options.idFactory(),
+        id: generateId(),
         reps: 0,
         weight: 0,
         completed: false

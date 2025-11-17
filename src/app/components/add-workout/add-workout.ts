@@ -1,6 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Workout } from '../../models/workout.models';
 import { WorkoutSessionService } from '../../services/workout-session.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
@@ -38,17 +39,15 @@ export class AddWorkoutComponent implements OnInit {
   private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
     getWorkout: () => this.workoutContext.workout(),
-    onReplaceExercise: (exerciseId: string) => {
-      this.navigationContext.navigateWithReturn('/add-exercise', {
-        replaceExerciseId: exerciseId
-      });
+    onWorkoutUpdated: (workout) => {
+      this.workoutSession.updateActiveWorkout(workout);
     },
-    onRemoveExercise: (exerciseId: string) => {
+    onReplaceExercise: (exerciseId: string) => {
       const workout = this.workoutContext.workout();
-      if (!workout) {
-        return;
-      }
-      this.workoutEditor.removeExerciseFromWorkout(workout.id, exerciseId);
+      this.navigationContext.navigateWithReturn('/add-exercise', {
+        replaceExerciseId: exerciseId,
+        workoutId: workout?.id
+      });
     }
   });
   discardGuard = this.editorContext.discard!;
@@ -103,6 +102,10 @@ export class AddWorkoutComponent implements OnInit {
     this.exerciseCardController.closeSetTypeMenu();
   }
 
+  onWorkoutUpdated(workout: Workout): void {
+    this.workoutSession.updateActiveWorkout(workout);
+  }
+
   ngOnInit(): void {
     // Create a new workout if none exists
     this.workoutContext.ensureFresh(() => this.workoutSession.createWorkout('New Workout'));
@@ -132,7 +135,10 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   addExercise(): void {
-    this.navigationContext.navigateWithReturn('/add-exercise');
+    const workout = this.activeWorkout();
+    this.navigationContext.navigateWithReturn('/add-exercise', {
+      workoutId: workout?.id
+    });
   }
 
   discardWorkout(): void {
@@ -142,7 +148,8 @@ export class AddWorkoutComponent implements OnInit {
   onExerciseReorder(event: DragReorderEvent): void {
     const workout = this.activeWorkout();
     if (workout) {
-      this.workoutEditor.reorderExercises(workout.id, event.fromId, event.toId);
+      const updatedWorkout = this.workoutEditor.reorderExercises(workout, event.fromId, event.toId);
+      this.workoutSession.updateActiveWorkout(updatedWorkout);
     }
   }
 

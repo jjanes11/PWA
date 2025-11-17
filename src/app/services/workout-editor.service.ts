@@ -1,116 +1,51 @@
 import { Injectable } from '@angular/core';
 import { Exercise, Set as WorkoutSet, Workout } from '../models/workout.models';
-import { WorkoutStoreService, WorkoutMutationOutcome } from './workout-store.service';
-import { IdService } from './id.service';
 import { WorkoutMutationError } from '../models/workout-errors';
 import { exerciseMutations, setMutations } from '../utils/workout-mutations';
 
 @Injectable({ providedIn: 'root' })
 export class WorkoutEditorService {
-  constructor(
-    private readonly store: WorkoutStoreService,
-    private readonly idService: IdService
-  ) {}
+  addExerciseToWorkout(workout: Workout, exerciseName: string): { workout: Workout; exercise: Exercise } {
+    const result = exerciseMutations.add(workout, exerciseName);
+    return { workout: result.workout, exercise: result.exercise };
+  }
 
-  addExerciseToWorkout(workoutId: string, exerciseName: string): Exercise {
-    const outcome = this.mutateWorkout(
-      workoutId,
-      workout => {
-        const result = exerciseMutations.add(workout, exerciseName, {
-          idFactory: () => this.idService.generateId()
-        });
+  removeExerciseFromWorkout(workout: Workout, exerciseId: string): Workout {
+    return exerciseMutations.remove(workout, exerciseId);
+  }
 
-        return {
-          workout: result.workout,
-          derived: result.exercise
-        };
-      },
-      WorkoutMutationError.workoutNotFound(workoutId)
-    );
+  replaceExerciseInWorkout(workout: Workout, exerciseId: string, newExerciseName: string): Workout {
+    return exerciseMutations.replace(workout, exerciseId, newExerciseName);
+  }
 
-    if (!outcome.derived) {
-      throw WorkoutMutationError.mutationFailed('addExerciseToWorkout', { workoutId });
+  reorderExercises(workout: Workout, draggedExerciseId: string, targetExerciseId: string): Workout {
+    return exerciseMutations.reorder(workout, draggedExerciseId, targetExerciseId);
+  }
+
+  addSetToExercise(workout: Workout, exerciseId: string): { workout: Workout; set: WorkoutSet } {
+    const result = setMutations.add(workout, exerciseId);
+
+    if (!result.set) {
+      throw WorkoutMutationError.exerciseNotFound(workout.id, exerciseId);
     }
 
-    return outcome.derived;
+    return { workout: result.workout, set: result.set };
   }
 
-  removeExerciseFromWorkout(workoutId: string, exerciseId: string): void {
-    this.mutateWorkout<void>(workoutId, workout => ({
-      workout: exerciseMutations.remove(workout, exerciseId)
-    }));
-  }
-
-  replaceExerciseInWorkout(workoutId: string, exerciseId: string, newExerciseName: string): void {
-    this.mutateWorkout<void>(workoutId, workout => ({
-      workout: exerciseMutations.replace(workout, exerciseId, newExerciseName)
-    }));
-  }
-
-  reorderExercises(workoutId: string, draggedExerciseId: string, targetExerciseId: string): void {
-    this.mutateWorkout<void>(workoutId, workout => ({
-      workout: exerciseMutations.reorder(workout, draggedExerciseId, targetExerciseId)
-    }));
-  }
-
-  addSetToExercise(workoutId: string, exerciseId: string): WorkoutSet {
-    const outcome = this.mutateWorkout(
-      workoutId,
-      workout => {
-        const result = setMutations.add(workout, exerciseId, {
-          idFactory: () => this.idService.generateId()
-        });
-
-        return {
-          workout: result.workout,
-          derived: result.set
-        };
-      },
-      WorkoutMutationError.exerciseNotFound(workoutId, exerciseId)
-    );
-
-    if (!outcome.derived) {
-      throw WorkoutMutationError.mutationFailed('addSetToExercise', {
-        workoutId,
-        exerciseId
-      });
-    }
-
-    return outcome.derived;
-  }
-
-  addDefaultSets(workoutId: string, exerciseId: string, count: number): void {
+  addDefaultSets(workout: Workout, exerciseId: string, count: number): Workout {
+    let current = workout;
     for (let i = 0; i < count; i++) {
-      this.addSetToExercise(workoutId, exerciseId);
+      const result = this.addSetToExercise(current, exerciseId);
+      current = result.workout;
     }
+    return current;
   }
 
-  updateSet(workoutId: string, exerciseId: string, set: WorkoutSet): void {
-    this.mutateWorkout<void>(workoutId, workout => ({
-      workout: setMutations.update(workout, exerciseId, set)
-    }));
+  updateSet(workout: Workout, exerciseId: string, set: WorkoutSet): Workout {
+    return setMutations.update(workout, exerciseId, set);
   }
 
-  removeSetFromExercise(workoutId: string, exerciseId: string, setId: string): void {
-    this.mutateWorkout<void>(workoutId, workout => ({
-      workout: setMutations.remove(workout, exerciseId, setId)
-    }));
-  }
-
-  getWorkoutSnapshot(workoutId: string): Workout | null {
-    return this.store.findWorkoutById(workoutId);
-  }
-
-  private mutateWorkout<T>(
-    workoutId: string,
-    mutator: (workout: Workout) => WorkoutMutationOutcome<T>,
-    error: WorkoutMutationError = WorkoutMutationError.workoutNotFound(workoutId)
-  ): WorkoutMutationOutcome<T> {
-    const outcome = this.store.mutateWorkout(workoutId, mutator);
-    if (!outcome) {
-      throw error;
-    }
-
-    return outcome;
+  removeSetFromExercise(workout: Workout, exerciseId: string, setId: string): Workout {
+    return setMutations.remove(workout, exerciseId, setId);
   }
 }

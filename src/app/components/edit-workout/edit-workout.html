@@ -75,9 +75,10 @@
 
 @if (showSetTypeMenu() && selectedSet(); as setInfo) {
   <app-set-type-menu
-    [workoutId]="workout()!.id"
+    [workout]="workout()!"
     [exerciseId]="setInfo.exerciseId"
     [setId]="setInfo.setId"
+    (workoutUpdated)="onWorkoutUpdated($event)"
     (closed)="closeSetTypeMenu()"
   ></app-set-type-menu>
 }

@@ -1,11 +1,9 @@
 import { Workout, Routine, Exercise, Set as WorkoutSet } from '../models/workout.models';
-
-type IdFactory = () => string;
+import { generateId } from './id-generator';
 
 type TimestampProvider = () => Date;
 
 interface WorkoutCloneOptions {
-  idFactory: IdFactory;
   timestampProvider?: TimestampProvider;
 }
 
@@ -13,12 +11,12 @@ const defaultTimestamp: TimestampProvider = () => new Date();
 
 export function createBaseWorkout(
   name: string,
-  options: WorkoutCloneOptions
+  options: WorkoutCloneOptions = {}
 ): Workout {
   const now = (options.timestampProvider ?? defaultTimestamp)();
 
   return {
-    id: options.idFactory(),
+    id: generateId(),
     name,
     date: now,
     startTime: now,
@@ -29,15 +27,15 @@ export function createBaseWorkout(
 
 export function workoutFromTemplate(
   routine: Routine,
-  options: WorkoutCloneOptions
+  options: WorkoutCloneOptions = {}
 ): Workout {
   const baseWorkout = createBaseWorkout(routine.name, options);
 
   const exercises: Exercise[] = routine.exercises.map(exerciseTemplate => ({
-    id: options.idFactory(),
+    id: generateId(),
     name: exerciseTemplate.name,
     sets: exerciseTemplate.sets.map(setTemplate => ({
-      id: options.idFactory(),
+      id: generateId(),
       reps: setTemplate.reps,
       weight: setTemplate.weight,
       completed: false,
@@ -53,31 +51,31 @@ export function workoutFromTemplate(
 
 export function cloneWorkoutForDraft(
   sourceWorkout: Workout,
-  options: WorkoutCloneOptions
+  options: WorkoutCloneOptions = {}
 ): Workout {
   const now = (options.timestampProvider ?? defaultTimestamp)();
 
   return {
-    id: options.idFactory(),
+    id: generateId(),
     name: sourceWorkout.name,
     date: now,
     startTime: now,
-    exercises: sourceWorkout.exercises.map(exercise => cloneExercise(exercise, options.idFactory)),
+    exercises: sourceWorkout.exercises.map(exercise => cloneExercise(exercise)),
     completed: false
   };
 }
 
-export function cloneExercise(exercise: Exercise, idFactory: IdFactory): Exercise {
+function cloneExercise(exercise: Exercise): Exercise {
   return {
-    id: idFactory(),
+    id: generateId(),
     name: exercise.name,
-    sets: exercise.sets.map(set => cloneSet(set, idFactory))
+    sets: exercise.sets.map(set => cloneSet(set))
   };
 }
 
-export function cloneSet(set: WorkoutSet, idFactory: IdFactory): WorkoutSet {
+function cloneSet(set: WorkoutSet): WorkoutSet {
   return {
-    id: idFactory(),
+    id: generateId(),
     reps: set.reps,
     weight: set.weight,
     completed: false,

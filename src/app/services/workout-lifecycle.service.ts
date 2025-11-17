@@ -91,4 +91,30 @@ export class WorkoutLifecycleService {
     // Not in session state - delegate to store for persisted workouts
     return this.store.updateWorkout(workoutId, mutate);
   }
+
+  mutateWorkout<T>(
+    workoutId: string,
+    mutator: (workout: Workout) => WorkoutMutationOutcome<T>
+  ): WorkoutMutationOutcome<T> | null {
+    const existingWorkout = this.findWorkoutById(workoutId);
+    if (!existingWorkout) {
+      return null;
+    }
+
+    const outcome = mutator(existingWorkout);
+    
+    // Update the workout via updateWorkout which handles session vs persisted
+    const updated = this.updateWorkout(workoutId, () => outcome.workout);
+    
+    if (!updated) {
+      return null;
+    }
+
+    return outcome;
+  }
+}
+
+export interface WorkoutMutationOutcome<T> {
+  workout: Workout;
+  derived?: T;
 }

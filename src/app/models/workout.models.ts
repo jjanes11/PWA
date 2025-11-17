@@ -9,7 +9,7 @@ export type SetType = 'normal' | 'warmup' | 'failure' | 'drop';
 export interface Set {
   id: string;
   reps: number;
-  weight: number; // in lbs or kg
+  weight: number; // in kg
   completed: boolean;
   type?: SetType; // Set type (defaults to 'normal')
   restTime?: number; // in seconds

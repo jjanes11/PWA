@@ -4,7 +4,6 @@ import { WorkoutLifecycleService } from './workout-lifecycle.service';
 import { WorkoutPersistenceManagerService } from './workout-persistence-manager.service';
 import { WorkoutStatsService } from './workout-stats.service';
 import { WorkoutUiService } from './workout-ui.service';
-import { IdService } from './id.service';
 import { WorkoutEditorService } from './workout-editor.service';
 import { createBaseWorkout, workoutFromTemplate, cloneWorkoutForDraft } from '../utils/workout-entity.utils';
 
@@ -20,7 +19,6 @@ export class WorkoutSessionService {
     private readonly persistence: WorkoutPersistenceManagerService,
     private readonly statsService: WorkoutStatsService,
     private readonly uiService: WorkoutUiService,
-    private readonly idService: IdService,
     private readonly workoutEditor: WorkoutEditorService
   ) {}
 
@@ -45,13 +43,13 @@ export class WorkoutSessionService {
   }
 
   createWorkout(name: string): Workout {
-    const workout = createBaseWorkout(name, this.withGeneratedIds());
+    const workout = createBaseWorkout(name);
     this.lifecycle.setActiveWorkout(workout);
     return workout;
   }
 
   createWorkoutFromRoutine(routine: Routine): Workout {
-    const workout = workoutFromTemplate(routine, this.withGeneratedIds());
+    const workout = workoutFromTemplate(routine);
     this.lifecycle.setActiveWorkout(workout);
     return workout;
   }
@@ -62,13 +60,13 @@ export class WorkoutSessionService {
       return null;
     }
 
-    const draftWorkout = cloneWorkoutForDraft(sourceWorkout, this.withGeneratedIds());
+    const draftWorkout = cloneWorkoutForDraft(sourceWorkout);
     this.lifecycle.setRoutineDraft(draftWorkout);
     return draftWorkout;
   }
 
   createRoutineDraft(name: string = 'New Routine'): Workout {
-    const draftWorkout = createBaseWorkout(name, this.withGeneratedIds());
+    const draftWorkout = createBaseWorkout(name);
     this.lifecycle.setRoutineDraft(draftWorkout);
     return draftWorkout;
   }
@@ -142,25 +140,34 @@ export class WorkoutSessionService {
     exerciseNames: string[],
     defaultSetCount: number
   ): Exercise[] {
+    const workout = this.lifecycle.findWorkoutById(workoutId);
+    if (!workout) {
+      throw new Error(`Workout not found: ${workoutId}`);
+    }
+
     const createdExercises: Exercise[] = [];
+    let updatedWorkout = workout;
 
     exerciseNames.forEach(name => {
-      const exercise = this.workoutEditor.addExerciseToWorkout(workoutId, name);
-      this.workoutEditor.addDefaultSets(workoutId, exercise.id, defaultSetCount);
-      createdExercises.push(exercise);
+      const result = this.workoutEditor.addExerciseToWorkout(updatedWorkout, name);
+      updatedWorkout = this.workoutEditor.addDefaultSets(result.workout, result.exercise.id, defaultSetCount);
+      createdExercises.push(result.exercise);
     });
+
+    // Persist the updated workout
+    this.lifecycle.updateWorkout(workoutId, () => updatedWorkout);
 
     return createdExercises;
   }
 
   replaceExerciseInWorkout(workoutId: string, exerciseId: string, newExerciseName: string): void {
-    this.workoutEditor.replaceExerciseInWorkout(workoutId, exerciseId, newExerciseName);
-  }
+    const workout = this.lifecycle.findWorkoutById(workoutId);
+    if (!workout) {
+      throw new Error(`Workout not found: ${workoutId}`);
+    }
 
-  private withGeneratedIds(): Parameters<typeof createBaseWorkout>[1] {
-    return {
-      idFactory: () => this.idService.generateId()
-    };
+    const updatedWorkout = this.workoutEditor.replaceExerciseInWorkout(workout, exerciseId, newExerciseName);
+    this.lifecycle.updateWorkout(workoutId, () => updatedWorkout);
   }
 
   private calculateDuration(workout: Workout): number {

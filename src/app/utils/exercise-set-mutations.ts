@@ -5,7 +5,7 @@ import { SetChangeEvent, SetCompleteEvent } from '../components/sets-table/sets-
 
 export interface ExerciseSetMutationsOptions {
   getWorkout: () => Workout | null;
-  refreshWorkout?: (workoutId: string) => void;
+  onWorkoutUpdated: (workout: Workout) => void;
 }
 
 interface ResolveResult {
@@ -17,11 +17,7 @@ export function useExerciseSetMutations(
   workoutEditor: WorkoutEditorService,
   options: ExerciseSetMutationsOptions
 ) {
-  const { getWorkout, refreshWorkout } = options;
-
-  function ensureRefresh(workoutId: string): void {
-    refreshWorkout?.(workoutId);
-  }
+  const { getWorkout, onWorkoutUpdated } = options;
 
   function resolveSet(exerciseId: string, setId: string): ResolveResult | null {
     const workout = getWorkout();
@@ -48,8 +44,8 @@ export function useExerciseSetMutations(
       return;
     }
 
-    workoutEditor.addSetToExercise(workout.id, exerciseId);
-    ensureRefresh(workout.id);
+    const result = workoutEditor.addSetToExercise(workout, exerciseId);
+    onWorkoutUpdated(result.workout);
   }
 
   function updateSetField(
@@ -65,8 +61,8 @@ export function useExerciseSetMutations(
 
     const { workout, set } = result;
     const updatedSet: WorkoutSet = { ...set!, [field]: value };
-    workoutEditor.updateSet(workout.id, exerciseId, updatedSet);
-    ensureRefresh(workout.id);
+    const updatedWorkout = workoutEditor.updateSet(workout, exerciseId, updatedSet);
+    onWorkoutUpdated(updatedWorkout);
   }
 
   function setCompletion(
@@ -81,8 +77,8 @@ export function useExerciseSetMutations(
 
     const { workout, set } = result;
     const updatedSet: WorkoutSet = { ...set!, completed };
-    workoutEditor.updateSet(workout.id, exerciseId, updatedSet);
-    ensureRefresh(workout.id);
+    const updatedWorkout = workoutEditor.updateSet(workout, exerciseId, updatedSet);
+    onWorkoutUpdated(updatedWorkout);
   }
 
   function handle(event: ExerciseActionEvent): boolean {
