@@ -1,6 +1,9 @@
 import { inject, Signal } from '@angular/core';
 import { Workout } from '../models/workout.models';
-import { WorkoutSessionService } from '../services/workout-session.service';
+import { WorkoutService } from '../services/workout.service';
+import { RoutineService } from '../services/routine.service';
+import { ActiveWorkoutService } from '../services/active-workout.service';
+import { RoutineDraftService } from '../services/routine-draft.service';
 
 export type WorkoutContextKind = 'active' | 'draft';
 
@@ -11,16 +14,19 @@ export interface WorkoutContext {
 }
 
 export function useWorkoutContext(kind: WorkoutContextKind): WorkoutContext {
-  const workoutService = inject(WorkoutSessionService);
+  const workoutService = inject(WorkoutService);
+  const activeWorkoutService = inject(ActiveWorkoutService);
+  const routineDraftService = inject(RoutineDraftService);
+
   const workoutSignal = kind === 'active'
-    ? workoutService.activeWorkout
-    : workoutService.routineDraft;
+    ? activeWorkoutService.activeWorkoutSignal()
+    : routineDraftService.routineDraftSignal();
 
   const setWorkout = (workout: Workout | null) => {
     if (kind === 'active') {
-      workoutService.setActiveWorkout(workout);
+      activeWorkoutService.setActiveWorkout(workout);
     } else {
-      workoutService.setRoutineDraft(workout);
+      routineDraftService.setRoutineDraft(workout);
     }
   };
 
@@ -39,7 +45,7 @@ export function useWorkoutContext(kind: WorkoutContextKind): WorkoutContext {
       return null;
     }
 
-    const latest = workoutService.workouts().find(w => w.id === current!.id);
+    const latest = workoutService.listWorkouts().find(w => w.id === current!.id);
     if (latest && latest !== current) {
       setWorkout(latest);
       return latest;

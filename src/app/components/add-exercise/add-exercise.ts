@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ExerciseService, Exercise } from '../../services/exercise.service';
-import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutService } from '../../services/workout.service';
 import { NavigationService } from '../../services/navigation.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { NavigationService } from '../../services/navigation.service';
 export class AddExercise {
   private router = inject(Router);
   private exerciseService = inject(ExerciseService);
-  private workoutSession = inject(WorkoutSessionService);
+  private workoutService = inject(WorkoutService);
   private navigationService = inject(NavigationService);
   
   searchQuery = signal('');
@@ -71,7 +71,7 @@ export class AddExercise {
       const oldExerciseId = this.replaceExerciseId();
       
       if (workoutId && oldExerciseId) {
-        this.workoutSession.replaceExerciseInWorkout(workoutId, oldExerciseId, exercise.name);
+        this.workoutService.replaceExerciseInWorkout(workoutId, oldExerciseId, exercise.name);
         this.router.navigate([this.returnUrl()]);
       }
     } else {
@@ -101,7 +101,7 @@ export class AddExercise {
     
     if (selected.length > 0 && workoutId) {
       // Add each selected exercise to target workout
-      const createdExercises = this.workoutSession.addExercisesWithDefaults(
+      const createdExercises = this.workoutService.addExercisesWithDefaults(
         workoutId,
         selected.map(exercise => exercise.name),
         3

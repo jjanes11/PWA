@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
-import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutService } from '../../services/workout.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { ExerciseCardComponent } from '../exercise-card/exercise-card';
+import { Workout } from '../../models/workout.models';
 
 @Component({
   selector: 'app-workout-detail',
@@ -14,7 +15,7 @@ import { ExerciseCardComponent } from '../exercise-card/exercise-card';
   styleUrl: './workout-detail.css',
 })
 export class WorkoutDetailComponent {
-  private workoutService = inject(WorkoutSessionService);
+  private workoutService = inject(WorkoutService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -31,7 +32,7 @@ export class WorkoutDetailComponent {
       return null;
     }
     
-    const foundWorkout = this.workoutService.workouts().find(w => w.id === id);
+    const foundWorkout = this.workoutService.listWorkouts().find((w: Workout) => w.id === id);
     if (!foundWorkout) {
       this.router.navigate(['/home']);
       return null;

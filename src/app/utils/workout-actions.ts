@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { WorkoutSessionService } from '../services/workout-session.service';
+import { WorkoutService } from '../services/workout.service';
 import { Workout } from '../models/workout.models';
 import { EditorContext } from './editor-context';
 import { NavigationContext } from './navigation-context';
@@ -15,7 +15,7 @@ export interface WorkoutActions {
 }
 
 export function useWorkoutActions(config: WorkoutActionsConfig): WorkoutActions {
-  const workoutService = inject(WorkoutSessionService);
+  const workoutService = inject(WorkoutService);
   const navigation = config.navigation ?? config.editorContext.navigation;
   const discard = config.editorContext.discard;
 

@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { Routine, Workout } from '../../models/workout.models';
-import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutService } from '../../services/workout.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { RoutineService } from '../../services/routine.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
@@ -25,7 +25,7 @@ import { useWorkoutActions } from '../../utils/workout-actions';
 export class EditRoutineComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private workoutSession = inject(WorkoutSessionService);
+  private workoutService = inject(WorkoutService);
   private workoutEditor = inject(WorkoutEditorService);
   private routineService = inject(RoutineService);
   private editorContext = setupEditorContext({
@@ -37,7 +37,7 @@ export class EditRoutineComponent {
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
     getWorkout: () => this.workoutContext.workout(),
     onWorkoutUpdated: (workout) => {
-      this.workoutSession.updateActiveWorkout(workout);
+      this.workoutService.updateActiveWorkout(workout);
     }
   });
   private navigationContext = this.editorContext.navigation;
@@ -79,7 +79,7 @@ export class EditRoutineComponent {
   }
 
   onWorkoutUpdated(workout: Workout): void {
-    this.workoutSession.updateActiveWorkout(workout);
+    this.workoutService.updateActiveWorkout(workout);
   }
 
   constructor() {

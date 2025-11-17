@@ -1,20 +1,24 @@
 import { Injectable, Signal } from '@angular/core';
 import { Workout, Routine } from '../models/workout.models';
 import { DataStoreService } from './data-store.service';
-import { WorkoutSessionService } from './workout-session.service';
+import { RoutineDraftService } from './routine-draft.service';
+import { WorkoutService } from './workout.service';
 import { generateId } from '../utils/id-generator';
+import { createBaseWorkout, cloneWorkoutForDraft } from '../utils/workout-entity.utils';
 
 /**
- * High-level service for routine management.
- * Provides business logic for routine operations and delegates persistence to DataStoreService.
+ * Facade for routine management.
+ * Handles routine CRUD, routine drafts, and workout-to-routine conversions.
  */
 @Injectable({ providedIn: 'root' })
 export class RoutineService {
   constructor(
     private readonly store: DataStoreService,
-    private readonly session: WorkoutSessionService
+    private readonly routineDraftService: RoutineDraftService,
+    private readonly workoutService: WorkoutService
   ) {}
 
+  // Routine list access
   routinesSignal(): Signal<Routine[]> {
     return this.store.routinesSignal();
   }
@@ -31,10 +35,47 @@ export class RoutineService {
     return this.store.findRoutineById(routineId);
   }
 
-  startWorkoutFromRoutine(routine: Routine): Workout {
-    return this.session.createWorkoutFromRoutine(routine);
+  // Routine draft access
+  get routineDraft(): Signal<Workout | null> {
+    return this.routineDraftService.routineDraftSignal();
   }
 
+  getRoutineDraft(): Workout | null {
+    return this.routineDraftService.getRoutineDraft();
+  }
+
+  // Create routine drafts
+  createRoutineDraft(name: string = 'New Routine'): Workout {
+    const draft = createBaseWorkout(name);
+    this.routineDraftService.setRoutineDraft(draft);
+    return draft;
+  }
+
+  createDraftFromWorkout(workoutId: string): Workout | null {
+    const sourceWorkout = this.workoutService.findWorkoutById(workoutId);
+    if (!sourceWorkout) {
+      return null;
+    }
+
+    const draft = cloneWorkoutForDraft(sourceWorkout);
+    this.routineDraftService.setRoutineDraft(draft);
+    return draft;
+  }
+
+  setRoutineDraft(draft: Workout | null): void {
+    this.routineDraftService.setRoutineDraft(draft);
+  }
+
+  clearRoutineDraft(): void {
+    this.routineDraftService.clearRoutineDraft();
+  }
+
+  // Start workout from routine
+  startWorkoutFromRoutine(routine: Routine): Workout {
+    return this.workoutService.createWorkoutFromRoutine(routine);
+  }
+
+  // Save routine from workout
   saveFromWorkout(workout: Workout): Routine {
     const routine: Routine = {
       id: generateId(),

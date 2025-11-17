@@ -1,7 +1,10 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutService } from '../../services/workout.service';
+import { RoutineService } from '../../services/routine.service';
+import { ActiveWorkoutService } from '../../services/active-workout.service';
+import { RoutineDraftService } from '../../services/routine-draft.service';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 
@@ -13,10 +16,12 @@ import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
   styleUrl: './workout-dashboard.css'
 })
 export class WorkoutDashboardComponent {
-  private workoutService = inject(WorkoutSessionService);
+  private workoutService = inject(WorkoutService);
+  private activeWorkoutService = inject(ActiveWorkoutService);
+  private routineDraftService = inject(RoutineDraftService);
   private router = inject(Router);
 
-  workouts = this.workoutService.workouts;
+  workouts = this.workoutService.workoutsSignal();
   showDeleteDialog = signal(false);
   selectedWorkoutId = signal<string | null>(null);
 
@@ -47,14 +52,14 @@ export class WorkoutDashboardComponent {
   });
 
   totalWorkouts = computed(() => {
-    const activeWorkoutId = this.workoutService.activeWorkout()?.id;
-    const routineDraftId = this.workoutService.routineDraft()?.id;
+    const activeWorkoutId = this.activeWorkoutService.getActiveWorkout()?.id;
+    const routineDraftId = this.routineDraftService.getRoutineDraft()?.id;
     return this.workouts().filter(w => w.id !== activeWorkoutId && w.id !== routineDraftId).length;
   });
   
   totalVolume = computed(() => {
-    const activeWorkoutId = this.workoutService.activeWorkout()?.id;
-    const routineDraftId = this.workoutService.routineDraft()?.id;
+    const activeWorkoutId = this.activeWorkoutService.getActiveWorkout()?.id;
+    const routineDraftId = this.routineDraftService.getRoutineDraft()?.id;
     
     return this.workouts()
       .filter(w => w.id !== activeWorkoutId && w.id !== routineDraftId)
@@ -68,16 +73,16 @@ export class WorkoutDashboardComponent {
   });
 
   currentStreak = computed(() => {
-    const activeWorkoutId = this.workoutService.activeWorkout()?.id;
-    const routineDraftId = this.workoutService.routineDraft()?.id;
+    const activeWorkoutId = this.activeWorkoutService.getActiveWorkout()?.id;
+    const routineDraftId = this.routineDraftService.getRoutineDraft()?.id;
     const completedWorkouts = this.workouts()
       .filter(w => w.completed && w.id !== activeWorkoutId && w.id !== routineDraftId);
     return completedWorkouts.length > 0 ? Math.min(completedWorkouts.length, 7) : 0;
   });
 
   avgWorkoutTime = computed(() => {
-    const activeWorkoutId = this.workoutService.activeWorkout()?.id;
-    const routineDraftId = this.workoutService.routineDraft()?.id;
+    const activeWorkoutId = this.activeWorkoutService.getActiveWorkout()?.id;
+    const routineDraftId = this.routineDraftService.getRoutineDraft()?.id;
     const completedWorkouts = this.workouts()
       .filter(w => w.completed && w.duration && w.id !== activeWorkoutId && w.id !== routineDraftId);
     if (completedWorkouts.length === 0) return 0;
@@ -87,8 +92,8 @@ export class WorkoutDashboardComponent {
   });
 
   recentWorkouts = computed(() => {
-    const activeWorkoutId = this.workoutService.activeWorkout()?.id;
-    const routineDraftId = this.workoutService.routineDraft()?.id;
+    const activeWorkoutId = this.activeWorkoutService.getActiveWorkout()?.id;
+    const routineDraftId = this.routineDraftService.getRoutineDraft()?.id;
 
     return this.workouts()
       .filter(w => w.id !== activeWorkoutId && w.id !== routineDraftId) // Exclude in-progress and draft workouts

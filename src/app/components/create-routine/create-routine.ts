@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Workout } from '../../models/workout.models';
-import { WorkoutSessionService } from '../../services/workout-session.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { RoutineService } from '../../services/routine.service';
 import { NavigationService } from '../../services/navigation.service';
@@ -24,7 +23,6 @@ import { useWorkoutActions } from '../../utils/workout-actions';
 })
 export class CreateRoutineComponent implements OnInit {
   private router = inject(Router);
-  private workoutSession = inject(WorkoutSessionService);
   private workoutEditor = inject(WorkoutEditorService);
   private routineService = inject(RoutineService);
   private navigationService = inject(NavigationService);
@@ -42,7 +40,7 @@ export class CreateRoutineComponent implements OnInit {
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
     getWorkout: () => this.workoutContext.workout(),
     onWorkoutUpdated: (workout) => {
-      this.workoutSession.updateDraft(workout);
+      this.routineService.setRoutineDraft(workout);
     }
   });
   title: string = '';
@@ -78,7 +76,7 @@ export class CreateRoutineComponent implements OnInit {
   }
 
   onWorkoutUpdated(workout: Workout): void {
-    this.workoutSession.updateDraft(workout);
+    this.routineService.setRoutineDraft(workout);
   }
 
   constructor() {}
@@ -88,7 +86,7 @@ export class CreateRoutineComponent implements OnInit {
     const sourceWorkoutId = this.navigationService.getSourceWorkoutId();
     
     if (sourceWorkoutId) {
-      const draftWorkout = this.workoutSession.createDraftFromWorkout(sourceWorkoutId);
+      const draftWorkout = this.routineService.createDraftFromWorkout(sourceWorkoutId);
       if (draftWorkout) {
         this.workoutContext.setWorkout(draftWorkout);
         this.title = draftWorkout.name || '';
@@ -96,7 +94,7 @@ export class CreateRoutineComponent implements OnInit {
       }
     }
 
-    const draftWorkout = this.workoutContext.ensureFresh(() => this.workoutSession.createRoutineDraft('New Routine'));
+    const draftWorkout = this.workoutContext.ensureFresh(() => this.routineService.createRoutineDraft('New Routine'));
     if (draftWorkout) {
       this.title = draftWorkout.name || '';
     }
@@ -132,7 +130,7 @@ export class CreateRoutineComponent implements OnInit {
     const workout = this.routineDraft();
     if (workout && this.title.trim()) {
       const updatedWorkout = { ...workout, name: this.title.trim() };
-      this.workoutSession.updateDraft(updatedWorkout);
+      this.routineService.setRoutineDraft(updatedWorkout);
     }
     
     // Navigate to add-exercise and return to this page after adding

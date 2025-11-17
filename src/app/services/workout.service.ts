@@ -1,42 +1,163 @@
-import { Injectable, signal, Signal } from '@angular/core';
-import { Workout } from '../models/workout.models';
+import { Injectable, Signal } from '@angular/core';
+import { Workout, Routine, WorkoutStats, Exercise } from '../models/workout.models';
 import { DataStoreService } from './data-store.service';
-import { WorkoutLifecycleService } from './workout-lifecycle.service';
+import { ActiveWorkoutService } from './active-workout.service';
+import { RoutineDraftService } from './routine-draft.service';
+import { WorkoutStatsService } from './workout-stats.service';
+import { WorkoutEditorService } from './workout-editor.service';
+import { createBaseWorkout, workoutFromTemplate, cloneWorkoutForDraft } from '../utils/workout-entity.utils';
 
 /**
- * Handles workout operations and persistence.
- * Encapsulates workout CRUD without exposing repository internals.
+ * Main facade for workout operations.
+ * Coordinates persistence, active workout state, and workout editing.
  */
 @Injectable({ providedIn: 'root' })
 export class WorkoutService {
   constructor(
     private readonly store: DataStoreService,
-    private readonly lifecycle: WorkoutLifecycleService
+    private readonly activeWorkoutService: ActiveWorkoutService,
+    private readonly statsService: WorkoutStatsService,
+    private readonly editor: WorkoutEditorService
   ) {}
 
+  // Workout list access
   workoutsSignal(): Signal<Workout[]> {
     return this.store.workoutsSignal();
   }
 
+  listWorkouts(): Workout[] {
+    return this.store.listWorkouts();
+  }
+
+  // Stats
+  get stats(): Signal<WorkoutStats> {
+    return this.statsService.stats;
+  }
+
+  // Active workout access
+  get activeWorkout(): Signal<Workout | null> {
+    return this.activeWorkoutService.activeWorkoutSignal();
+  }
+
+  getActiveWorkout(): Workout | null {
+    return this.activeWorkoutService.getActiveWorkout();
+  }
+
+  hasActiveWorkout(): boolean {
+    return this.activeWorkoutService.hasActiveWorkout();
+  }
+
+  // Create new workouts
+  createWorkout(name: string): Workout {
+    const workout = createBaseWorkout(name);
+    this.activeWorkoutService.setActiveWorkout(workout);
+    return workout;
+  }
+
+  createWorkoutFromRoutine(routine: Routine): Workout {
+    const workout = workoutFromTemplate(routine);
+    this.activeWorkoutService.setActiveWorkout(workout);
+    return workout;
+  }
+
+  // Update active workout
+  updateActiveWorkout(workout: Workout): void {
+    this.activeWorkoutService.updateActiveWorkout(workout);
+  }
+
+  clearActiveWorkout(): void {
+    this.activeWorkoutService.clearActiveWorkout();
+  }
+
+  // Find workout (checks active first, then persisted)
+  findWorkoutById(workoutId: string): Workout | null {
+    const active = this.activeWorkoutService.getActiveWorkout();
+    if (active?.id === workoutId) {
+      return active;
+    }
+    return this.store.findWorkoutById(workoutId);
+  }
+
+  // Persistence operations
   saveWorkout(workout: Workout): void {
     this.store.saveWorkout(workout);
   }
 
-  updateWorkout(workoutId: string, mutate: (workout: Workout) => Workout): Workout | null {
-    return this.lifecycle.updateWorkout(workoutId, mutate);
+  finishWorkout(workout: Workout): void {
+    this.store.saveWorkout(workout);
+    if (this.activeWorkoutService.getActiveWorkout()?.id === workout.id) {
+      this.activeWorkoutService.clearActiveWorkout();
+    }
   }
 
   deleteWorkout(workoutId: string): void {
     this.store.deleteWorkout(workoutId);
-    this.lifecycle.clearWorkoutReferences(workoutId);
+    if (this.activeWorkoutService.getActiveWorkout()?.id === workoutId) {
+      this.activeWorkoutService.clearActiveWorkout();
+    }
   }
 
-  findWorkoutById(workoutId: string): Workout | null {
-    return this.lifecycle.findWorkoutById(workoutId);
+  completeWorkout(workoutId: string): void {
+    const workout = this.findWorkoutById(workoutId);
+    if (!workout) return;
+
+    const completed = {
+      ...workout,
+      completed: true,
+      duration: this.calculateDuration(workout)
+    };
+    
+    this.store.saveWorkout(completed);
   }
 
-  finishWorkout(workout: Workout): void {
-    this.store.saveWorkout(workout);
-    this.lifecycle.clearWorkoutReferences(workout.id);
+  // Workout editing with WorkoutEditorService
+  addExercisesWithDefaults(
+    workoutId: string,
+    exerciseNames: string[],
+    defaultSetCount: number
+  ): Exercise[] {
+    const workout = this.findWorkoutById(workoutId);
+    if (!workout) {
+      throw new Error(`Workout not found: ${workoutId}`);
+    }
+
+    const createdExercises: Exercise[] = [];
+    let updatedWorkout = workout;
+
+    exerciseNames.forEach(name => {
+      const result = this.editor.addExerciseToWorkout(updatedWorkout, name);
+      updatedWorkout = this.editor.addDefaultSets(result.workout, result.exercise.id, defaultSetCount);
+      createdExercises.push(result.exercise);
+    });
+
+    // Update active workout or persisted
+    if (this.activeWorkoutService.getActiveWorkout()?.id === workoutId) {
+      this.activeWorkoutService.updateActiveWorkout(updatedWorkout);
+    } else {
+      this.store.saveWorkout(updatedWorkout);
+    }
+
+    return createdExercises;
+  }
+
+  replaceExerciseInWorkout(workoutId: string, exerciseId: string, newExerciseName: string): void {
+    const workout = this.findWorkoutById(workoutId);
+    if (!workout) {
+      throw new Error(`Workout not found: ${workoutId}`);
+    }
+
+    const updatedWorkout = this.editor.replaceExerciseInWorkout(workout, exerciseId, newExerciseName);
+    
+    if (this.activeWorkoutService.getActiveWorkout()?.id === workoutId) {
+      this.activeWorkoutService.updateActiveWorkout(updatedWorkout);
+    } else {
+      this.store.saveWorkout(updatedWorkout);
+    }
+  }
+
+  private calculateDuration(workout: Workout): number {
+    const now = new Date();
+    const start = new Date(workout.date);
+    return Math.round((now.getTime() - start.getTime()) / (1000 * 60));
   }
 }

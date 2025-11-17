@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
-import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutService } from '../../services/workout.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { Workout } from '../../models/workout.models';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
@@ -23,7 +23,7 @@ import { useWorkoutActions } from '../../utils/workout-actions';
 export class EditWorkoutComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private workoutSession = inject(WorkoutSessionService);
+  private workoutService = inject(WorkoutService);
   private workoutEditor = inject(WorkoutEditorService);
   private editorContext = setupEditorContext({
     kind: 'active',
@@ -46,7 +46,7 @@ export class EditWorkoutComponent {
     getWorkout: () => this.workout(),
     onWorkoutUpdated: (updatedWorkout) => {
       this.workout.set(updatedWorkout);
-      this.workoutSession.saveWorkout(updatedWorkout);
+      this.workoutService.saveWorkout(updatedWorkout);
     }
   });
   
@@ -83,14 +83,14 @@ export class EditWorkoutComponent {
         return;
       }
 
-      const foundWorkout = this.workoutSession.workouts().find(w => w.id === id);
+      const foundWorkout = this.workoutService.listWorkouts().find((w: Workout) => w.id === id);
       if (!foundWorkout) {
         this.router.navigate(['/home']);
         return;
       }
 
       // Check if there's an activeWorkout with this ID (e.g., after adding exercises)
-      const activeWorkout = this.workoutSession.activeWorkout();
+      const activeWorkout = this.workoutService.getActiveWorkout();
       const workoutToUse = (activeWorkout?.id === id ? activeWorkout : foundWorkout)!;
 
       // Update local signals with potentially updated workout
@@ -102,7 +102,7 @@ export class EditWorkoutComponent {
 
       // Clear activeWorkout after using it
       if (activeWorkout?.id === id) {
-        this.workoutSession.setActiveWorkout(null);
+        this.workoutService.clearActiveWorkout();
       }
     });
   }
@@ -113,7 +113,7 @@ export class EditWorkoutComponent {
 
   onWorkoutUpdated(workout: Workout): void {
     this.workout.set(workout);
-    this.workoutSession.saveWorkout(workout);
+    this.workoutService.saveWorkout(workout);
   }
 
   // Computed workout stats

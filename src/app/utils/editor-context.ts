@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { WorkoutSessionService } from '../services/workout-session.service';
+import { WorkoutService } from '../services/workout.service';
 import { NavigationService } from '../services/navigation.service';
 import { useWorkoutContext, WorkoutContext, WorkoutContextKind } from './workout-context';
 import { useDiscardGuard, DiscardGuard } from './discard-guard';
@@ -24,7 +24,7 @@ export interface EditorContextOptions extends Partial<NavigationContextOptions> 
 }
 
 export function setupEditorContext(options: EditorContextOptions): EditorContext {
-  const workoutService = inject(WorkoutSessionService);
+  const workoutService = inject(WorkoutService);
   const navigationService = inject(NavigationService);
 
   const workoutContext = useWorkoutContext(options.kind);

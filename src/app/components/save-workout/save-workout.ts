@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { WorkoutSessionService } from '../../services/workout-session.service';
+import { WorkoutService } from '../../services/workout.service';
 
 @Component({
   selector: 'app-save-workout',
@@ -12,7 +12,7 @@ import { WorkoutSessionService } from '../../services/workout-session.service';
 })
 export class SaveWorkoutComponent implements OnInit {
   private router = inject(Router);
-  private workoutService = inject(WorkoutSessionService);
+  private workoutService = inject(WorkoutService);
 
   activeWorkout = this.workoutService.activeWorkout;
   workoutTitle = signal('');
@@ -115,7 +115,7 @@ export class SaveWorkoutComponent implements OnInit {
       duration: finalDuration
     };
 
-    this.workoutService.finishActiveWorkout(updatedWorkout);
+    this.workoutService.finishWorkout(updatedWorkout);
 
     // Navigate to workouts page
     this.router.navigate(['/workouts']);
