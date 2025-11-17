@@ -115,7 +115,7 @@ export class SaveWorkoutComponent implements OnInit {
       duration: finalDuration
     };
 
-    this.workoutService.saveCompletedWorkout(updatedWorkout);
+    this.workoutService.finishActiveWorkout(updatedWorkout);
 
     // Navigate to workouts page
     this.router.navigate(['/workouts']);

@@ -18,15 +18,15 @@ export class WorkoutSessionService {
   ) {}
 
   get workouts(): Signal<Workout[]> {
-    return this.store.workouts;
+    return this.store.workoutsSignal();
   }
 
   get activeWorkout(): Signal<Workout | null> {
-    return this.store.activeWorkout;
+    return this.store.activeWorkoutSignal();
   }
 
   get routineDraft(): Signal<Workout | null> {
-    return this.store.routineDraft;
+    return this.store.routineDraftSignal();
   }
 
   get workoutInProgressDialog(): Signal<boolean> {
@@ -50,7 +50,7 @@ export class WorkoutSessionService {
   }
 
   createDraftFromWorkout(workoutId: string): Workout | null {
-    const sourceWorkout = this.store.getWorkoutById(workoutId);
+    const sourceWorkout = this.store.findWorkoutById(workoutId);
     if (!sourceWorkout) {
       return null;
     }
@@ -70,19 +70,17 @@ export class WorkoutSessionService {
     this.store.clearRoutineDraft();
   }
 
-  updateWorkout(workout: Workout): void {
-    this.store.replaceExistingWorkout(workout);
+  saveWorkout(workout: Workout): void {
+    this.store.saveWorkout(workout);
   }
 
-  saveCompletedWorkout(workout: Workout): void {
-    const updatedWorkouts = this.buildUpdatedWorkoutsSnapshot(workout);
-    this.store.commitWorkouts(updatedWorkouts);
+  finishActiveWorkout(workout: Workout): void {
+    this.store.saveWorkout(workout);
     this.store.clearWorkoutReferences(workout.id);
   }
 
   deleteWorkout(workoutId: string): void {
-    const workouts = this.store.getWorkouts().filter(w => w.id !== workoutId);
-    this.store.commitWorkouts(workouts);
+    this.store.deleteWorkout(workoutId);
   }
 
   setActiveWorkout(workout: Workout | null): void {
@@ -97,8 +95,16 @@ export class WorkoutSessionService {
     this.store.setRoutineDraft(workout);
   }
 
+  updateDraft(workout: Workout): void {
+    this.store.setRoutineDraft(workout);
+  }
+
+  updateActiveWorkout(workout: Workout): void {
+    this.store.setActiveWorkout(workout);
+  }
+
   completeWorkout(workoutId: string): void {
-    this.store.updateWorkoutById(workoutId, workout => ({
+    this.store.updateWorkout(workoutId, workout => ({
       ...workout,
       completed: true,
       duration: this.calculateDuration(workout)
@@ -122,7 +128,7 @@ export class WorkoutSessionService {
   }
 
   getWorkoutSnapshot(workoutId: string): Workout | null {
-    return this.store.getWorkoutById(workoutId);
+    return this.store.findWorkoutById(workoutId);
   }
 
   addExercisesWithDefaults(
@@ -156,14 +162,4 @@ export class WorkoutSessionService {
     const start = new Date(workout.date);
     return Math.round((now.getTime() - start.getTime()) / (1000 * 60));
   }
-
-  private buildUpdatedWorkoutsSnapshot(workout: Workout): Workout[] {
-    // If the workout already exists, replace it. Otherwise, add it.
-    const workouts = this.store.getWorkouts();
-    const existingIndex = workouts.findIndex(saved => saved.id === workout.id);
-    return existingIndex >= 0
-      ? workouts.map(saved => (saved.id === workout.id ? workout : saved))
-      : [...workouts, workout];
-  }
-
 }

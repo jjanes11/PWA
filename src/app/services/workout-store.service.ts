@@ -1,179 +1,216 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, Signal, signal } from '@angular/core';
 import { Workout, Routine } from '../models/workout.models';
 import { WorkoutPersistenceService } from './workout-persistence.service';
 
-interface CommitOptions {
-  persist?: boolean;
-}
-
 @Injectable({ providedIn: 'root' })
 export class WorkoutStoreService {
-  private static readonly defaultCommitOptions = { persist: true } as const;
+  private readonly workouts = signal<Workout[]>([]);
+  private readonly routines = signal<Routine[]>([]);
+  private readonly activeWorkout = signal<Workout | null>(null);
+  private readonly routineDraft = signal<Workout | null>(null);
 
-  private readonly _workouts = signal<Workout[]>([]);
-  private readonly _routines = signal<Routine[]>([]);
-  private readonly _activeWorkout = signal<Workout | null>(null);
-  private readonly _routineDraft = signal<Workout | null>(null);
-
-  readonly workouts = this._workouts.asReadonly();
-  readonly routines = this._routines.asReadonly();
-  readonly activeWorkout = this._activeWorkout.asReadonly();
-  readonly routineDraft = this._routineDraft.asReadonly();
   constructor(private readonly persistence: WorkoutPersistenceService) {
     this.restoreFromPersistence();
   }
 
-  private restoreFromPersistence(): void {
-    const workouts = this.persistence.loadWorkouts();
-    this._workouts.set(workouts);
-
-    const routines = this.persistence.loadRoutines();
-    this._routines.set(routines);
+  workoutsSignal(): Signal<Workout[]> {
+    return this.workouts.asReadonly();
   }
 
-  setActiveWorkout(workout: Workout | null): void {
-    this._activeWorkout.set(workout);
+  routinesSignal(): Signal<Routine[]> {
+    return this.routines.asReadonly();
   }
 
-  clearActiveWorkout(): void {
-    this._activeWorkout.set(null);
+  activeWorkoutSignal(): Signal<Workout | null> {
+    return this.activeWorkout.asReadonly();
   }
 
-  setRoutineDraft(workout: Workout | null): void {
-    this._routineDraft.set(workout);
+  routineDraftSignal(): Signal<Workout | null> {
+    return this.routineDraft.asReadonly();
   }
 
-  clearRoutineDraft(): void {
-    this._routineDraft.set(null);
+  listWorkouts(): Workout[] {
+    return this.workouts();
   }
 
-  getWorkouts(): Workout[] {
-    return this._workouts();
+  listRoutines(): Routine[] {
+    return this.routines();
   }
 
-  getRoutines(): Routine[] {
-    return this._routines();
-  }
-
-  getWorkoutById(workoutId: string): Workout | null {
-    const active = this._activeWorkout();
-    if (active && active.id === workoutId) {
+  findWorkoutById(workoutId: string): Workout | null {
+    const active = this.activeWorkout();
+    if (active?.id === workoutId) {
       return active;
     }
 
-    const draft = this._routineDraft();
-    if (draft && draft.id === workoutId) {
+    const draft = this.routineDraft();
+    if (draft?.id === workoutId) {
       return draft;
     }
 
-    return this._workouts().find(workout => workout.id === workoutId) ?? null;
+    return this.workouts().find(workout => workout.id === workoutId) ?? null;
   }
 
-  replaceExistingWorkout(workout: Workout): void {
-    this.updateWorkoutById(workout.id, () => workout);
+  findRoutineById(routineId: string): Routine | null {
+    return this.routines().find(routine => routine.id === routineId) ?? null;
   }
 
-  mutateWorkout<T>(
-    workoutId: string,
-    mutator: (workout: Workout) => WorkoutMutationOutcome<T>
-  ): WorkoutMutationOutcome<T> | null {
-    const existingWorkout = this.getWorkoutById(workoutId);
-    if (!existingWorkout) {
-      return null;
-    }
-
-    const outcome = mutator(existingWorkout);
-    this.replaceExistingWorkout(outcome.workout);
-    return outcome;
+  saveWorkout(workout: Workout): void {
+    const current = this.workouts();
+    const index = current.findIndex(w => w.id === workout.id);
+    
+    const updated = index >= 0
+      ? current.map(w => w.id === workout.id ? workout : w)
+      : [...current, workout];
+    
+    this.setWorkouts(updated);
   }
 
-  clearWorkoutReferences(workoutId: string): void {
-    if (this._activeWorkout()?.id === workoutId) {
-      this.clearActiveWorkout();
-    }
-
-    if (this._routineDraft()?.id === workoutId) {
-      this.clearRoutineDraft();
-    }
-  }
-
-  commitWorkouts(
-    workouts: Workout[],
-    options?: CommitOptions
-  ): void {
-    const { persist } = { ...WorkoutStoreService.defaultCommitOptions, ...options };
-    this._workouts.set(workouts);
-
-    if (persist) {
-      this.persistence.saveWorkouts(workouts);
-    }
-  }
-
-  commitRoutines(routines: Routine[], options?: CommitOptions): void {
-    const { persist } = { ...WorkoutStoreService.defaultCommitOptions, ...options };
-    this._routines.set(routines);
-    if (persist) {
-      this.persistence.saveRoutines(routines);
-    }
-  }
-
-  updateWorkoutById(
+  updateWorkout(
     workoutId: string,
     mutate: (workout: Workout) => Workout
   ): Workout | null {
-    const savedWorkouts = this._workouts();
-    let updatedWorkout: Workout | null = null;
-    const updatedWorkouts = savedWorkouts.map(workout => {
-      if (workout.id !== workoutId) {
-        return workout;
+    // Try persisted workouts first
+    const workouts = this.workouts();
+    let updated: Workout | null = null;
+    
+    const next = workouts.map(workout => {
+      if (workout.id === workoutId) {
+        updated = mutate(workout);
+        return updated;
       }
-      updatedWorkout = mutate(workout);
-      return updatedWorkout;
+      return workout;
     });
 
-    if (updatedWorkout) {
-      this.commitWorkouts(updatedWorkouts);
-      return updatedWorkout;
+    if (updated) {
+      this.setWorkouts(next);
+      return updated;
     }
 
-    const active = this._activeWorkout();
-    if (active && active.id === workoutId) {
+    // Try active workout
+    const active = this.activeWorkout();
+    if (active?.id === workoutId) {
       const updatedActive = mutate(active);
-      this._activeWorkout.set(updatedActive);
+      this.activeWorkout.set(updatedActive);
       return updatedActive;
     }
 
-    const draft = this._routineDraft();
-    if (draft && draft.id === workoutId) {
+    // Try routine draft
+    const draft = this.routineDraft();
+    if (draft?.id === workoutId) {
       const updatedDraft = mutate(draft);
-      this._routineDraft.set(updatedDraft);
+      this.routineDraft.set(updatedDraft);
       return updatedDraft;
     }
 
     return null;
   }
 
-  updateRoutineById(
-    routineId: string,
-    mutate: (routine: Routine) => Routine
-  ): Routine | null {
-    let updatedRoutine: Routine | null = null;
-    const routines = this._routines().map(routine => {
-      if (routine.id !== routineId) {
-        return routine;
-      }
-      updatedRoutine = mutate(routine);
-      return updatedRoutine;
-    });
+  deleteWorkout(workoutId: string): void {
+    const remaining = this.workouts().filter(w => w.id !== workoutId);
+    this.setWorkouts(remaining);
+    this.clearWorkoutReferences(workoutId);
+  }
 
-    if (!updatedRoutine) {
+  mutateWorkout<T>(
+    workoutId: string,
+    mutator: (workout: Workout) => WorkoutMutationOutcome<T>
+  ): WorkoutMutationOutcome<T> | null {
+    const existingWorkout = this.findWorkoutById(workoutId);
+    if (!existingWorkout) {
       return null;
     }
 
-    this.commitRoutines(routines);
-    return updatedRoutine;
+    const outcome = mutator(existingWorkout);
+    this.updateWorkout(workoutId, () => outcome.workout);
+    return outcome;
   }
 
+  saveRoutine(routine: Routine): void {
+    const current = this.routines();
+    const index = current.findIndex(r => r.id === routine.id);
+    
+    const updated = index >= 0
+      ? current.map(r => r.id === routine.id ? routine : r)
+      : [...current, routine];
+    
+    this.setRoutines(updated);
+  }
+
+  updateRoutine(
+    routineId: string,
+    mutate: (routine: Routine) => Routine
+  ): Routine | null {
+    let updated: Routine | null = null;
+    
+    const next = this.routines().map(routine => {
+      if (routine.id === routineId) {
+        updated = mutate(routine);
+        return updated;
+      }
+      return routine;
+    });
+
+    if (!updated) {
+      return null;
+    }
+
+    this.setRoutines(next);
+    return updated;
+  }
+
+  deleteRoutine(routineId: string): void {
+    const remaining = this.routines().filter(r => r.id !== routineId);
+    this.setRoutines(remaining);
+  }
+
+  replaceAllRoutines(routines: Routine[]): void {
+    this.setRoutines(routines);
+  }
+
+  setActiveWorkout(workout: Workout | null): void {
+    this.activeWorkout.set(workout);
+  }
+
+  clearActiveWorkout(): void {
+    this.activeWorkout.set(null);
+  }
+
+  setRoutineDraft(workout: Workout | null): void {
+    this.routineDraft.set(workout);
+  }
+
+  clearRoutineDraft(): void {
+    this.routineDraft.set(null);
+  }
+
+  clearWorkoutReferences(workoutId: string): void {
+    if (this.activeWorkout()?.id === workoutId) {
+      this.clearActiveWorkout();
+    }
+
+    if (this.routineDraft()?.id === workoutId) {
+      this.clearRoutineDraft();
+    }
+  }
+
+  private restoreFromPersistence(): void {
+    const workouts = this.persistence.loadWorkouts();
+    this.workouts.set(workouts);
+
+    const routines = this.persistence.loadRoutines();
+    this.routines.set(routines);
+  }
+
+  private setWorkouts(workouts: Workout[]): void {
+    this.workouts.set(workouts);
+    this.persistence.saveWorkouts(workouts);
+  }
+
+  private setRoutines(routines: Routine[]): void {
+    this.routines.set(routines);
+    this.persistence.saveRoutines(routines);
+  }
 }
 
 export interface WorkoutMutationOutcome<T> {

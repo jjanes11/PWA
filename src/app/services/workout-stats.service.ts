@@ -4,35 +4,37 @@ import { WorkoutStoreService } from './workout-store.service';
 
 @Injectable({ providedIn: 'root' })
 export class WorkoutStatsService {
-  readonly stats: Signal<WorkoutStats> = computed(() => {
-    const workouts = this.store.workouts();
-    const completed = workouts.filter(w => w.completed);
+  readonly stats: Signal<WorkoutStats>;
 
-    const totalExercises = completed.reduce((sum, w) => sum + w.exercises.length, 0);
-    const totalSets = completed.reduce(
-      (sum, w) => sum + w.exercises.reduce((exerciseSum, e) => exerciseSum + e.sets.length, 0),
-      0
-    );
-    const totalWeight = completed.reduce(
-      (sum, w) =>
-        sum +
-        w.exercises.reduce(
-          (exerciseSum, e) =>
-            exerciseSum + e.sets.reduce((setSum, s) => setSum + s.weight * s.reps, 0),
-          0
-        ),
-      0
-    );
-    const totalDuration = completed.reduce((sum, w) => sum + (w.duration || 0), 0);
+  constructor(private readonly store: WorkoutStoreService) {
+    const workouts = this.store.workoutsSignal();
+    this.stats = computed(() => {
+      const completed = workouts().filter(w => w.completed);
 
-    return {
-      totalWorkouts: completed.length,
-      totalExercises,
-      totalSets,
-      totalWeight,
-      averageDuration: completed.length > 0 ? totalDuration / completed.length : 0
-    } satisfies WorkoutStats;
-  });
+      const totalExercises = completed.reduce((sum, w) => sum + w.exercises.length, 0);
+      const totalSets = completed.reduce(
+        (sum, w) => sum + w.exercises.reduce((exerciseSum, e) => exerciseSum + e.sets.length, 0),
+        0
+      );
+      const totalWeight = completed.reduce(
+        (sum, w) =>
+          sum +
+          w.exercises.reduce(
+            (exerciseSum, e) =>
+              exerciseSum + e.sets.reduce((setSum, s) => setSum + s.weight * s.reps, 0),
+            0
+          ),
+        0
+      );
+      const totalDuration = completed.reduce((sum, w) => sum + (w.duration || 0), 0);
 
-  constructor(private readonly store: WorkoutStoreService) {}
+      return {
+        totalWorkouts: completed.length,
+        totalExercises,
+        totalSets,
+        totalWeight,
+        averageDuration: completed.length > 0 ? totalDuration / completed.length : 0
+      } satisfies WorkoutStats;
+    });
+  }
 }

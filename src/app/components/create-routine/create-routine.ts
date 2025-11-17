@@ -116,11 +116,11 @@ export class CreateRoutineComponent implements OnInit {
   }
 
   addExercise(): void {
-    // Save current title to workout before navigating
+    // Update draft title before navigating
     const workout = this.routineDraft();
     if (workout && this.title.trim()) {
       const updatedWorkout = { ...workout, name: this.title.trim() };
-      this.workoutSession.updateWorkout(updatedWorkout);
+      this.workoutSession.updateDraft(updatedWorkout);
     }
     
     // Navigate to add-exercise and return to this page after adding

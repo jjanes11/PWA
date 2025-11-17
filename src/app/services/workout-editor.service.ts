@@ -98,7 +98,7 @@ export class WorkoutEditorService {
   }
 
   getWorkoutSnapshot(workoutId: string): Workout | null {
-    return this.store.getWorkoutById(workoutId);
+    return this.store.findWorkoutById(workoutId);
   }
 
   private mutateWorkout<T>(

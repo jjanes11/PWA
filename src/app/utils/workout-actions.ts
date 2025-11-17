@@ -23,7 +23,7 @@ export function useWorkoutActions(config: WorkoutActionsConfig): WorkoutActions 
     if (!workout) {
       return;
     }
-    workoutService.updateWorkout(workout);
+    workoutService.saveWorkout(workout);
   };
 
   const discardWorkout = (options?: { skipCleanup?: boolean }) => {
