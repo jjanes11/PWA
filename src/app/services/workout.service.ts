@@ -101,16 +101,11 @@ export class WorkoutService {
   }
 
   // Workout editing with WorkoutEditorService
-  addExercisesWithDefaults(
-    workoutId: string,
+  addExercisesToWorkout(
+    workout: Workout,
     exerciseNames: string[],
     defaultSetCount: number
-  ): Exercise[] {
-    const workout = this.findWorkoutById(workoutId);
-    if (!workout) {
-      throw new Error(`Workout not found: ${workoutId}`);
-    }
-
+  ): { workout: Workout; exercises: Exercise[] } {
     const createdExercises: Exercise[] = [];
     let updatedWorkout = workout;
 
@@ -120,26 +115,15 @@ export class WorkoutService {
       createdExercises.push(result.exercise);
     });
 
-    this.applyWorkoutUpdate(workoutId, updatedWorkout);
-    return createdExercises;
+    return { workout: updatedWorkout, exercises: createdExercises };
   }
 
-  replaceExerciseInWorkout(workoutId: string, exerciseId: string, newExerciseName: string): void {
-    const workout = this.findWorkoutById(workoutId);
-    if (!workout) {
-      throw new Error(`Workout not found: ${workoutId}`);
-    }
-
-    const updatedWorkout = this.editor.replaceExerciseInWorkout(workout, exerciseId, newExerciseName);
-    this.applyWorkoutUpdate(workoutId, updatedWorkout);
-  }
-
-  private applyWorkoutUpdate(workoutId: string, workout: Workout): void {
-    if (this.activeWorkoutService.getActiveWorkout()?.id === workoutId) {
-      this.activeWorkoutService.updateActiveWorkout(workout);
-    } else {
-      this.store.saveWorkout(workout);
-    }
+  replaceExercise(
+    workout: Workout,
+    exerciseId: string,
+    newExerciseName: string
+  ): Workout {
+    return this.editor.replaceExerciseInWorkout(workout, exerciseId, newExerciseName);
   }
 
   private calculateDuration(workout: Workout): number {

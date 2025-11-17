@@ -1,10 +1,12 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Workout } from '../../models/workout.models';
 import { WorkoutService } from '../../services/workout.service';
+import { ActiveWorkoutService } from '../../services/active-workout.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { WorkoutUiService } from '../../services/workout-ui.service';
+import { NavigationService } from '../../services/navigation.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { DragReorderEvent } from '../../directives/draggable.directive';
 import { MenuItem } from '../card-menu/card-menu';
@@ -12,8 +14,8 @@ import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, BottomButtonConfig, EditorButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
-import { setupEditorContext } from '../../utils/editor-context';
-import { useWorkoutActions } from '../../utils/workout-actions';
+import { useDiscardGuard } from '../../utils/discard-guard';
+import { useNavigationContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-add-workout',
@@ -23,36 +25,46 @@ import { useWorkoutActions } from '../../utils/workout-actions';
 })
 export class AddWorkoutComponent implements OnInit {
   private workoutService = inject(WorkoutService);
+  private activeWorkoutService = inject(ActiveWorkoutService);
   private workoutEditor = inject(WorkoutEditorService);
   private uiService = inject(WorkoutUiService);
+  private navigationService = inject(NavigationService);
   private router = inject(Router);
-  private editorContext = setupEditorContext({
-    kind: 'active',
+  
+  activeWorkout = this.activeWorkoutService.activeWorkoutSignal();
+  
+  private navigationContext = useNavigationContext({
     defaultOrigin: '/workouts',
-    discardConfig: {
-      message: 'Are you sure you want to discard this workout?',
-      confirmText: 'Discard Workout',
-      onConfirm: () => this.handleDiscardConfirm()
+    cleanup: () => {
+      const workout = this.activeWorkout();
+      if (workout) {
+        this.workoutService.deleteWorkout(workout.id);
+        this.activeWorkoutService.clearActiveWorkout();
+      }
     }
   });
-  private workoutContext = this.editorContext.workoutContext;
-  activeWorkout = this.workoutContext.workout;
-  private navigationContext = this.editorContext.navigation;
-  private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
+  
+  discardGuard = useDiscardGuard({
+    message: 'Are you sure you want to discard this workout?',
+    confirmText: 'Discard Workout',
+    onConfirm: () => this.handleDiscardConfirm()
+  });
+  
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
-    getWorkout: () => this.workoutContext.workout(),
+    getWorkout: () => this.activeWorkout(),
     onWorkoutUpdated: (workout) => {
-      this.workoutService.updateActiveWorkout(workout);
+      this.activeWorkoutService.setActiveWorkout(workout);
     },
     onReplaceExercise: (exerciseId: string) => {
-      const workout = this.workoutContext.workout();
+      const workout = this.activeWorkout();
       this.navigationContext.navigateWithReturn('/add-exercise', {
         replaceExerciseId: exerciseId,
-        workoutId: workout?.id
+        workoutId: workout?.id,
+        workoutSource: 'activeWorkout'
       });
     }
   });
-  discardGuard = this.editorContext.discard!;
+  
   draggedExerciseId = signal<string | null>(null);
   
   // Set Type Menu (via controller)
@@ -105,12 +117,15 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   onWorkoutUpdated(workout: Workout): void {
-    this.workoutService.updateActiveWorkout(workout);
+    this.activeWorkoutService.setActiveWorkout(workout);
   }
 
   ngOnInit(): void {
     // Create a new workout if none exists
-    this.workoutContext.ensureFresh(() => this.workoutService.createWorkout('New Workout'));
+    if (!this.activeWorkout()) {
+      const newWorkout = this.workoutService.createWorkout('New Workout');
+      this.activeWorkoutService.setActiveWorkout(newWorkout);
+    }
   }
 
   goBack(): void {
@@ -139,12 +154,13 @@ export class AddWorkoutComponent implements OnInit {
   addExercise(): void {
     const workout = this.activeWorkout();
     this.navigationContext.navigateWithReturn('/add-exercise', {
-      workoutId: workout?.id
+      workoutId: workout?.id,
+      workoutSource: 'activeWorkout'
     });
   }
 
   discardWorkout(): void {
-    this.workoutActions.discardWorkout();
+    this.discardGuard.open();
   }
 
   onExerciseReorder(event: DragReorderEvent): void {

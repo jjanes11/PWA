@@ -12,8 +12,8 @@ import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, EditorButtonConfig, BottomButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
-import { setupEditorContext } from '../../utils/editor-context';
-import { useWorkoutActions } from '../../utils/workout-actions';
+import { useNavigationContext } from '../../utils/navigation-context';
+import { ActiveWorkoutService } from '../../services/active-workout.service';
 
 @Component({
   selector: 'app-edit-routine',
@@ -28,20 +28,17 @@ export class EditRoutineComponent {
   private workoutService = inject(WorkoutService);
   private workoutEditor = inject(WorkoutEditorService);
   private routineService = inject(RoutineService);
-  private editorContext = setupEditorContext({
-    kind: 'active',
+  private activeWorkoutService = inject(ActiveWorkoutService);
+  private navigationContext = useNavigationContext({
     defaultOrigin: '/workouts'
   });
-  private workoutContext = this.editorContext.workoutContext;
-  activeWorkout = this.workoutContext.workout;
+  activeWorkout = this.activeWorkoutService.activeWorkoutSignal();
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
-    getWorkout: () => this.workoutContext.workout(),
+    getWorkout: () => this.activeWorkout(),
     onWorkoutUpdated: (workout) => {
-      this.workoutService.updateActiveWorkout(workout);
+      this.activeWorkoutService.setActiveWorkout(workout);
     }
   });
-  private navigationContext = this.editorContext.navigation;
-  private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
 
   // Convert route params to signal
   private routineId = toSignal(
@@ -101,7 +98,7 @@ export class EditRoutineComponent {
       this.routine.set(foundRoutine);
       
       // Check if we already have a draft workout (returning from add-exercise)
-      const existingDraft = this.workoutContext.workout();
+      const existingDraft = this.activeWorkout();
       
       if (existingDraft) {
         // Restore from existing draft
@@ -111,13 +108,13 @@ export class EditRoutineComponent {
         this.title = foundRoutine.name;
         
         const draftWorkout = this.routineService.startWorkoutFromRoutine(foundRoutine);
-        this.workoutContext.setWorkout(draftWorkout);
+        this.activeWorkoutService.setActiveWorkout(draftWorkout);
       }
     });
   }
 
   cancel(): void {
-    this.workoutActions.discardWorkout();
+    this.navigationContext.exit();
   }
 
   update(): void {
@@ -129,8 +126,7 @@ export class EditRoutineComponent {
         ...workout,
         name: this.title.trim() || 'Untitled Routine'
       };
-      this.workoutActions.saveWorkout(updatedWorkout);
-      this.workoutContext.setWorkout(updatedWorkout);
+      this.activeWorkoutService.setActiveWorkout(updatedWorkout);
       
       // Delete old routine
       this.routineService.deleteRoutine(routine.id);
@@ -149,13 +145,13 @@ export class EditRoutineComponent {
     const workout = this.activeWorkout();
     if (workout && this.title.trim()) {
       const updatedWorkout = { ...workout, name: this.title.trim() };
-      this.workoutActions.saveWorkout(updatedWorkout);
-      this.workoutContext.setWorkout(updatedWorkout);
+      this.activeWorkoutService.setActiveWorkout(updatedWorkout);
     }
     
     if (workout) {
       this.navigationContext.navigateWithReturn('/add-exercise', {
-        workoutId: workout.id
+        workoutId: workout.id,
+        workoutSource: 'activeWorkout'
       });
     }
   }

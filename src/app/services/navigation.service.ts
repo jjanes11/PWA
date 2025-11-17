@@ -69,6 +69,27 @@ export class NavigationService {
   }
 
   /**
+   * Get the workout source from navigation state
+   * Indicates where the workout comes from: activeWorkout, routineDraft, persistedWorkout, or persistedRoutine
+   * @returns 'activeWorkout' | 'routineDraft' | 'persistedWorkout' | 'persistedRoutine' | null
+   */
+  getWorkoutSource(): 'activeWorkout' | 'routineDraft' | 'persistedWorkout' | 'persistedRoutine' | null {
+    const navigation = this.router.currentNavigation();
+    const state = navigation?.extras?.state;
+    
+    if (state && state['workoutSource']) {
+      return state['workoutSource'];
+    }
+    
+    const historyState = history.state;
+    if (historyState && historyState['workoutSource']) {
+      return historyState['workoutSource'];
+    }
+    
+    return null;
+  }
+
+  /**
    * Get the source workout ID from navigation state or history state
    * Used when creating a routine from an existing workout
    * @returns The source workout ID, or null if creating from scratch

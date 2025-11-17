@@ -5,10 +5,13 @@ import { Router } from '@angular/router';
 import { ExerciseService, Exercise } from '../../services/exercise.service';
 import { WorkoutService } from '../../services/workout.service';
 import { NavigationService } from '../../services/navigation.service';
+import { resolveWorkoutFromNavigation, WorkoutSource, WorkoutUpdater } from '../../utils/workout-context';
+import { Workout } from '../../models/workout.models';
 
 @Component({
   selector: 'app-add-exercise',
   imports: [CommonModule, FormsModule],
+  providers: [WorkoutUpdater],
   templateUrl: './add-exercise.html',
   styleUrl: './add-exercise.css'
 })
@@ -17,21 +20,22 @@ export class AddExercise {
   private exerciseService = inject(ExerciseService);
   private workoutService = inject(WorkoutService);
   private navigationService = inject(NavigationService);
+  private workoutUpdater = inject(WorkoutUpdater);
+  
+  // Resolve workout from navigation state
+  private workoutResolution = resolveWorkoutFromNavigation();
+  workout = signal<Workout | null>(this.workoutResolution.workout);
+  private workoutSource = signal<WorkoutSource | null>(this.workoutResolution.source);
   
   searchQuery = signal('');
   selectedExercises = signal<Exercise[]>([]);
   private returnUrl = signal<string>('/workout/new');
-  private workoutId = signal<string | null>(null);
   isReplaceMode = signal(false);
   replaceExerciseId = signal<string | null>(null);
 
   constructor() {
     // Get return URL from navigation service
     this.returnUrl.set(this.navigationService.getReturnUrl('/workout/new'));
-
-    // Get workout ID from navigation state
-    const workoutId = this.navigationService.getWorkoutId();
-    this.workoutId.set(workoutId);
 
     // Check if we're in replace mode
     const replaceId = this.navigationService.getReplaceExerciseId();
@@ -67,11 +71,14 @@ export class AddExercise {
   selectExercise(exercise: Exercise): void {
     // In replace mode, immediately replace and navigate back
     if (this.isReplaceMode()) {
-      const workoutId = this.workoutId();
+      const workout = this.workout();
       const oldExerciseId = this.replaceExerciseId();
+      const source = this.workoutSource();
       
-      if (workoutId && oldExerciseId) {
-        this.workoutService.replaceExerciseInWorkout(workoutId, oldExerciseId, exercise.name);
+      if (workout && oldExerciseId && source) {
+        const updatedWorkout = this.workoutService.replaceExercise(workout, oldExerciseId, exercise.name);
+        this.workout.set(updatedWorkout);
+        this.workoutUpdater.updateBySource(updatedWorkout, source);
         this.router.navigate([this.returnUrl()]);
       }
     } else {
@@ -97,17 +104,19 @@ export class AddExercise {
 
   addSelectedExercises(): void {
     const selected = this.selectedExercises();
-    const workoutId = this.workoutId();
+    const workout = this.workout();
+    const source = this.workoutSource();
     
-    if (selected.length > 0 && workoutId) {
-      // Add each selected exercise to target workout
-      const createdExercises = this.workoutService.addExercisesWithDefaults(
-        workoutId,
+    if (selected.length > 0 && workout && source) {
+      const result = this.workoutService.addExercisesToWorkout(
+        workout,
         selected.map(exercise => exercise.name),
         3
       );
       
-      console.log('Added exercises to workout:', createdExercises);
+      this.workout.set(result.workout);
+      this.workoutUpdater.updateBySource(result.workout, source);
+      console.log('Added exercises to workout:', result.exercises);
       this.router.navigate([this.returnUrl()]);
     }
   }

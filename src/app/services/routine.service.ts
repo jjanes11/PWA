@@ -4,7 +4,6 @@ import { DataStoreService } from './data-store.service';
 import { RoutineDraftService } from './routine-draft.service';
 import { WorkoutService } from './workout.service';
 import { generateId } from '../utils/id-generator';
-import { createBaseWorkout, cloneWorkoutForDraft } from '../utils/workout-entity.utils';
 
 /**
  * Facade for routine management.

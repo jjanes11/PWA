@@ -11,8 +11,7 @@ import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, EditorButtonConfig, BottomButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
-import { setupEditorContext } from '../../utils/editor-context';
-import { useWorkoutActions } from '../../utils/workout-actions';
+import { useNavigationContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-edit-workout',
@@ -25,13 +24,9 @@ export class EditWorkoutComponent {
   private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
   private workoutEditor = inject(WorkoutEditorService);
-  private editorContext = setupEditorContext({
-    kind: 'active',
-    defaultOrigin: '/home',
-    cleanupMode: 'none'
+  private navigationContext = useNavigationContext({
+    defaultOrigin: '/home'
   });
-  private navigationContext = this.editorContext.navigation;
-  private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
 
   // Convert route params to signal
   private workoutId = toSignal(
@@ -160,7 +155,7 @@ export class EditWorkoutComponent {
   });
 
   cancel(): void {
-    this.workoutActions.discardWorkout({ skipCleanup: true });
+    this.navigationContext.exit();
   }
 
   saveWorkout(): void {
@@ -174,9 +169,9 @@ export class EditWorkoutComponent {
       notes: this.workoutDescription().trim()
     };
 
-    this.workoutActions.saveWorkout(updatedWorkout);
+    this.workoutService.saveWorkout(updatedWorkout);
     this.workout.set(updatedWorkout); // Update local signal
-    this.navigationContext.exit({ skipCleanup: true });
+    this.navigationContext.exit();
   }
 
   addExercise(): void {
@@ -184,7 +179,8 @@ export class EditWorkoutComponent {
     if (!workout) return;
     
     this.navigationContext.navigateWithReturn('/add-exercise', {
-      workoutId: workout.id
+      workoutId: workout.id,
+      workoutSource: 'persistedWorkout'
     });
   }
 

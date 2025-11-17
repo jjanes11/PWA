@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,8 +13,8 @@ import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, EditorButtonConfig, BottomButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
-import { setupEditorContext } from '../../utils/editor-context';
-import { useWorkoutActions } from '../../utils/workout-actions';
+import { useDiscardGuard } from '../../utils/discard-guard';
+import { useNavigationContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-create-routine',
@@ -30,27 +30,33 @@ export class CreateRoutineComponent implements OnInit {
   private routineService = inject(RoutineService);
   private routineDraftService = inject(RoutineDraftService);
   private navigationService = inject(NavigationService);
-  private editorContext = setupEditorContext({
-    kind: 'draft',
+  
+  routineDraft = this.routineDraftService.routineDraftSignal();
+  title: string = '';
+  
+  private navigationContext = useNavigationContext({
     defaultOrigin: '/workouts',
-    discardConfig: {
-      message: 'Are you sure you want to discard the routine?',
-      confirmText: 'Discard Routine',
-      onConfirm: () => this.handleDiscardConfirm()
+    cleanup: () => {
+      const draft = this.routineDraft();
+      if (draft) {
+        this.routineDraftService.clearRoutineDraft();
+      }
     }
   });
-  private workoutContext = this.editorContext.workoutContext;
-  routineDraft = this.workoutContext.workout; // Use routineDraft signal from context
+  
+  discardGuard = useDiscardGuard({
+    message: 'Are you sure you want to discard the routine?',
+    confirmText: 'Discard Routine',
+    onConfirm: () => this.handleDiscardConfirm()
+  });
+  
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
-    getWorkout: () => this.workoutContext.workout(),
+    getWorkout: () => this.routineDraft(),
     onWorkoutUpdated: (workout) => {
       this.routineDraftService.setRoutineDraft(workout);
     }
   });
-  title: string = '';
-  private navigationContext = this.editorContext.navigation;
-  discardGuard = this.editorContext.discard!;
-  private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
+  
   headerLeftButton: EditorButtonConfig = {
     label: 'Cancel',
     variant: 'ghost'
@@ -96,19 +102,23 @@ export class CreateRoutineComponent implements OnInit {
         return;
       }
       const draftWorkout = this.routineDraftService.createDraftFromWorkout(sourceWorkout);
-      this.workoutContext.setWorkout(draftWorkout);
+      this.routineDraftService.setRoutineDraft(draftWorkout);
       this.title = draftWorkout.name || '';
       return;
     }
 
-    const draftWorkout = this.workoutContext.ensureFresh(() => this.routineDraftService.createDraft('New Routine'));
-    if (draftWorkout) {
-      this.title = draftWorkout.name || '';
+    // Create a new routine draft if none exists
+    if (!this.routineDraft()) {
+      const newDraft = this.routineDraftService.createDraft('New Routine');
+      this.routineDraftService.setRoutineDraft(newDraft);
+      this.title = newDraft.name || '';
+    } else {
+      this.title = this.routineDraft()?.name || '';
     }
   }
 
   cancel(): void {
-    this.workoutActions.discardWorkout();
+    this.discardGuard.open();
   }
 
   save(): void {
@@ -119,8 +129,8 @@ export class CreateRoutineComponent implements OnInit {
         ...workout,
         name: this.title.trim() || 'Untitled Routine'
       };
-      // Update workout via shared actions
-      this.workoutActions.saveWorkout(updatedWorkout);
+      // Update the draft
+      this.routineDraftService.setRoutineDraft(updatedWorkout);
 
       // Save as template for routines
       this.routineService.saveFromWorkout(updatedWorkout);
@@ -143,7 +153,8 @@ export class CreateRoutineComponent implements OnInit {
     // Navigate to add-exercise and return to this page after adding
     if (workout) {
       this.navigationContext.navigateWithReturn('/add-exercise', {
-        workoutId: workout.id
+        workoutId: workout.id,
+        workoutSource: 'routineDraft'
       });
     }
   }
