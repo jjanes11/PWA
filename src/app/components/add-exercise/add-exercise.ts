@@ -5,13 +5,13 @@ import { Router } from '@angular/router';
 import { ExerciseService, Exercise } from '../../services/exercise.service';
 import { WorkoutService } from '../../services/workout.service';
 import { NavigationService } from '../../services/navigation.service';
-import { resolveWorkoutFromNavigation, WorkoutSource, WorkoutUpdater } from '../../utils/workout-context';
+import { WorkoutContextService } from '../../utils/workout-context';
 import { Workout } from '../../models/workout.models';
 
 @Component({
   selector: 'app-add-exercise',
   imports: [CommonModule, FormsModule],
-  providers: [WorkoutUpdater],
+  providers: [WorkoutContextService],
   templateUrl: './add-exercise.html',
   styleUrl: './add-exercise.css'
 })
@@ -20,12 +20,9 @@ export class AddExercise {
   private exerciseService = inject(ExerciseService);
   private workoutService = inject(WorkoutService);
   private navigationService = inject(NavigationService);
-  private workoutUpdater = inject(WorkoutUpdater);
+  private workoutContext = inject(WorkoutContextService);
   
-  // Resolve workout from navigation state
-  private workoutResolution = resolveWorkoutFromNavigation();
-  workout = signal<Workout | null>(this.workoutResolution.workout);
-  private workoutSource = signal<WorkoutSource | null>(this.workoutResolution.source);
+  workout = this.workoutContext.workout;
   
   searchQuery = signal('');
   selectedExercises = signal<Exercise[]>([]);
@@ -34,6 +31,9 @@ export class AddExercise {
   replaceExerciseId = signal<string | null>(null);
 
   constructor() {
+    // Load workout from navigation state
+    this.workoutContext.load();
+    
     // Get return URL from navigation service
     this.returnUrl.set(this.navigationService.getReturnUrl('/workout/new'));
 
@@ -73,12 +73,10 @@ export class AddExercise {
     if (this.isReplaceMode()) {
       const workout = this.workout();
       const oldExerciseId = this.replaceExerciseId();
-      const source = this.workoutSource();
       
-      if (workout && oldExerciseId && source) {
-        const updatedWorkout = this.workoutService.replaceExercise(workout, oldExerciseId, exercise.name);
-        this.workout.set(updatedWorkout);
-        this.workoutUpdater.updateBySource(updatedWorkout, source);
+      if (workout && oldExerciseId) {
+        const updatedWorkout = this.workoutService.replaceExercise(workout as Workout, oldExerciseId, exercise.name);
+        this.workoutContext.save(updatedWorkout);
         this.router.navigate([this.returnUrl()]);
       }
     } else {
@@ -105,17 +103,15 @@ export class AddExercise {
   addSelectedExercises(): void {
     const selected = this.selectedExercises();
     const workout = this.workout();
-    const source = this.workoutSource();
     
-    if (selected.length > 0 && workout && source) {
+    if (selected.length > 0 && workout) {
       const result = this.workoutService.addExercisesToWorkout(
-        workout,
+        workout as Workout,
         selected.map(exercise => exercise.name),
         3
       );
       
-      this.workout.set(result.workout);
-      this.workoutUpdater.updateBySource(result.workout, source);
+      this.workoutContext.save(result.workout);
       console.log('Added exercises to workout:', result.exercises);
       this.router.navigate([this.returnUrl()]);
     }
