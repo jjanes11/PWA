@@ -1,6 +1,6 @@
 import { Injectable, Signal, signal } from '@angular/core';
 import { Workout, Routine } from '../models/workout.models';
-import { WorkoutPersistenceService } from './workout-persistence.service';
+import { StorageService } from './storage.service';
 
 /**
  * Central repository for all persisted application data.
@@ -11,7 +11,7 @@ export class DataStoreService {
   private readonly workouts = signal<Workout[]>([]);
   private readonly routines = signal<Routine[]>([]);
 
-  constructor(private readonly persistence: WorkoutPersistenceService) {
+  constructor(private readonly storage: StorageService) {
     this.restoreFromPersistence();
   }
 
@@ -41,12 +41,12 @@ export class DataStoreService {
 
   private setWorkouts(workouts: Workout[]): void {
     this.workouts.set(workouts);
-    this.persistence.saveWorkouts(workouts);
+    this.storage.saveWorkouts(workouts);
   }
 
   private setRoutines(routines: Routine[]): void {
     this.routines.set(routines);
-    this.persistence.saveRoutines(routines);
+    this.storage.saveRoutines(routines);
   }
 
   saveWorkout(workout: Workout): void {
@@ -130,10 +130,10 @@ export class DataStoreService {
   }
 
   private restoreFromPersistence(): void {
-    const workouts = this.persistence.loadWorkouts();
+    const workouts = this.storage.loadWorkouts();
     this.workouts.set(workouts);
 
-    const routines = this.persistence.loadRoutines();
+    const routines = this.storage.loadRoutines();
     this.routines.set(routines);
   }
 }

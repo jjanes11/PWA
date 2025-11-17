@@ -1,30 +1,34 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Signal } from '@angular/core';
 import { Workout, Routine } from '../models/workout.models';
-import { RoutinePersistenceService } from './routine-persistence.service';
+import { DataStoreService } from './data-store.service';
 import { WorkoutSessionService } from './workout-session.service';
 import { generateId } from '../utils/id-generator';
 
 /**
  * High-level service for routine management.
- * Coordinates routine operations through persistence service.
+ * Provides business logic for routine operations and delegates persistence to DataStoreService.
  */
 @Injectable({ providedIn: 'root' })
-export class WorkoutRoutineService {
-  get routines() {
-    return this.routinePersistence.routinesSignal();
-  }
-
+export class RoutineService {
   constructor(
-    private readonly routinePersistence: RoutinePersistenceService,
+    private readonly store: DataStoreService,
     private readonly session: WorkoutSessionService
   ) {}
 
-  getRoutines(): Routine[] {
-    return this.routinePersistence.listRoutines();
+  routinesSignal(): Signal<Routine[]> {
+    return this.store.routinesSignal();
   }
 
-  findRoutineById(routineId: string): Routine | undefined {
-    return this.routinePersistence.findRoutineById(routineId) ?? undefined;
+  get routines() {
+    return this.store.routinesSignal();
+  }
+
+  listRoutines(): Routine[] {
+    return this.store.listRoutines();
+  }
+
+  findRoutineById(routineId: string): Routine | null {
+    return this.store.findRoutineById(routineId);
   }
 
   startWorkoutFromRoutine(routine: Routine): Workout {
@@ -46,24 +50,24 @@ export class WorkoutRoutineService {
       }))
     };
 
-    this.routinePersistence.saveRoutine(routine);
+    this.store.saveRoutine(routine);
     return routine;
   }
 
-  saveRoutineDirectly(routine: Routine): void {
-    this.routinePersistence.saveRoutine(routine);
+  saveRoutine(routine: Routine): void {
+    this.store.saveRoutine(routine);
   }
 
   updateRoutine(routine: Routine): Routine | null {
-    return this.routinePersistence.updateRoutine(routine.id, () => routine);
+    return this.store.updateRoutine(routine.id, () => routine);
   }
 
   deleteRoutine(routineId: string): void {
-    this.routinePersistence.deleteRoutine(routineId);
+    this.store.deleteRoutine(routineId);
   }
 
   reorderRoutines(fromId: string, toId: string): void {
-    const routines = [...this.routinePersistence.listRoutines()];
+    const routines = [...this.store.listRoutines()];
     const fromIndex = routines.findIndex(r => r.id === fromId);
     const toIndex = routines.findIndex(r => r.id === toId);
 
@@ -73,6 +77,6 @@ export class WorkoutRoutineService {
 
     const [moved] = routines.splice(fromIndex, 1);
     routines.splice(toIndex, 0, moved);
-    this.routinePersistence.replaceAllRoutines(routines);
+    this.store.replaceAllRoutines(routines);
   }
 }

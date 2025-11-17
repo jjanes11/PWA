@@ -7,7 +7,7 @@ interface PersistenceConfig {
 }
 
 @Injectable({ providedIn: 'root' })
-export class WorkoutPersistenceService {
+export class StorageService {
   private readonly config: PersistenceConfig = {
     workoutsKey: 'workout-data',
     routinesKey: 'routine-data'

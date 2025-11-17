@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Workout } from '../../models/workout.models';
 import { WorkoutSessionService } from '../../services/workout-session.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
-import { WorkoutRoutineService } from '../../services/workout-template.service';
+import { RoutineService } from '../../services/routine.service';
 import { NavigationService } from '../../services/navigation.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
@@ -26,7 +26,7 @@ export class CreateRoutineComponent implements OnInit {
   private router = inject(Router);
   private workoutSession = inject(WorkoutSessionService);
   private workoutEditor = inject(WorkoutEditorService);
-  private workoutRoutineService = inject(WorkoutRoutineService);
+  private routineService = inject(RoutineService);
   private navigationService = inject(NavigationService);
   private editorContext = setupEditorContext({
     kind: 'draft',
@@ -118,7 +118,7 @@ export class CreateRoutineComponent implements OnInit {
       this.workoutActions.saveWorkout(updatedWorkout);
 
       // Save as template for routines
-      this.workoutRoutineService.saveFromWorkout(updatedWorkout);
+      this.routineService.saveFromWorkout(updatedWorkout);
 
       // Navigate to workouts page to see the newly created routine
       this.router.navigate(['/workouts']);

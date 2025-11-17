@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 import { Routine, Workout } from '../../models/workout.models';
 import { WorkoutSessionService } from '../../services/workout-session.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
-import { WorkoutRoutineService } from '../../services/workout-template.service';
+import { RoutineService } from '../../services/routine.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { WorkoutEditorComponent, EditorButtonConfig, BottomButtonConfig, WorkoutEditorEmptyState } from '../workout-editor/workout-editor';
@@ -27,7 +27,7 @@ export class EditRoutineComponent {
   private route = inject(ActivatedRoute);
   private workoutSession = inject(WorkoutSessionService);
   private workoutEditor = inject(WorkoutEditorService);
-  private workoutRoutineService = inject(WorkoutRoutineService);
+  private routineService = inject(RoutineService);
   private editorContext = setupEditorContext({
     kind: 'active',
     defaultOrigin: '/workouts'
@@ -91,7 +91,7 @@ export class EditRoutineComponent {
         return;
       }
 
-      const foundRoutine = this.workoutRoutineService.findRoutineById(id);
+      const foundRoutine = this.routineService.findRoutineById(id);
       
       if (!foundRoutine) {
         this.router.navigate(['/workouts']);
@@ -110,7 +110,7 @@ export class EditRoutineComponent {
         // First time loading, create new draft from routine
         this.title = foundRoutine.name;
         
-        const draftWorkout = this.workoutRoutineService.startWorkoutFromRoutine(foundRoutine);
+        const draftWorkout = this.routineService.startWorkoutFromRoutine(foundRoutine);
         this.workoutContext.setWorkout(draftWorkout);
       }
     });
@@ -133,10 +133,10 @@ export class EditRoutineComponent {
       this.workoutContext.setWorkout(updatedWorkout);
       
       // Delete old routine
-      this.workoutRoutineService.deleteRoutine(routine.id);
+      this.routineService.deleteRoutine(routine.id);
       
       // Save the draft workout as the new routine
-      this.workoutRoutineService.saveFromWorkout(updatedWorkout);
+      this.routineService.saveFromWorkout(updatedWorkout);
 
       this.navigationContext.exit();
       return;

@@ -1,7 +1,7 @@
 import { Injectable, Signal } from '@angular/core';
 import { Workout, Routine, WorkoutStats, Exercise } from '../models/workout.models';
 import { WorkoutLifecycleService } from './workout-lifecycle.service';
-import { WorkoutPersistenceManagerService } from './workout-persistence-manager.service';
+import { WorkoutService } from './workout.service';
 import { WorkoutStatsService } from './workout-stats.service';
 import { WorkoutUiService } from './workout-ui.service';
 import { WorkoutEditorService } from './workout-editor.service';
@@ -16,7 +16,7 @@ import { createBaseWorkout, workoutFromTemplate, cloneWorkoutForDraft } from '..
 export class WorkoutSessionService {
   constructor(
     private readonly lifecycle: WorkoutLifecycleService,
-    private readonly persistence: WorkoutPersistenceManagerService,
+    private readonly persistence: WorkoutService,
     private readonly statsService: WorkoutStatsService,
     private readonly uiService: WorkoutUiService,
     private readonly workoutEditor: WorkoutEditorService

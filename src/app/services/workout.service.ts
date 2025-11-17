@@ -1,14 +1,14 @@
-import { Injectable, Signal } from '@angular/core';
+import { Injectable, signal, Signal } from '@angular/core';
 import { Workout } from '../models/workout.models';
 import { DataStoreService } from './data-store.service';
 import { WorkoutLifecycleService } from './workout-lifecycle.service';
 
 /**
- * Handles workout persistence operations.
- * Encapsulates CRUD operations without exposing repository internals.
+ * Handles workout operations and persistence.
+ * Encapsulates workout CRUD without exposing repository internals.
  */
 @Injectable({ providedIn: 'root' })
-export class WorkoutPersistenceManagerService {
+export class WorkoutService {
   constructor(
     private readonly store: DataStoreService,
     private readonly lifecycle: WorkoutLifecycleService

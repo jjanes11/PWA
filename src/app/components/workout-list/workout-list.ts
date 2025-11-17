@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { WorkoutSessionService } from '../../services/workout-session.service';
-import { WorkoutRoutineService } from '../../services/workout-template.service';
+import { RoutineService } from '../../services/routine.service';
 import { Routine } from '../../models/workout.models';
 import { NavigationService } from '../../services/navigation.service';
 import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
@@ -17,13 +17,14 @@ import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 })
 export class WorkoutListComponent {
   private router = inject(Router);
-  private workoutSessionService = inject(WorkoutSessionService);
-  private workoutRoutineService = inject(WorkoutRoutineService);
+  private workoutService = inject(WorkoutSessionService);
+  private routineService = inject(RoutineService);
   private navigationService = inject(NavigationService);
 
   private pendingAction: (() => void) | null = null;
 
-  routines = this.workoutRoutineService.routines;
+  workouts = this.workoutService.workouts;
+  routines = this.routineService.routines;
   showDeleteDialog = signal(false);
   showWorkoutInProgressDialog = signal(false);
   selectedRoutineId = signal<string | null>(null);
@@ -45,12 +46,12 @@ export class WorkoutListComponent {
   ];
 
   startNewWorkout(): void {
-    const activeWorkout = this.workoutSessionService.activeWorkout();
+    const activeWorkout = this.workoutService.activeWorkout();
     if (activeWorkout && activeWorkout.exercises.length > 0) {
       this.pendingAction = () => {
         this.router.navigate(['/workout/new']);
       };
-      this.workoutSessionService.hideWorkoutInProgressDialog();
+      this.workoutService.hideWorkoutInProgressDialog();
       this.showWorkoutInProgressDialog.set(true);
       return;
     }
@@ -61,18 +62,18 @@ export class WorkoutListComponent {
   resumeWorkout(): void {
     this.showWorkoutInProgressDialog.set(false);
     this.pendingAction = null;
-    this.workoutSessionService.hideWorkoutInProgressDialog();
+    this.workoutService.hideWorkoutInProgressDialog();
     this.router.navigate(['/workout/new']);
   }
 
   confirmStartNewWorkout(): void {
-    const activeWorkout = this.workoutSessionService.activeWorkout();
+    const activeWorkout = this.workoutService.activeWorkout();
     if (activeWorkout) {
-      this.workoutSessionService.deleteWorkout(activeWorkout.id);
-      this.workoutSessionService.clearActiveWorkout();
+      this.workoutService.deleteWorkout(activeWorkout.id);
+      this.workoutService.clearActiveWorkout();
     }
 
-    this.workoutSessionService.hideWorkoutInProgressDialog();
+    this.workoutService.hideWorkoutInProgressDialog();
     this.showWorkoutInProgressDialog.set(false);
     const action = this.pendingAction;
     this.pendingAction = null;
@@ -82,7 +83,7 @@ export class WorkoutListComponent {
   cancelStartNewWorkout(): void {
     this.showWorkoutInProgressDialog.set(false);
     this.pendingAction = null;
-    this.workoutSessionService.hideWorkoutInProgressDialog();
+    this.workoutService.hideWorkoutInProgressDialog();
   }
 
   createNewRoutine(): void {
@@ -90,18 +91,18 @@ export class WorkoutListComponent {
   }
 
   startRoutine(routine: Routine): void {
-    const activeWorkout = this.workoutSessionService.activeWorkout();
+    const activeWorkout = this.workoutService.activeWorkout();
     if (activeWorkout && activeWorkout.exercises.length > 0) {
       this.pendingAction = () => {
-        this.workoutRoutineService.startWorkoutFromRoutine(routine);
+        this.routineService.startWorkoutFromRoutine(routine);
         this.router.navigate(['/workout/new']);
       };
-      this.workoutSessionService.hideWorkoutInProgressDialog();
+      this.workoutService.hideWorkoutInProgressDialog();
       this.showWorkoutInProgressDialog.set(true);
       return;
     }
 
-    this.workoutRoutineService.startWorkoutFromRoutine(routine);
+    this.routineService.startWorkoutFromRoutine(routine);
     this.router.navigate(['/workout/new']);
   }
 
@@ -121,7 +122,7 @@ export class WorkoutListComponent {
   confirmDelete(): void {
     const routineId = this.selectedRoutineId();
     if (routineId) {
-      this.workoutRoutineService.deleteRoutine(routineId);
+      this.routineService.deleteRoutine(routineId);
     }
     this.showDeleteDialog.set(false);
     this.selectedRoutineId.set(null);
@@ -132,6 +133,6 @@ export class WorkoutListComponent {
   }
 
   onRoutineReorder(event: DragReorderEvent): void {
-    this.workoutRoutineService.reorderRoutines(event.fromId, event.toId);
+    this.routineService.reorderRoutines(event.fromId, event.toId);
   }
 }
