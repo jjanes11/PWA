@@ -6,6 +6,7 @@ import { Workout } from '../../models/workout.models';
 import { WorkoutSessionService } from '../../services/workout-session.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { WorkoutRoutineService } from '../../services/workout-template.service';
+import { NavigationService } from '../../services/navigation.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
@@ -26,6 +27,7 @@ export class CreateRoutineComponent implements OnInit {
   private workoutSession = inject(WorkoutSessionService);
   private workoutEditor = inject(WorkoutEditorService);
   private workoutRoutineService = inject(WorkoutRoutineService);
+  private navigationService = inject(NavigationService);
   private editorContext = setupEditorContext({
     kind: 'draft',
     defaultOrigin: '/workouts',
@@ -44,7 +46,6 @@ export class CreateRoutineComponent implements OnInit {
     }
   });
   title: string = '';
-  private sourceWorkoutId: string | null = null;
   private navigationContext = this.editorContext.navigation;
   discardGuard = this.editorContext.discard!;
   private workoutActions = useWorkoutActions({ editorContext: this.editorContext });
@@ -83,9 +84,11 @@ export class CreateRoutineComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // If we have a source workout ID, create a draft from it
-    if (this.sourceWorkoutId) {
-      const draftWorkout = this.workoutSession.createDraftFromWorkout(this.sourceWorkoutId);
+    // Check if we have a source workout ID from navigation state
+    const sourceWorkoutId = this.navigationService.getSourceWorkoutId();
+    
+    if (sourceWorkoutId) {
+      const draftWorkout = this.workoutSession.createDraftFromWorkout(sourceWorkoutId);
       if (draftWorkout) {
         this.workoutContext.setWorkout(draftWorkout);
         this.title = draftWorkout.name || '';
@@ -117,7 +120,8 @@ export class CreateRoutineComponent implements OnInit {
       // Save as template for routines
       this.workoutRoutineService.saveFromWorkout(updatedWorkout);
 
-      this.navigationContext.exit();
+      // Navigate to workouts page to see the newly created routine
+      this.router.navigate(['/workouts']);
       return;
     }
     this.router.navigate(['/workouts']);
