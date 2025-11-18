@@ -1,4 +1,4 @@
-# Angular PWA - Progressive Web App
+# Jacaona - Progressive Web App
 
 A simple Angular Progressive Web App (PWA) that demonstrates modern web app capabilities including offline functionality, installability, and responsive design. This project is automatically deployed to GitHub Pages using GitHub Actions.
 
