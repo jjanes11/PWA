@@ -4,7 +4,7 @@ A simple Angular Progressive Web App (PWA) that demonstrates modern web app capa
 
 ## 🚀 Live Demo
 
-Once deployed, your PWA will be available at: `https://yourusername.github.io/jacaona/`
+Once deployed, your PWA will be available at: `https://jjanes11.github.io/jacaona/`
 
 ## ✨ PWA Features
 
@@ -64,7 +64,7 @@ This project includes a GitHub Actions workflow that automatically:
    git add .
    git commit -m "Initial commit"
    git branch -M main
-   git remote add origin https://github.com/yourusername/jacaona.git
+   git remote add origin https://github.com/jjanes11/jacaona.git
    git push -u origin main
    ```
 
