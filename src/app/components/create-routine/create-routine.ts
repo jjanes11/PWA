@@ -51,13 +51,10 @@ export class CreateRoutineComponent implements OnInit {
     onConfirm: () => this.handleDiscardConfirm()
   });
   
-  private exerciseCardController = useExerciseCardController(this.workoutEditor, {
+  private exerciseCardController = useExerciseCardController<Routine>(this.workoutEditor, {
     getWorkout: () => this.routineDraft(),
-    onWorkoutUpdated: (workout) => {
-      // Routine drafts are stored as Workout type
-      if ('date' in workout) {
-        this.routineDraftService.setRoutineDraft(workout);
-      }
+    onWorkoutUpdated: (routine) => {
+      this.routineDraftService.setRoutineDraft(routine);
     }
   });
   
@@ -89,8 +86,8 @@ export class CreateRoutineComponent implements OnInit {
     this.exerciseCardController.closeSetTypeMenu();
   }
 
-  onWorkoutUpdated(workout: Workout | Routine): void {
-    this.routineDraftService.setRoutineDraft(workout as Workout);
+  onRoutineUpdated(routine: Routine): void {
+    this.routineDraftService.setRoutineDraft(routine);
   }
 
   constructor() {}
@@ -126,20 +123,21 @@ export class CreateRoutineComponent implements OnInit {
   }
 
   save(): void {
-    const workout = this.routineDraft();
-    if (workout) {
-      // Create updated workout with the user's title
-      const updatedWorkout = {
-        ...workout,
+    const routine = this.routineDraft();
+    if (routine) {
+      // Create updated routine with the user's title
+      const updatedRoutine: Routine = {
+        ...routine,
         name: this.title.trim() || 'Untitled Routine'
       };
       // Update the draft
-      this.routineDraftService.setRoutineDraft(updatedWorkout);
+      this.routineDraftService.setRoutineDraft(updatedRoutine);
 
-      // Save as template for routines
-      this.routineService.saveFromWorkout(updatedWorkout);
+      // Save as routine
+      this.routineService.saveRoutine(updatedRoutine);
 
-      // Navigate to workouts page to see the newly created routine
+      // Clear draft and navigate to workouts page
+      this.routineDraftService.clearRoutineDraft();
       this.router.navigate(['/workouts']);
       return;
     }
@@ -148,17 +146,17 @@ export class CreateRoutineComponent implements OnInit {
 
   addExercise(): void {
     // Update draft title before navigating
-    const workout = this.routineDraft();
-    if (workout && this.title.trim()) {
-      const updatedWorkout = { ...workout, name: this.title.trim() };
-      this.routineDraftService.setRoutineDraft(updatedWorkout);
+    const routine = this.routineDraft();
+    if (routine && this.title.trim()) {
+      const updatedRoutine: Routine = { ...routine, name: this.title.trim() };
+      this.routineDraftService.setRoutineDraft(updatedRoutine);
     }
     
     // Navigate to add-exercise and return to this page after adding
-    if (workout) {
+    if (routine) {
       this.router.navigate(['/add-exercise'], {
         queryParams: {
-          workoutId: workout.id,
+          workoutId: routine.id,
           source: WorkoutSource.RoutineDraft,
           returnUrl: this.router.url
         }

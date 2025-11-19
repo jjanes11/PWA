@@ -56,10 +56,10 @@ export class EditRoutineComponent {
     });
   }
   
-  private exerciseCardController = useExerciseCardController(this.workoutEditor, {
+  private exerciseCardController = useExerciseCardController<Routine>(this.workoutEditor, {
     getWorkout: () => this.routine(),
     onWorkoutUpdated: (updatedRoutine) => {
-      this.routine.set(updatedRoutine as Routine);
+      this.routine.set(updatedRoutine);
     }
   });
 

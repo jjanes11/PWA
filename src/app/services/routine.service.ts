@@ -27,11 +27,11 @@ export class RoutineService {
   }
 
   // Routine draft access
-  routineDraftSignal(): Signal<Workout | null> {
+  routineDraftSignal(): Signal<Routine | null> {
     return this.routineDraftService.routineDraftSignal();
   }
 
-  getRoutineDraft(): Workout | null {
+  getRoutineDraft(): Routine | null {
     return this.routineDraftService.getRoutineDraft();
   }
 

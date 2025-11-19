@@ -6,7 +6,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { WorkoutService } from '../../services/workout.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
-import { Workout, Routine, WorkoutSource } from '../../models/workout.models';
+import { Workout, WorkoutSource } from '../../models/workout.models';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { ExerciseListEditorComponent, EditorButtonConfig, BottomButtonConfig, ExerciseListEditorEmptyState } from '../exercise-list-editor/exercise-list-editor';
@@ -58,13 +58,11 @@ export class EditWorkoutComponent {
     });
   }
   
-  private exerciseCardController = useExerciseCardController(this.workoutEditor, {
+  private exerciseCardController = useExerciseCardController<Workout>(this.workoutEditor, {
     getWorkout: () => this.workout(),
     onWorkoutUpdated: (updatedWorkout) => {
-      if ('date' in updatedWorkout) {
-        this.workout.set(updatedWorkout);
-        this.workoutService.saveWorkout(updatedWorkout);
-      }
+      this.workout.set(updatedWorkout);
+      this.workoutService.saveWorkout(updatedWorkout);
     }
   });
   
@@ -96,9 +94,9 @@ export class EditWorkoutComponent {
     this.exerciseCardController.closeSetTypeMenu();
   }
 
-  onWorkoutUpdated(workout: Workout | Routine): void {
-    this.workout.set(workout as Workout);
-    this.workoutService.saveWorkout(workout as Workout);
+  onWorkoutUpdated(workout: Workout): void {
+    this.workout.set(workout);
+    this.workoutService.saveWorkout(workout);
   }
 
   // Computed workout stats

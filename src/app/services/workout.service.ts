@@ -1,5 +1,5 @@
 import { Injectable, Signal } from '@angular/core';
-import { Workout, Routine, WorkoutStats, Exercise } from '../models/workout.models';
+import { Workout, Routine, WorkoutStats, Exercise, WorkoutEntity } from '../models/workout.models';
 import { DataStoreService } from './data-store.service';
 import { ActiveWorkoutService } from './active-workout.service';
 import { RoutineDraftService } from './routine-draft.service';
@@ -101,11 +101,11 @@ export class WorkoutService {
   }
 
   // Workout editing with WorkoutEditorService
-  addExercisesToWorkout(
-    workout: Workout,
+  addExercisesToWorkout<T extends WorkoutEntity>(
+    workout: T,
     exerciseNames: string[],
     defaultSetCount: number
-  ): { workout: Workout; exercises: Exercise[] } {
+  ): { workout: T; exercises: Exercise[] } {
     const createdExercises: Exercise[] = [];
     let updatedWorkout = workout;
 
@@ -118,11 +118,11 @@ export class WorkoutService {
     return { workout: updatedWorkout, exercises: createdExercises };
   }
 
-  replaceExercise(
-    workout: Workout,
+  replaceExercise<T extends WorkoutEntity>(
+    workout: T,
     exerciseId: string,
     newExerciseName: string
-  ): Workout {
+  ): T {
     return this.editor.replaceExerciseInWorkout(workout, exerciseId, newExerciseName);
   }
 

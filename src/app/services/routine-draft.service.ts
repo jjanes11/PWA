@@ -1,6 +1,6 @@
-import { Injectable, Signal, signal, inject } from '@angular/core';
-import { Workout } from '../models/workout.models';
-import { createBaseWorkout, cloneWorkoutForDraft } from '../utils/workout-entity.utils';
+import { Injectable, Signal, signal } from '@angular/core';
+import { Workout, Routine } from '../models/workout.models';
+import { generateId } from '../utils/id-generator';
 
 /**
  * Manages routine draft state (unsaved routine template being created/edited).
@@ -8,17 +8,17 @@ import { createBaseWorkout, cloneWorkoutForDraft } from '../utils/workout-entity
  */
 @Injectable({ providedIn: 'root' })
 export class RoutineDraftService {
-  private readonly routineDraft = signal<Workout | null>(null);
+  private readonly routineDraft = signal<Routine | null>(null);
 
-  routineDraftSignal(): Signal<Workout | null> {
+  routineDraftSignal(): Signal<Routine | null> {
     return this.routineDraft.asReadonly();
   }
 
-  getRoutineDraft(): Workout | null {
+  getRoutineDraft(): Routine | null {
     return this.routineDraft();
   }
 
-  setRoutineDraft(draft: Workout | null): void {
+  setRoutineDraft(draft: Routine | null): void {
     this.routineDraft.set(draft);
   }
 
@@ -27,15 +27,35 @@ export class RoutineDraftService {
   }
 
   // Create new routine draft
-  createDraft(name: string = 'New Routine'): Workout {
-    const draft = createBaseWorkout(name);
+  createDraft(name: string = 'New Routine'): Routine {
+    const draft: Routine = {
+      id: generateId(),
+      name,
+      exercises: []
+    };
     this.setRoutineDraft(draft);
     return draft;
   }
 
-  // Create draft from existing workout
-  createDraftFromWorkout(sourceWorkout: Workout): Workout {
-    const draft = cloneWorkoutForDraft(sourceWorkout);
+  // Create draft from existing workout (copy exercises structure)
+  createDraftFromWorkout(sourceWorkout: Workout): Routine {
+    const draft: Routine = {
+      id: generateId(),
+      name: sourceWorkout.name,
+      exercises: sourceWorkout.exercises.map(exercise => ({
+        id: generateId(),
+        name: exercise.name,
+        sets: exercise.sets.map(set => ({
+          id: generateId(),
+          reps: set.reps,
+          weight: set.weight,
+          completed: false,
+          type: set.type,
+          restTime: set.restTime,
+          notes: set.notes
+        }))
+      }))
+    };
     this.setRoutineDraft(draft);
     return draft;
   }

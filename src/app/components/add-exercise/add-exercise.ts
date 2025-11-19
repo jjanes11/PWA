@@ -9,7 +9,7 @@ import { ActiveWorkoutService } from '../../services/active-workout.service';
 import { RoutineDraftService } from '../../services/routine-draft.service';
 import { RoutineService } from '../../services/routine.service';
 import { DataStoreService } from '../../services/data-store.service';
-import { Workout, Routine, WorkoutSource } from '../../models/workout.models';
+import { Workout, Routine, WorkoutSource, WorkoutEntity } from '../../models/workout.models';
 
 @Component({
   selector: 'app-add-exercise',
@@ -30,8 +30,8 @@ export class AddExercise {
   // Get query params
   private queryParams = toSignal(this.route.queryParams);
   
-  // Workout context state
-  workout = signal<Workout | Routine | null>(null);
+  // Entity context state (can be Workout or Routine)
+  entity = signal<WorkoutEntity | null>(null);
   source = signal<WorkoutSource | null>(null);
   
   searchQuery = signal('');
@@ -82,7 +82,7 @@ export class AddExercise {
         return;
       }
 
-      this.workout.set(entity);
+      this.entity.set(entity);
       this.source.set(sourceParam);
     });
   }
@@ -114,31 +114,37 @@ export class AddExercise {
   }
 
   selectExercise(exercise: Exercise): void {
-    // In replace mode, immediately replace and navigate back
     if (this.isReplaceMode()) {
-      const workout = this.workout();
-      const oldExerciseId = this.replaceExerciseId();
-      const source = this.source();
-      
-      if (workout && oldExerciseId && source) {
-        const updatedWorkout = this.workoutService.replaceExercise(workout as Workout, oldExerciseId, exercise.name);
-        this.saveToSource(updatedWorkout, source);
-        this.router.navigateByUrl(this.returnUrl());
-      }
+      this.replaceExercise(exercise);
     } else {
-      // Normal add mode - toggle selection for multiple exercises
-      const currentSelections = this.selectedExercises();
-      const index = currentSelections.findIndex(e => e.id === exercise.id);
-      
-      if (index >= 0) {
-        // Exercise is already selected, remove it
-        const updated = [...currentSelections];
-        updated.splice(index, 1);
-        this.selectedExercises.set(updated);
-      } else {
-        // Exercise not selected, add it
-        this.selectedExercises.set([...currentSelections, exercise]);
-      }
+      this.toggleExerciseSelection(exercise);
+    }
+  }
+
+  private replaceExercise(exercise: Exercise): void {
+    const entity = this.entity();
+    const oldExerciseId = this.replaceExerciseId();
+    const source = this.source();
+    
+    if (entity && oldExerciseId && source) {
+      const updated = this.workoutService.replaceExercise(entity, oldExerciseId, exercise.name);
+      this.saveToSource(updated, source);
+      this.router.navigateByUrl(this.returnUrl());
+    }
+  }
+
+  private toggleExerciseSelection(exercise: Exercise): void {
+    const currentSelections = this.selectedExercises();
+    const index = currentSelections.findIndex(e => e.id === exercise.id);
+    
+    if (index >= 0) {
+      // Exercise is already selected, remove it
+      const updated = [...currentSelections];
+      updated.splice(index, 1);
+      this.selectedExercises.set(updated);
+    } else {
+      // Exercise not selected, add it
+      this.selectedExercises.set([...currentSelections, exercise]);
     }
   }
 
@@ -148,32 +154,33 @@ export class AddExercise {
 
   addSelectedExercises(): void {
     const selected = this.selectedExercises();
-    const workout = this.workout();
+    const entity = this.entity();
     const source = this.source();
     
-    if (selected.length > 0 && workout && source) {
+    if (selected.length > 0 && entity && source) {
       const result = this.workoutService.addExercisesToWorkout(
-        workout as Workout,
+        entity,
         selected.map(exercise => exercise.name),
         3
       );
       
       this.saveToSource(result.workout, source);
-      console.log('Added exercises to workout:', result.exercises);
+      console.log('Added exercises:', result.exercises);
       this.router.navigateByUrl(this.returnUrl());
     }
   }
 
   /**
-   * Save workout back to its source.
+   * Save entity back to its source.
+   * The source determines the entity type, so type assertions are safe.
    */
-  private saveToSource(entity: Workout | Routine, source: WorkoutSource): void {
+  private saveToSource(entity: WorkoutEntity, source: WorkoutSource): void {
     switch (source) {
       case WorkoutSource.ActiveWorkout:
         this.activeWorkoutService.setActiveWorkout(entity as Workout);
         break;
       case WorkoutSource.RoutineDraft:
-        this.routineDraftService.setRoutineDraft(entity as Workout);
+        this.routineDraftService.setRoutineDraft(entity as Routine);
         break;
       case WorkoutSource.PersistedWorkout:
         this.workoutService.saveWorkout(entity as Workout);

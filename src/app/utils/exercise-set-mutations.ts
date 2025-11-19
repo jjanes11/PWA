@@ -1,25 +1,25 @@
 import { WorkoutEditorService } from '../services/workout-editor.service';
-import { Workout, Routine, Set as WorkoutSet } from '../models/workout.models';
+import { Workout, Routine, Set as WorkoutSet, WorkoutEntity } from '../models/workout.models';
 import { ExerciseActionEvent } from '../components/exercise-card/exercise-card';
 import { SetChangeEvent, SetCompleteEvent } from '../components/sets-table/sets-table';
 
-export interface ExerciseSetMutationsOptions {
-  getWorkout: () => Workout | Routine | null;
-  onWorkoutUpdated: (workout: Workout | Routine) => void;
+export interface ExerciseSetMutationsOptions<T extends WorkoutEntity = WorkoutEntity> {
+  getWorkout: () => T | null;
+  onWorkoutUpdated: (workout: T) => void;
 }
 
-interface ResolveResult {
-  workout: Workout | Routine;
+interface ResolveResult<T extends WorkoutEntity = WorkoutEntity> {
+  workout: T;
   set?: WorkoutSet;
 }
 
-export function useExerciseSetMutations(
+export function useExerciseSetMutations<T extends WorkoutEntity = WorkoutEntity>(
   workoutEditor: WorkoutEditorService,
-  options: ExerciseSetMutationsOptions
+  options: ExerciseSetMutationsOptions<T>
 ) {
   const { getWorkout, onWorkoutUpdated } = options;
 
-  function resolveSet(exerciseId: string, setId: string): ResolveResult | null {
+  function resolveSet(exerciseId: string, setId: string): ResolveResult<T> | null {
     const workout = getWorkout();
     if (!workout) {
       return null;

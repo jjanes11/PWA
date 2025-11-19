@@ -39,6 +39,8 @@ export interface Routine {
   exercises: Exercise[]; // Same structure as Workout
 }
 
+export type WorkoutEntity = Workout | Routine;
+
 export enum WorkoutSource {
   ActiveWorkout = 'activeWorkout',
   RoutineDraft = 'routineDraft',

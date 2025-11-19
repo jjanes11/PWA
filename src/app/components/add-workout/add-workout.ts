@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Workout, Routine, WorkoutSource } from '../../models/workout.models';
+import { Workout, WorkoutSource } from '../../models/workout.models';
 import { WorkoutService } from '../../services/workout.service';
 import { ActiveWorkoutService } from '../../services/active-workout.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
@@ -47,13 +47,10 @@ export class AddWorkoutComponent implements OnInit {
     onConfirm: () => this.handleDiscardConfirm()
   });
   
-  private exerciseCardController = useExerciseCardController(this.workoutEditor, {
+  private exerciseCardController = useExerciseCardController<Workout>(this.workoutEditor, {
     getWorkout: () => this.activeWorkout(),
     onWorkoutUpdated: (workout) => {
-      // Only workouts can be active, not routines
-      if ('date' in workout) {
-        this.activeWorkoutService.setActiveWorkout(workout);
-      }
+      this.activeWorkoutService.setActiveWorkout(workout);
     },
     onReplaceExercise: (exerciseId: string) => {
       const workout = this.activeWorkout();
@@ -121,8 +118,8 @@ export class AddWorkoutComponent implements OnInit {
     this.exerciseCardController.closeSetTypeMenu();
   }
 
-  onWorkoutUpdated(workout: Workout | Routine): void {
-    this.activeWorkoutService.setActiveWorkout(workout as Workout);
+  onWorkoutUpdated(workout: Workout): void {
+    this.activeWorkoutService.setActiveWorkout(workout);
   }
 
   ngOnInit(): void {

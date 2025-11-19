@@ -11,7 +11,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { BottomSheetDialog } from '../bottom-sheet-dialog/bottom-sheet-dialog';
-import { Workout, Routine, SetType } from '../../models/workout.models';
+import { Workout, Routine, SetType, WorkoutEntity } from '../../models/workout.models';
 
 @Component({
   selector: 'app-set-type-menu',
@@ -20,11 +20,11 @@ import { Workout, Routine, SetType } from '../../models/workout.models';
   templateUrl: './set-type-menu.html',
   styleUrl: './set-type-menu.css'
 })
-export class SetTypeMenuComponent {
-  @Input({ required: true }) workout!: Workout | Routine;
+export class SetTypeMenuComponent<T extends WorkoutEntity = WorkoutEntity> {
+  @Input({ required: true }) workout!: T;
   @Input({ required: true }) exerciseId!: string;
   @Input({ required: true }) setId!: string;
-  @Output() workoutUpdated = new EventEmitter<Workout | Routine>();
+  @Output() workoutUpdated = new EventEmitter<T>();
   @Output() closed = new EventEmitter<void>();
   
   private workoutEditor = inject(WorkoutEditorService);

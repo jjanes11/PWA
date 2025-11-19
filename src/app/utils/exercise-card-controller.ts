@@ -3,8 +3,9 @@ import { ExerciseActionEvent } from '../components/exercise-card/exercise-card';
 import { SetTypeClickEvent } from '../components/sets-table/sets-table';
 import { useSetTypeMenu } from './set-type-menu';
 import { useExerciseSetMutations, ExerciseSetMutationsOptions } from './exercise-set-mutations';
+import { WorkoutEntity } from '../models/workout.models';
 
-export interface ExerciseCardControllerOptions extends ExerciseSetMutationsOptions {
+export interface ExerciseCardControllerOptions<T extends WorkoutEntity = WorkoutEntity> extends ExerciseSetMutationsOptions<T> {
   onReplaceExercise?: (exerciseId: string) => void;
   onRemoveExercise?: (exerciseId: string) => void;
 }
@@ -17,9 +18,9 @@ export interface ExerciseCardController {
   selectedSet: ReturnType<typeof useSetTypeMenu>['selectedSet'];
 }
 
-export function useExerciseCardController(
+export function useExerciseCardController<T extends WorkoutEntity = WorkoutEntity>(
   workoutEditor: WorkoutEditorService,
-  options: ExerciseCardControllerOptions
+  options: ExerciseCardControllerOptions<T>
 ): ExerciseCardController {
   const setTypeMenu = useSetTypeMenu();
   const setMutations = useExerciseSetMutations(workoutEditor, options);
