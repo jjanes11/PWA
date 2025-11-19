@@ -65,7 +65,9 @@ export class EditWorkoutComponent {
       this.workout.set(workout);
       this.workoutService.saveWorkout(workout);
     },
-    source: WorkoutSource.PersistedWorkout
+    source: WorkoutSource.PersistedWorkout,
+    getTitle: () => this.workoutTitle(),
+    returnUrl: '/home'
   });
   
   // Expose editor properties for template
@@ -133,23 +135,23 @@ export class EditWorkoutComponent {
   });
 
   cancel(): void {
-    this.router.navigate(['/home']);
+    this.entityEditor.cancel();
   }
 
   saveWorkout(): void {
     const workout = this.workout();
     if (!workout) return;
 
-    // Update workout with new values
+    // Update workout with new values before saving
     const updatedWorkout: Workout = {
       ...workout,
       name: this.workoutTitle().trim() || 'Untitled Workout',
       notes: this.workoutDescription().trim()
     };
 
+    this.workout.set(updatedWorkout);
     this.workoutService.saveWorkout(updatedWorkout);
-    this.workout.set(updatedWorkout); // Update local signal
-    this.router.navigate(['/home']);
+    this.entityEditor.cancel(); // Navigate using editor's cancel (just navigation)
   }
 
   addExercise(): void {

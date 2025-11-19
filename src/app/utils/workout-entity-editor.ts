@@ -23,6 +23,15 @@ export interface WorkoutEntityEditorConfig<T extends WorkoutEntity> {
   
   /** Optional: Custom menu items (defaults to replace/remove) */
   menuItems?: MenuItem[];
+  
+  /** Optional: Custom navigation URL after save/cancel (defaults based on source) */
+  returnUrl?: string;
+  
+  /** Optional: Callback to get title/name for saving entity */
+  getTitle?: () => string;
+  
+  /** Optional: Additional cleanup logic */
+  onCleanup?: () => void;
 }
 
 /**
@@ -59,6 +68,12 @@ export interface WorkoutEntityEditorResult<T extends WorkoutEntity> {
   
   /** Update the entity with set type menu changes */
   onEntityUpdated: (entity: T) => void;
+  
+  /** Save entity with title and navigate away */
+  save: (navigateUrl?: string) => void;
+  
+  /** Cancel editing and navigate away */
+  cancel: (navigateUrl?: string) => void;
 }
 
 /**
@@ -145,6 +160,36 @@ export function useWorkoutEntityEditor<T extends WorkoutEntity>(
     });
   };
   
+  // Save action: update entity with title and navigate away
+  const save = (navigateUrl?: string): void => {
+    const entity = config.getEntity();
+    if (!entity) {
+      router.navigate([navigateUrl || getDefaultReturnUrl(config.source)]);
+      return;
+    }
+    
+    // Get title from config or use entity's current name
+    const title = config.getTitle ? config.getTitle() : entity.name;
+    const updatedEntity = {
+      ...entity,
+      name: title.trim() || getDefaultTitle(entity)
+    } as T;
+    
+    config.onEntityUpdated(updatedEntity);
+    
+    // Perform cleanup if provided
+    if (config.onCleanup) {
+      config.onCleanup();
+    }
+    
+    router.navigate([navigateUrl || getDefaultReturnUrl(config.source)]);
+  };
+  
+  // Cancel action: navigate away without saving
+  const cancel = (navigateUrl?: string): void => {
+    router.navigate([navigateUrl || getDefaultReturnUrl(config.source)]);
+  };
+  
   return {
     draggedExerciseId,
     dragOverExerciseId,
@@ -156,6 +201,33 @@ export function useWorkoutEntityEditor<T extends WorkoutEntity>(
     showSetTypeMenu: exerciseCardController.showSetTypeMenu,
     selectedSet: exerciseCardController.selectedSet,
     closeSetTypeMenu: () => exerciseCardController.closeSetTypeMenu(),
-    onEntityUpdated: config.onEntityUpdated
+    onEntityUpdated: config.onEntityUpdated,
+    save,
+    cancel
   };
+}
+
+/**
+ * Get default return URL based on workout source
+ */
+function getDefaultReturnUrl(source: WorkoutSource): string {
+  switch (source) {
+    case WorkoutSource.ActiveWorkout:
+      return '/workouts';
+    case WorkoutSource.RoutineDraft:
+      return '/workouts';
+    case WorkoutSource.PersistedWorkout:
+      return '/home';
+    case WorkoutSource.PersistedRoutine:
+      return '/workouts';
+    default:
+      return '/workouts';
+  }
+}
+
+/**
+ * Get default title for untitled entities
+ */
+function getDefaultTitle(entity: WorkoutEntity): string {
+  return 'date' in entity ? 'Untitled Workout' : 'Untitled Routine';
 }

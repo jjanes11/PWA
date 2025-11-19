@@ -55,7 +55,10 @@ export class CreateRoutineComponent {
   private entityEditor = useWorkoutEntityEditor<Routine>({
     getEntity: () => this.routineDraft(),
     onEntityUpdated: (routine) => this.routineDraftService.setRoutineDraft(routine),
-    source: WorkoutSource.RoutineDraft
+    source: WorkoutSource.RoutineDraft,
+    getTitle: () => this.title,
+    onCleanup: () => this.routineDraftService.clearRoutineDraft(),
+    returnUrl: '/workouts'
   });
   
   // Expose editor properties for template
@@ -118,18 +121,15 @@ export class CreateRoutineComponent {
         ...routine,
         name: this.title.trim() || 'Untitled Routine'
       };
-      // Update the draft
-      this.routineDraftService.setRoutineDraft(updatedRoutine);
-
-      // Save as routine
+      
+      // Save as routine to persistent storage
       this.routineService.saveRoutine(updatedRoutine);
-
-      // Clear draft and navigate to workouts page
-      this.routineDraftService.clearRoutineDraft();
-      this.router.navigate(['/workouts']);
+      
+      // Use entityEditor for cleanup and navigation
+      this.entityEditor.save();
       return;
     }
-    this.router.navigate(['/workouts']);
+    this.entityEditor.cancel();
   }
 
   addExercise(): void {

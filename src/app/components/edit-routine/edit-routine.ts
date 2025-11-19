@@ -63,7 +63,9 @@ export class EditRoutineComponent {
       this.routine.set(routine);
       this.routineService.saveRoutine(routine);
     },
-    source: WorkoutSource.PersistedRoutine
+    source: WorkoutSource.PersistedRoutine,
+    getTitle: () => this.title(),
+    returnUrl: '/workouts'
   });
   
   // Expose editor properties for template
@@ -86,23 +88,11 @@ export class EditRoutineComponent {
   }
 
   cancel(): void {
-    this.router.navigate(['/workouts']);
+    this.entityEditor.cancel();
   }
 
   update(): void {
-    const routine = this.routine();
-    if (routine) {
-      // Update the routine with current title
-      const updatedRoutine: Routine = {
-        ...routine,
-        name: this.title().trim() || 'Untitled Routine'
-      };
-      
-      this.routineService.saveRoutine(updatedRoutine);
-      this.router.navigate(['/workouts']);
-      return;
-    }
-    this.router.navigate(['/workouts']);
+    this.entityEditor.save();
   }
 
   addExercise(): void {
