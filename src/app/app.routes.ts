@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { workoutContextResolver } from './resolvers/workout-context.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -9,8 +8,8 @@ export const routes: Routes = [
   },
   { 
     path: 'add-exercise', 
-    loadComponent: () => import('./components/add-exercise/add-exercise').then(m => m.AddExercise),
-    resolve: { context: workoutContextResolver }
+    loadComponent: () => import('./components/add-exercise/add-exercise').then(m => m.AddExercise)
+    // Context loaded directly in component via effect() from query params
   },
   { 
     path: 'create-exercise', 
