@@ -1,8 +1,10 @@
 import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { computed } from '@angular/core';
 import { ExerciseService } from '../../services/exercise.service';
-import { NavigationService } from '../../services/navigation.service';
 
 @Component({
   selector: 'app-create-exercise',
@@ -12,18 +14,15 @@ import { NavigationService } from '../../services/navigation.service';
 })
 export class CreateExercise {
   private exerciseService = inject(ExerciseService);
-  private navigationService = inject(NavigationService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
   
   exerciseName = signal('');
-  private returnUrl = signal<string>('/workout/new');
-
-  constructor() {
-    // Get return URL from navigation service
-    this.returnUrl.set(this.navigationService.getReturnUrl('/workout/new'));
-  }
+  private queryParams = toSignal(this.route.queryParams);
+  returnUrl = computed(() => this.queryParams()?.['returnUrl'] || '/workout/new');
 
   goBack(): void {
-    this.navigationService.navigateWithReturnUrl('/add-exercise', this.returnUrl());
+    this.router.navigateByUrl(this.returnUrl());
   }
 
   save(): void {
@@ -37,6 +36,6 @@ export class CreateExercise {
     console.log('Created custom exercise:', newExercise);
     
     // Navigate back to add-exercise page with the new exercise available
-    this.navigationService.navigateWithReturnUrl('/add-exercise', this.returnUrl());
+    this.router.navigateByUrl(this.returnUrl());
   }
 }

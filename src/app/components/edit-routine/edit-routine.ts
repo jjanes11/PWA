@@ -1,17 +1,17 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
-import { Routine } from '../../models/workout.models';
+import { Routine, WorkoutSource } from '../../models/workout.models';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { RoutineService } from '../../services/routine.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { ExerciseListEditorComponent, EditorButtonConfig, BottomButtonConfig, ExerciseListEditorEmptyState } from '../exercise-list-editor/exercise-list-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
-import { useNavigationContext } from '../../utils/navigation-context';
+import { useCleanupContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-edit-routine',
@@ -25,12 +25,36 @@ export class EditRoutineComponent {
   private route = inject(ActivatedRoute);
   private workoutEditor = inject(WorkoutEditorService);
   private routineService = inject(RoutineService);
-  private navigationContext = useNavigationContext({
-    defaultOrigin: '/workouts'
-  });
+  private cleanup = useCleanupContext();
+  
+  // Get routine ID from route params
+  private routineId = toSignal(
+    this.route.params.pipe(map(params => params['id']))
+  );
   
   routine = signal<Routine | null>(null);
-  title: string = '';
+  title = signal('');
+
+  constructor() {
+    // Load routine when ID changes
+    effect(() => {
+      const id = this.routineId();
+      if (!id) {
+        this.router.navigate(['/workouts']);
+        return;
+      }
+
+      const routine = this.routineService.findRoutineById(id);
+      if (!routine) {
+        // Routine was deleted, redirect
+        this.router.navigate(['/workouts']);
+        return;
+      }
+
+      this.routine.set(routine);
+      this.title.set(routine.name);
+    });
+  }
   
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
     getWorkout: () => this.routine(),
@@ -38,11 +62,6 @@ export class EditRoutineComponent {
       this.routine.set(updatedRoutine as Routine);
     }
   });
-
-  // Convert route params to signal
-  private routineId = toSignal(
-    this.route.params.pipe(map(params => params['id']))
-  );
 
   // Set Type Menu (via controller)
   showSetTypeMenu = this.exerciseCardController.showSetTypeMenu;
@@ -76,59 +95,35 @@ export class EditRoutineComponent {
     this.routineService.saveRoutine(routine);
   }
 
-  constructor() {
-    // Effect that loads routine when ID changes
-    effect(() => {
-      const id = this.routineId();
-      if (!id) {
-        this.router.navigate(['/workouts']);
-        return;
-      }
-
-      const foundRoutine = this.routineService.findRoutineById(id);
-      
-      if (!foundRoutine) {
-        this.router.navigate(['/workouts']);
-        return;
-      }
-
-      this.routine.set(foundRoutine);
-      this.title = foundRoutine.name;
-    });
-  }
-
   cancel(): void {
-    this.navigationContext.exit();
+    this.router.navigate(['/workouts']);
   }
 
   update(): void {
     const routine = this.routine();
     if (routine) {
-      // Update the routine with the current title
+      // Update the routine with current title
       const updatedRoutine: Routine = {
         ...routine,
-        name: this.title.trim() || 'Untitled Routine'
+        name: this.title().trim() || 'Untitled Routine'
       };
       
       this.routineService.saveRoutine(updatedRoutine);
-      this.navigationContext.exit();
+      this.router.navigate(['/workouts']);
       return;
     }
     this.router.navigate(['/workouts']);
   }
 
   addExercise(): void {
-    // Save current title to routine before navigating
     const routine = this.routine();
-    if (routine && this.title.trim()) {
-      const updatedRoutine = { ...routine, name: this.title.trim() };
-      this.routine.set(updatedRoutine);
-    }
-    
     if (routine) {
-      this.navigationContext.navigateWithReturn('/add-exercise', {
-        workoutId: routine.id,
-        workoutSource: 'persistedRoutine'
+      this.router.navigate(['/add-exercise'], {
+        queryParams: {
+          workoutId: routine.id,
+          source: 'persistedRoutine' as WorkoutSource,
+          returnUrl: this.router.url
+        }
       });
     }
   }

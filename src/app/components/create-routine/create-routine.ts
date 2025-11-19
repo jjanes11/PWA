@@ -1,20 +1,20 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Workout, Routine } from '../../models/workout.models';
+import { Router, ActivatedRoute } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Workout, Routine, WorkoutSource } from '../../models/workout.models';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { WorkoutService } from '../../services/workout.service';
 import { RoutineService } from '../../services/routine.service';
 import { RoutineDraftService } from '../../services/routine-draft.service';
-import { NavigationService } from '../../services/navigation.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { ExerciseListEditorComponent, EditorButtonConfig, BottomButtonConfig, ExerciseListEditorEmptyState } from '../exercise-list-editor/exercise-list-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useDiscardGuard } from '../../utils/discard-guard';
-import { useNavigationContext } from '../../utils/navigation-context';
+import { useCleanupContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-create-routine',
@@ -25,17 +25,18 @@ import { useNavigationContext } from '../../utils/navigation-context';
 })
 export class CreateRoutineComponent implements OnInit {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private workoutEditor = inject(WorkoutEditorService);
   private workoutService = inject(WorkoutService);
   private routineService = inject(RoutineService);
   private routineDraftService = inject(RoutineDraftService);
-  private navigationService = inject(NavigationService);
+  
+  private queryParams = toSignal(this.route.queryParams);
   
   routineDraft = this.routineDraftService.routineDraftSignal();
   title: string = '';
   
-  private navigationContext = useNavigationContext({
-    defaultOrigin: '/workouts',
+  private cleanup = useCleanupContext({
     cleanup: () => {
       const draft = this.routineDraft();
       if (draft) {
@@ -95,8 +96,8 @@ export class CreateRoutineComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // Check if we have a source workout ID from navigation state
-    const sourceWorkoutId = this.navigationService.getSourceWorkoutId();
+    // Check if we have a source workout ID from query params
+    const sourceWorkoutId = this.queryParams()?.['sourceWorkoutId'];
     
     if (sourceWorkoutId) {
       const sourceWorkout = this.workoutService.findWorkoutById(sourceWorkoutId);
@@ -155,9 +156,12 @@ export class CreateRoutineComponent implements OnInit {
     
     // Navigate to add-exercise and return to this page after adding
     if (workout) {
-      this.navigationContext.navigateWithReturn('/add-exercise', {
-        workoutId: workout.id,
-        workoutSource: 'routineDraft'
+      this.router.navigate(['/add-exercise'], {
+        queryParams: {
+          workoutId: workout.id,
+          source: 'routineDraft' as WorkoutSource,
+          returnUrl: this.router.url
+        }
       });
     }
   }
@@ -169,6 +173,7 @@ export class CreateRoutineComponent implements OnInit {
   }
 
   private handleDiscardConfirm(): void {
-    this.navigationContext.exit();
+    this.cleanup.performCleanup();
+    this.router.navigate(['/workouts']);
   }
 }

@@ -5,7 +5,6 @@ import { WorkoutService } from '../../services/workout.service';
 import { RoutineService } from '../../services/routine.service';
 import { WorkoutUiService } from '../../services/workout-ui.service';
 import { Routine } from '../../models/workout.models';
-import { NavigationService } from '../../services/navigation.service';
 import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
@@ -20,7 +19,6 @@ export class WorkoutListComponent {
   private router = inject(Router);
   private workoutService = inject(WorkoutService);
   private routineService = inject(RoutineService);
-  private navigationService = inject(NavigationService);
   private uiService = inject(WorkoutUiService);
 
   private pendingAction: (() => void) | null = null;
@@ -88,8 +86,10 @@ export class WorkoutListComponent {
     this.uiService.hideWorkoutInProgressDialog();
   }
 
-  createNewRoutine(): void {
-    this.navigationService.navigateWithReturnUrl('/routine/new', '/workouts');
+  createRoutine(): void {
+    this.router.navigate(['/routine/new'], {
+      queryParams: { returnUrl: '/workouts' }
+    });
   }
 
   startRoutine(routine: Routine): void {

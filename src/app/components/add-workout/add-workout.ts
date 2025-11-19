@@ -1,12 +1,11 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Workout, Routine } from '../../models/workout.models';
+import { Workout, Routine, WorkoutSource } from '../../models/workout.models';
 import { WorkoutService } from '../../services/workout.service';
 import { ActiveWorkoutService } from '../../services/active-workout.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { WorkoutUiService } from '../../services/workout-ui.service';
-import { NavigationService } from '../../services/navigation.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { DragReorderEvent } from '../../directives/draggable.directive';
 import { MenuItem } from '../card-menu/card-menu';
@@ -15,7 +14,7 @@ import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { ExerciseListEditorComponent, BottomButtonConfig, EditorButtonConfig, ExerciseListEditorEmptyState } from '../exercise-list-editor/exercise-list-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useDiscardGuard } from '../../utils/discard-guard';
-import { useNavigationContext } from '../../utils/navigation-context';
+import { useCleanupContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-add-workout',
@@ -28,13 +27,11 @@ export class AddWorkoutComponent implements OnInit {
   private activeWorkoutService = inject(ActiveWorkoutService);
   private workoutEditor = inject(WorkoutEditorService);
   private uiService = inject(WorkoutUiService);
-  private navigationService = inject(NavigationService);
   private router = inject(Router);
   
   activeWorkout = this.activeWorkoutService.activeWorkoutSignal();
   
-  private navigationContext = useNavigationContext({
-    defaultOrigin: '/workouts',
+  private cleanup = useCleanupContext({
     cleanup: () => {
       const workout = this.activeWorkout();
       if (workout) {
@@ -60,11 +57,16 @@ export class AddWorkoutComponent implements OnInit {
     },
     onReplaceExercise: (exerciseId: string) => {
       const workout = this.activeWorkout();
-      this.navigationContext.navigateWithReturn('/add-exercise', {
-        replaceExerciseId: exerciseId,
-        workoutId: workout?.id,
-        workoutSource: 'activeWorkout'
-      });
+      if (workout) {
+        this.router.navigate(['/add-exercise'], {
+          queryParams: {
+            workoutId: workout.id,
+            source: 'activeWorkout' as WorkoutSource,
+            replaceExerciseId: exerciseId,
+            returnUrl: this.router.url
+          }
+        });
+      }
     }
   });
   
@@ -136,10 +138,11 @@ export class AddWorkoutComponent implements OnInit {
     // Only show dialog if workout has exercises
     if (workout && workout.exercises.length > 0) {
       this.uiService.showWorkoutInProgressDialog();
-      this.router.navigateByUrl(this.navigationContext.origin());
+      this.router.navigate(['/workouts']);
     } else {
       // No exercises, perform cleanup and navigate back
-      this.navigationContext.exit();
+      this.cleanup.performCleanup();
+      this.router.navigate(['/workouts']);
     }
   }
 
@@ -150,16 +153,22 @@ export class AddWorkoutComponent implements OnInit {
       this.router.navigate(['/save-workout']);
     } else {
       // If no exercises, just go back
-      this.navigationContext.exit();
+      this.cleanup.performCleanup();
+      this.router.navigate(['/workouts']);
     }
   }
 
   addExercise(): void {
     const workout = this.activeWorkout();
-    this.navigationContext.navigateWithReturn('/add-exercise', {
-      workoutId: workout?.id,
-      workoutSource: 'activeWorkout'
-    });
+    if (workout) {
+      this.router.navigate(['/add-exercise'], {
+        queryParams: {
+          workoutId: workout.id,
+          source: 'activeWorkout' as WorkoutSource,
+          returnUrl: this.router.url
+        }
+      });
+    }
   }
 
   discardWorkout(): void {
@@ -183,6 +192,7 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   private handleDiscardConfirm(): void {
-    this.navigationContext.exit();
+    this.cleanup.performCleanup();
+    this.router.navigate(['/workouts']);
   }
 }

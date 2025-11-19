@@ -160,11 +160,12 @@ export class WorkoutInProgressDialog {
   // Hide dialog on specific pages
   private shouldHideOnCurrentRoute = computed(() => {
     const url = this.currentUrl();
+    const path = url.split('?')[0]; // Extract path before query params
     const hideDialogRoutes = ['/routine/new', '/add-exercise'];
-    const isEditRoutine = url.match(/^\/routine\/edit\//);
-    const isEditWorkout = url.match(/^\/edit-workout\//);
-    const isWorkoutDetail = url.match(/^\/workout\/[^/]+$/) && !url.includes('/workout/new');
-    return hideDialogRoutes.includes(url) || !!isEditRoutine || !!isEditWorkout || !!isWorkoutDetail;
+    const isEditRoutine = path.match(/^\/routine\/edit\//);
+    const isEditWorkout = path.match(/^\/edit-workout\//);
+    const isWorkoutDetail = path.match(/^\/workout\/[^/]+$/) && !path.includes('/workout/new');
+    return hideDialogRoutes.includes(path) || !!isEditRoutine || !!isEditWorkout || !!isWorkoutDetail;
   });
 
   // Only show dialog if workout service wants to show it AND we're not on a hidden route

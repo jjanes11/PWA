@@ -34,6 +34,8 @@ export interface Routine {
   exercises: Exercise[]; // Same structure as Workout
 }
 
+export type WorkoutSource = 'activeWorkout' | 'routineDraft' | 'persistedWorkout' | 'persistedRoutine';
+
 export interface WorkoutStats {
   totalWorkouts: number;
   totalExercises: number;

@@ -1,49 +1,49 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 import { ExerciseService, Exercise } from '../../services/exercise.service';
 import { WorkoutService } from '../../services/workout.service';
-import { NavigationService } from '../../services/navigation.service';
-import { WorkoutContextService } from '../../utils/workout-context';
-import { Workout } from '../../models/workout.models';
+import { ActiveWorkoutService } from '../../services/active-workout.service';
+import { RoutineDraftService } from '../../services/routine-draft.service';
+import { RoutineService } from '../../services/routine.service';
+import { Workout, Routine } from '../../models/workout.models';
+import { WorkoutContextData } from '../../resolvers/workout-context.resolver';
+import { WorkoutSource } from '../../models/workout.models';
 
 @Component({
   selector: 'app-add-exercise',
   imports: [CommonModule, FormsModule],
-  providers: [WorkoutContextService],
   templateUrl: './add-exercise.html',
   styleUrl: './add-exercise.css'
 })
 export class AddExercise {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private exerciseService = inject(ExerciseService);
   private workoutService = inject(WorkoutService);
-  private navigationService = inject(NavigationService);
-  private workoutContext = inject(WorkoutContextService);
+  private activeWorkoutService = inject(ActiveWorkoutService);
+  private routineDraftService = inject(RoutineDraftService);
+  private routineService = inject(RoutineService);
   
-  workout = this.workoutContext.workout;
+  // Get workout context from resolver
+  private contextData = toSignal(
+    this.route.data.pipe(map(data => data['context'] as WorkoutContextData | null))
+  );
+  
+  workout = computed(() => this.contextData()?.entity || null);
+  source = computed(() => this.contextData()?.source || null);
   
   searchQuery = signal('');
   selectedExercises = signal<Exercise[]>([]);
-  private returnUrl = signal<string>('/workout/new');
-  isReplaceMode = signal(false);
-  replaceExerciseId = signal<string | null>(null);
-
-  constructor() {
-    // Load workout from navigation state
-    this.workoutContext.load();
-    
-    // Get return URL from navigation service
-    this.returnUrl.set(this.navigationService.getReturnUrl('/workout/new'));
-
-    // Check if we're in replace mode
-    const replaceId = this.navigationService.getReplaceExerciseId();
-    if (replaceId) {
-      this.isReplaceMode.set(true);
-      this.replaceExerciseId.set(replaceId);
-    }
-  }
+  
+  // Get query params
+  private queryParams = toSignal(this.route.queryParams);
+  returnUrl = computed(() => this.queryParams()?.['returnUrl'] || '/workout/new');
+  isReplaceMode = computed(() => !!this.queryParams()?.['replaceExerciseId']);
+  replaceExerciseId = computed(() => this.queryParams()?.['replaceExerciseId'] || null);
 
   filteredExercises = computed(() => {
     const query = this.searchQuery().toLowerCase().trim();
@@ -57,11 +57,14 @@ export class AddExercise {
   });
 
   cancel(): void {
-    this.router.navigate([this.returnUrl()]);
+    this.router.navigateByUrl(this.returnUrl());
   }
 
   create(): void {
-    this.navigationService.navigateWithReturnUrl('/create-exercise', this.returnUrl());
+    const currentReturn = this.returnUrl();
+    this.router.navigate(['/create-exercise'], {
+      queryParams: { returnUrl: currentReturn }
+    });
   }
 
   onSearchChange(): void {
@@ -73,11 +76,12 @@ export class AddExercise {
     if (this.isReplaceMode()) {
       const workout = this.workout();
       const oldExerciseId = this.replaceExerciseId();
+      const source = this.source();
       
-      if (workout && oldExerciseId) {
+      if (workout && oldExerciseId && source) {
         const updatedWorkout = this.workoutService.replaceExercise(workout as Workout, oldExerciseId, exercise.name);
-        this.workoutContext.save(updatedWorkout);
-        this.router.navigate([this.returnUrl()]);
+        this.saveToSource(updatedWorkout, source);
+        this.router.navigateByUrl(this.returnUrl());
       }
     } else {
       // Normal add mode - toggle selection for multiple exercises
@@ -103,17 +107,38 @@ export class AddExercise {
   addSelectedExercises(): void {
     const selected = this.selectedExercises();
     const workout = this.workout();
+    const source = this.source();
     
-    if (selected.length > 0 && workout) {
+    if (selected.length > 0 && workout && source) {
       const result = this.workoutService.addExercisesToWorkout(
         workout as Workout,
         selected.map(exercise => exercise.name),
         3
       );
       
-      this.workoutContext.save(result.workout);
+      this.saveToSource(result.workout, source);
       console.log('Added exercises to workout:', result.exercises);
-      this.router.navigate([this.returnUrl()]);
+      this.router.navigateByUrl(this.returnUrl());
+    }
+  }
+
+  /**
+   * Save workout back to its source.
+   */
+  private saveToSource(entity: Workout | Routine, source: WorkoutSource): void {
+    switch (source) {
+      case 'activeWorkout':
+        this.activeWorkoutService.setActiveWorkout(entity as Workout);
+        break;
+      case 'routineDraft':
+        this.routineDraftService.setRoutineDraft(entity as Workout);
+        break;
+      case 'persistedWorkout':
+        this.workoutService.saveWorkout(entity as Workout);
+        break;
+      case 'persistedRoutine':
+        this.routineService.saveRoutine(entity as Routine);
+        break;
     }
   }
 }

@@ -6,12 +6,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { WorkoutService } from '../../services/workout.service';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
-import { Workout, Routine } from '../../models/workout.models';
+import { Workout, Routine, WorkoutSource } from '../../models/workout.models';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { ExerciseListEditorComponent, EditorButtonConfig, BottomButtonConfig, ExerciseListEditorEmptyState } from '../exercise-list-editor/exercise-list-editor';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
-import { useNavigationContext } from '../../utils/navigation-context';
+import { useCleanupContext } from '../../utils/navigation-context';
 
 @Component({
   selector: 'app-edit-workout',
@@ -24,11 +24,9 @@ export class EditWorkoutComponent {
   private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
   private workoutEditor = inject(WorkoutEditorService);
-  private navigationContext = useNavigationContext({
-    defaultOrigin: '/home'
-  });
+  private cleanup = useCleanupContext();
 
-  // Convert route params to signal
+  // Get workout ID from route params
   private workoutId = toSignal(
     this.route.params.pipe(map(params => params['id']))
   );
@@ -37,6 +35,29 @@ export class EditWorkoutComponent {
   workout = signal<Workout | null>(null);
   workoutTitle = signal('');
   workoutDescription = signal('');
+  
+  constructor() {
+    // Load workout when ID changes
+    effect(() => {
+      const id = this.workoutId();
+      if (!id) {
+        this.router.navigate(['/home']);
+        return;
+      }
+
+      const workout = this.workoutService.findWorkoutById(id);
+      if (!workout) {
+        // Workout was deleted, redirect
+        this.router.navigate(['/home']);
+        return;
+      }
+
+      this.workout.set(workout);
+      this.workoutTitle.set(workout.name);
+      this.workoutDescription.set(workout.notes || '');
+    });
+  }
+  
   private exerciseCardController = useExerciseCardController(this.workoutEditor, {
     getWorkout: () => this.workout(),
     onWorkoutUpdated: (updatedWorkout) => {
@@ -70,39 +91,6 @@ export class EditWorkoutComponent {
     title: 'No exercises yet',
     message: 'Add an exercise to continue editing this workout.'
   };
-
-  constructor() {
-    // Effect that loads workout when ID changes
-    effect(() => {
-      const id = this.workoutId();
-      if (!id) {
-        this.router.navigate(['/home']);
-        return;
-      }
-
-      const foundWorkout = this.workoutService.workoutsSignal()().find((w: Workout) => w.id === id);
-      if (!foundWorkout) {
-        this.router.navigate(['/home']);
-        return;
-      }
-
-      // Check if there's an activeWorkout with this ID (e.g., after adding exercises)
-      const activeWorkout = this.workoutService.getActiveWorkout();
-      const workoutToUse = (activeWorkout?.id === id ? activeWorkout : foundWorkout)!;
-
-      // Update local signals with potentially updated workout
-      this.workout.set(workoutToUse);
-      this.workoutTitle.set(workoutToUse.name);
-      this.workoutDescription.set(workoutToUse.notes || '');
-
-      this.navigationContext.setOrigin(`/workout/${foundWorkout.id}`);
-
-      // Clear activeWorkout after using it
-      if (activeWorkout?.id === id) {
-        this.workoutService.clearActiveWorkout();
-      }
-    });
-  }
   
   closeSetTypeMenu(): void {
     this.exerciseCardController.closeSetTypeMenu();
@@ -157,7 +145,7 @@ export class EditWorkoutComponent {
   });
 
   cancel(): void {
-    this.navigationContext.exit();
+    this.router.navigate(['/home']);
   }
 
   saveWorkout(): void {
@@ -173,16 +161,19 @@ export class EditWorkoutComponent {
 
     this.workoutService.saveWorkout(updatedWorkout);
     this.workout.set(updatedWorkout); // Update local signal
-    this.navigationContext.exit();
+    this.router.navigate(['/home']);
   }
 
   addExercise(): void {
     const workout = this.workout();
     if (!workout) return;
     
-    this.navigationContext.navigateWithReturn('/add-exercise', {
-      workoutId: workout.id,
-      workoutSource: 'persistedWorkout'
+    this.router.navigate(['/add-exercise'], {
+      queryParams: {
+        workoutId: workout.id,
+        source: 'persistedWorkout' as WorkoutSource,
+        returnUrl: this.router.url
+      }
     });
   }
 
