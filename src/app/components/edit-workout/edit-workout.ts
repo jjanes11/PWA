@@ -1,18 +1,16 @@
 import { Component, inject, effect, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { Workout, WorkoutSource } from '../../models/workout.models';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { DragReorderEvent } from '../../directives/draggable.directive';
 import { ExerciseListEditorComponent } from '../exercise-list-editor/exercise-list-editor';
-import { useCleanupContext } from '../../utils/navigation-context';
 import { EditorButtons, EmptyStates } from '../../utils/editor-button-configs';
 import { useWorkoutEntityEditor } from '../../utils/workout-entity-editor';
+import { useEntityLoader } from '../../utils/entity-loader';
 
 @Component({
   selector: 'app-edit-workout',
@@ -22,39 +20,26 @@ import { useWorkoutEntityEditor } from '../../utils/workout-entity-editor';
 })
 export class EditWorkoutComponent {
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
-  private cleanup = useCleanupContext();
 
-  // Get workout ID from route params
-  private workoutId = toSignal(
-    this.route.params.pipe(map(params => params['id']))
-  );
+  // Use entity loader to handle route params and loading
+  private entityLoader = useEntityLoader<Workout>({
+    loadEntity: (id) => this.workoutService.findWorkoutById(id),
+    onNotFound: () => this.router.navigate(['/home'])
+  });
 
-  // Local workout being edited (writable signal)
-  workout = signal<Workout | null>(null);
+  workout = this.entityLoader.entity;
   workoutTitle = signal('');
   workoutDescription = signal('');
   
   constructor() {
-    // Load workout when ID changes
+    // Update title and description when workout loads
     effect(() => {
-      const id = this.workoutId();
-      if (!id) {
-        this.router.navigate(['/home']);
-        return;
+      const w = this.workout();
+      if (w) {
+        this.workoutTitle.set(w.name);
+        this.workoutDescription.set(w.notes || '');
       }
-
-      const workout = this.workoutService.findWorkoutById(id);
-      if (!workout) {
-        // Workout was deleted, redirect
-        this.router.navigate(['/home']);
-        return;
-      }
-
-      this.workout.set(workout);
-      this.workoutTitle.set(workout.name);
-      this.workoutDescription.set(workout.notes || '');
     });
   }
   

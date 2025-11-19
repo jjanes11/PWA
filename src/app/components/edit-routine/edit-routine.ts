@@ -1,18 +1,16 @@
 import { Component, inject, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { Routine, WorkoutSource } from '../../models/workout.models';
 import { RoutineService } from '../../services/routine.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { DragReorderEvent } from '../../directives/draggable.directive';
 import { ExerciseListEditorComponent } from '../exercise-list-editor/exercise-list-editor';
-import { useCleanupContext } from '../../utils/navigation-context';
 import { EditorButtons, EmptyStates } from '../../utils/editor-button-configs';
 import { useWorkoutEntityEditor } from '../../utils/workout-entity-editor';
+import { useEntityLoader } from '../../utils/entity-loader';
 
 @Component({
   selector: 'app-edit-routine',
@@ -23,36 +21,24 @@ import { useWorkoutEntityEditor } from '../../utils/workout-entity-editor';
 })
 export class EditRoutineComponent {
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private routineService = inject(RoutineService);
-  private cleanup = useCleanupContext();
   
-  // Get routine ID from route params
-  private routineId = toSignal(
-    this.route.params.pipe(map(params => params['id']))
-  );
+  // Use entity loader to handle route params and loading
+  private entityLoader = useEntityLoader<Routine>({
+    loadEntity: (id) => this.routineService.findRoutineById(id),
+    onNotFound: () => this.router.navigate(['/workouts'])
+  });
   
-  routine = signal<Routine | null>(null);
+  routine = this.entityLoader.entity;
   title = signal('');
 
   constructor() {
-    // Load routine when ID changes
+    // Update title when routine loads
     effect(() => {
-      const id = this.routineId();
-      if (!id) {
-        this.router.navigate(['/workouts']);
-        return;
+      const r = this.routine();
+      if (r) {
+        this.title.set(r.name);
       }
-
-      const routine = this.routineService.findRoutineById(id);
-      if (!routine) {
-        // Routine was deleted, redirect
-        this.router.navigate(['/workouts']);
-        return;
-      }
-
-      this.routine.set(routine);
-      this.title.set(routine.name);
     });
   }
   
