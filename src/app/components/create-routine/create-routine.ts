@@ -17,6 +17,7 @@ import { DragReorderEvent } from '../../directives/draggable.directive';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useDiscardGuard } from '../../utils/discard-guard';
 import { useCleanupContext } from '../../utils/navigation-context';
+import { EditorButtons, MenuIcons, EmptyStates } from '../../utils/editor-button-configs';
 
 @Component({
   selector: 'app-create-routine',

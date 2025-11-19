@@ -14,6 +14,7 @@ import { MenuItem } from '../card-menu/card-menu';
 import { DragReorderEvent } from '../../directives/draggable.directive';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useCleanupContext } from '../../utils/navigation-context';
+import { EditorButtons, MenuIcons, EmptyStates } from '../../utils/editor-button-configs';
 
 @Component({
   selector: 'app-edit-routine',
@@ -85,12 +86,12 @@ export class EditRoutineComponent {
   menuItems: MenuItem[] = [
     {
       action: 'replace',
-      icon: 'M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z',
+      icon: MenuIcons.replace,
       text: 'Replace Exercise'
     },
     {
       action: 'remove',
-      icon: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
+      icon: MenuIcons.remove,
       text: 'Remove Exercise',
       danger: true
     }
@@ -99,25 +100,10 @@ export class EditRoutineComponent {
   // Set Type Menu (via controller)
   showSetTypeMenu = this.exerciseCardController.showSetTypeMenu;
   selectedSet = this.exerciseCardController.selectedSet;
-  headerLeftButton: EditorButtonConfig = {
-    label: 'Cancel',
-    variant: 'ghost'
-  };
-
-  headerRightButton: EditorButtonConfig = {
-    label: 'Update'
-  };
-
-  bottomPrimaryButton: BottomButtonConfig = {
-    label: '+ Add exercise',
-    variant: 'secondary'
-  };
-
-  emptyState: ExerciseListEditorEmptyState = {
-    iconPath: 'M3 10h2v4H3v-4Zm3-3h2v10H6V7Zm12 0h-2v10h2V7Zm3 3h-2v4h2v-4ZM9 11h6v2H9v-2Z',
-    title: 'No exercises yet',
-    message: 'Add exercises to update this routine.'
-  };
+  headerLeftButton = EditorButtons.cancel();
+  headerRightButton = EditorButtons.update();
+  bottomPrimaryButton = EditorButtons.addExercisePlus('secondary');
+  emptyState = EmptyStates.editRoutine();
 
   closeSetTypeMenu(): void {
     this.exerciseCardController.closeSetTypeMenu();
