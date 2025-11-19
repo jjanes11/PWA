@@ -12,6 +12,8 @@ import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { ExerciseListEditorComponent, EditorButtonConfig, BottomButtonConfig, ExerciseListEditorEmptyState } from '../exercise-list-editor/exercise-list-editor';
+import { MenuItem } from '../card-menu/card-menu';
+import { DragReorderEvent } from '../../directives/draggable.directive';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useDiscardGuard } from '../../utils/discard-guard';
 import { useCleanupContext } from '../../utils/navigation-context';
@@ -55,6 +57,19 @@ export class CreateRoutineComponent implements OnInit {
     getWorkout: () => this.routineDraft(),
     onWorkoutUpdated: (routine) => {
       this.routineDraftService.setRoutineDraft(routine);
+    },
+    onReplaceExercise: (exerciseId: string) => {
+      const routine = this.routineDraft();
+      if (routine) {
+        this.router.navigate(['/add-exercise'], {
+          queryParams: {
+            workoutId: routine.id,
+            source: WorkoutSource.RoutineDraft,
+            replaceExerciseId: exerciseId,
+            returnUrl: this.router.url
+          }
+        });
+      }
     }
   });
   
@@ -78,6 +93,23 @@ export class CreateRoutineComponent implements OnInit {
     message: 'Add exercises to build your routine.'
   };
   
+  draggedExerciseId = signal<string | null>(null);
+  dragOverExerciseId = signal<string | null>(null);
+
+  menuItems: MenuItem[] = [
+    {
+      action: 'replace',
+      icon: 'M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z',
+      text: 'Replace Exercise'
+    },
+    {
+      action: 'remove',
+      icon: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
+      text: 'Remove Exercise',
+      danger: true
+    }
+  ];
+
   // Set Type Menu (via controller)
   showSetTypeMenu = this.exerciseCardController.showSetTypeMenu;
   selectedSet = this.exerciseCardController.selectedSet;
@@ -168,6 +200,14 @@ export class CreateRoutineComponent implements OnInit {
     if (this.exerciseCardController.handleAction(event)) {
       return;
     }
+  }
+
+  onExerciseReorder(event: DragReorderEvent): void {
+    const routine = this.routineDraft();
+    if (!routine) return;
+
+    const reordered = this.workoutEditor.reorderExercises(routine, event.fromId, event.toId);
+    this.routineDraftService.setRoutineDraft(reordered);
   }
 
   private handleDiscardConfirm(): void {

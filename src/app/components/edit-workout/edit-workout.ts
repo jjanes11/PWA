@@ -10,6 +10,8 @@ import { Workout, WorkoutSource } from '../../models/workout.models';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
 import { ExerciseListEditorComponent, EditorButtonConfig, BottomButtonConfig, ExerciseListEditorEmptyState } from '../exercise-list-editor/exercise-list-editor';
+import { MenuItem } from '../card-menu/card-menu';
+import { DragReorderEvent } from '../../directives/draggable.directive';
 import { useExerciseCardController } from '../../utils/exercise-card-controller';
 import { useCleanupContext } from '../../utils/navigation-context';
 
@@ -63,9 +65,39 @@ export class EditWorkoutComponent {
     onWorkoutUpdated: (updatedWorkout) => {
       this.workout.set(updatedWorkout);
       this.workoutService.saveWorkout(updatedWorkout);
+    },
+    onReplaceExercise: (exerciseId: string) => {
+      const workout = this.workout();
+      if (workout) {
+        this.router.navigate(['/add-exercise'], {
+          queryParams: {
+            workoutId: workout.id,
+            source: WorkoutSource.PersistedWorkout,
+            replaceExerciseId: exerciseId,
+            returnUrl: this.router.url
+          }
+        });
+      }
     }
   });
   
+  draggedExerciseId = signal<string | null>(null);
+  dragOverExerciseId = signal<string | null>(null);
+
+  menuItems: MenuItem[] = [
+    {
+      action: 'replace',
+      icon: 'M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z',
+      text: 'Replace Exercise'
+    },
+    {
+      action: 'remove',
+      icon: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
+      text: 'Remove Exercise',
+      danger: true
+    }
+  ];
+
   // Set Type Menu (via controller)
   showSetTypeMenu = this.exerciseCardController.showSetTypeMenu;
   selectedSet = this.exerciseCardController.selectedSet;
@@ -185,5 +217,14 @@ export class EditWorkoutComponent {
     if (this.exerciseCardController.handleAction(event)) {
       return;
     }
+  }
+
+  onExerciseReorder(event: DragReorderEvent): void {
+    const workout = this.workout();
+    if (!workout) return;
+
+    const reordered = this.workoutEditor.reorderExercises(workout, event.fromId, event.toId);
+    this.workout.set(reordered);
+    this.workoutService.saveWorkout(reordered);
   }
 }

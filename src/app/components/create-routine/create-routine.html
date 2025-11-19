@@ -2,8 +2,13 @@
   [title]="'Create Routine'"
   [workout]="routineDraft()"
   [exerciseMode]="'edit'"
+  [showMenu]="true"
   [showAddSetButton]="true"
   [showCompleteColumn]="false"
+  [menuItems]="menuItems"
+  [enableReorder]="true"
+  [draggedId]="draggedExerciseId"
+  [dragOverId]="dragOverExerciseId"
   [leftButton]="headerLeftButton"
   [rightButton]="headerRightButton"
   [bottomPrimary]="bottomPrimaryButton"
@@ -12,6 +17,7 @@
   (rightAction)="save()"
   (bottomPrimaryAction)="addExercise()"
   (exerciseAction)="onExerciseAction($event)"
+  (exerciseReorder)="onExerciseReorder($event)"
 >
   <div editor-before-list class="jacaona-content">
     <div class="jacaona-field">
