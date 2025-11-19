@@ -159,7 +159,7 @@ export class CreateRoutineComponent implements OnInit {
       this.router.navigate(['/add-exercise'], {
         queryParams: {
           workoutId: workout.id,
-          source: 'routineDraft' as WorkoutSource,
+          source: WorkoutSource.RoutineDraft,
           returnUrl: this.router.url
         }
       });

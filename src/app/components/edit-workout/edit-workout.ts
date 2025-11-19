@@ -171,7 +171,7 @@ export class EditWorkoutComponent {
     this.router.navigate(['/add-exercise'], {
       queryParams: {
         workoutId: workout.id,
-        source: 'persistedWorkout' as WorkoutSource,
+        source: WorkoutSource.PersistedWorkout,
         returnUrl: this.router.url
       }
     });

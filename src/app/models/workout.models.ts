@@ -4,14 +4,19 @@ export interface Exercise {
   sets: Set[];
 }
 
-export type SetType = 'normal' | 'warmup' | 'failure' | 'drop';
+export enum SetType {
+  Normal = 'normal',
+  Warmup = 'warmup',
+  Failure = 'failure',
+  Drop = 'drop'
+}
 
 export interface Set {
   id: string;
   reps: number;
   weight: number; // in kg
   completed: boolean;
-  type?: SetType; // Set type (defaults to 'normal')
+  type?: SetType; // Set type (defaults to SetType.Normal)
   restTime?: number; // in seconds
   notes?: string;
 }
@@ -34,7 +39,12 @@ export interface Routine {
   exercises: Exercise[]; // Same structure as Workout
 }
 
-export type WorkoutSource = 'activeWorkout' | 'routineDraft' | 'persistedWorkout' | 'persistedRoutine';
+export enum WorkoutSource {
+  ActiveWorkout = 'activeWorkout',
+  RoutineDraft = 'routineDraft',
+  PersistedWorkout = 'persistedWorkout',
+  PersistedRoutine = 'persistedRoutine'
+}
 
 export interface WorkoutStats {
   totalWorkouts: number;

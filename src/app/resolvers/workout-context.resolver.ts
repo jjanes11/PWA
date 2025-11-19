@@ -40,21 +40,21 @@ export const workoutContextResolver: ResolveFn<WorkoutContextData | null> = (
   let entity: Workout | Routine | null = null;
 
   switch (source) {
-    case 'activeWorkout':
+    case WorkoutSource.ActiveWorkout:
       const active = activeWorkout.getActiveWorkout();
       entity = active?.id === workoutId ? active : null;
       break;
       
-    case 'routineDraft':
+    case WorkoutSource.RoutineDraft:
       const draft = routineDraft.getRoutineDraft();
       entity = draft?.id === workoutId ? draft : null;
       break;
       
-    case 'persistedWorkout':
+    case WorkoutSource.PersistedWorkout:
       entity = store.findWorkoutById(workoutId);
       break;
       
-    case 'persistedRoutine':
+    case WorkoutSource.PersistedRoutine:
       entity = store.findRoutineById(workoutId);
       break;
   }

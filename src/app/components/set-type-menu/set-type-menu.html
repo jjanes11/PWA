@@ -1,22 +1,22 @@
 <app-bottom-sheet-dialog [isOpen]="isOpen()" (closed)="closeMenu()">
   <h3 class="jacaona-menu-title">Select Set Type</h3>
   
-  <button class="jacaona-menu-item" (click)="setSetType('warmup')">
+  <button class="jacaona-menu-item" (click)="setSetType(SetType.Warmup)">
     <span class="jacaona-menu-icon jacaona-set-type-icon-warmup jacaona-set-type-char">W</span>
     <span class="jacaona-menu-text">Warm Up Set</span>
   </button>
   
-  <button class="jacaona-menu-item" (click)="setSetType('normal')">
+  <button class="jacaona-menu-item" (click)="setSetType(SetType.Normal)">
     <span class="jacaona-menu-icon jacaona-set-type-char">1</span>
     <span class="jacaona-menu-text">Normal Set</span>
   </button>
   
-  <button class="jacaona-menu-item" (click)="setSetType('failure')">
+  <button class="jacaona-menu-item" (click)="setSetType(SetType.Failure)">
     <span class="jacaona-menu-icon jacaona-set-type-icon-failure jacaona-set-type-char">F</span>
     <span class="jacaona-menu-text">Failure Set</span>
   </button>
   
-  <button class="jacaona-menu-item" (click)="setSetType('drop')">
+  <button class="jacaona-menu-item" (click)="setSetType(SetType.Drop)">
     <span class="jacaona-menu-icon jacaona-set-type-icon-drop jacaona-set-type-char">D</span>
     <span class="jacaona-menu-text">Drop Set</span>
   </button>

@@ -127,16 +127,16 @@ export class AddExercise {
    */
   private saveToSource(entity: Workout | Routine, source: WorkoutSource): void {
     switch (source) {
-      case 'activeWorkout':
+      case WorkoutSource.ActiveWorkout:
         this.activeWorkoutService.setActiveWorkout(entity as Workout);
         break;
-      case 'routineDraft':
+      case WorkoutSource.RoutineDraft:
         this.routineDraftService.setRoutineDraft(entity as Workout);
         break;
-      case 'persistedWorkout':
+      case WorkoutSource.PersistedWorkout:
         this.workoutService.saveWorkout(entity as Workout);
         break;
-      case 'persistedRoutine':
+      case WorkoutSource.PersistedRoutine:
         this.routineService.saveRoutine(entity as Routine);
         break;
     }

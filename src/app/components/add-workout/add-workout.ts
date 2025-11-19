@@ -61,7 +61,7 @@ export class AddWorkoutComponent implements OnInit {
         this.router.navigate(['/add-exercise'], {
           queryParams: {
             workoutId: workout.id,
-            source: 'activeWorkout' as WorkoutSource,
+            source: WorkoutSource.ActiveWorkout,
             replaceExerciseId: exerciseId,
             returnUrl: this.router.url
           }
@@ -164,7 +164,7 @@ export class AddWorkoutComponent implements OnInit {
       this.router.navigate(['/add-exercise'], {
         queryParams: {
           workoutId: workout.id,
-          source: 'activeWorkout' as WorkoutSource,
+          source: WorkoutSource.ActiveWorkout,
           returnUrl: this.router.url
         }
       });

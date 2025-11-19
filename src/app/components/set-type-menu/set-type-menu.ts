@@ -11,9 +11,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { BottomSheetDialog } from '../bottom-sheet-dialog/bottom-sheet-dialog';
-import { Workout, Routine } from '../../models/workout.models';
-
-export type SetType = 'normal' | 'warmup' | 'failure' | 'drop';
+import { Workout, Routine, SetType } from '../../models/workout.models';
 
 @Component({
   selector: 'app-set-type-menu',
@@ -31,6 +29,9 @@ export class SetTypeMenuComponent {
   
   private workoutEditor = inject(WorkoutEditorService);
   protected isOpen = signal(true); // Opens immediately when component is created
+  
+  // Expose enum to template
+  protected readonly SetType = SetType;
   
   // Static to track which menu is open globally (only one menu open at a time)
   private static openMenuId = signal<string | null>(null);
