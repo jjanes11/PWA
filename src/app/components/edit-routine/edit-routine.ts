@@ -1,20 +1,18 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+import { Component, inject, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { Routine, WorkoutSource } from '../../models/workout.models';
-import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { RoutineService } from '../../services/routine.service';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
-import { ExerciseListEditorComponent, EditorButtonConfig, BottomButtonConfig, ExerciseListEditorEmptyState } from '../exercise-list-editor/exercise-list-editor';
-import { MenuItem } from '../card-menu/card-menu';
 import { DragReorderEvent } from '../../directives/draggable.directive';
-import { useExerciseCardController } from '../../utils/exercise-card-controller';
+import { ExerciseListEditorComponent } from '../exercise-list-editor/exercise-list-editor';
 import { useCleanupContext } from '../../utils/navigation-context';
-import { EditorButtons, MenuIcons, EmptyStates } from '../../utils/editor-button-configs';
+import { EditorButtons, EmptyStates } from '../../utils/editor-button-configs';
+import { useWorkoutEntityEditor } from '../../utils/workout-entity-editor';
 
 @Component({
   selector: 'app-edit-routine',
@@ -26,7 +24,6 @@ import { EditorButtons, MenuIcons, EmptyStates } from '../../utils/editor-button
 export class EditRoutineComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private workoutEditor = inject(WorkoutEditorService);
   private routineService = inject(RoutineService);
   private cleanup = useCleanupContext();
   
@@ -59,59 +56,33 @@ export class EditRoutineComponent {
     });
   }
   
-  private exerciseCardController = useExerciseCardController<Routine>(this.workoutEditor, {
-    getWorkout: () => this.routine(),
-    onWorkoutUpdated: (updatedRoutine) => {
-      this.routine.set(updatedRoutine);
-      this.routineService.saveRoutine(updatedRoutine);
+  // Entity editor provides all exercise editing functionality
+  private entityEditor = useWorkoutEntityEditor<Routine>({
+    getEntity: () => this.routine(),
+    onEntityUpdated: (routine) => {
+      this.routine.set(routine);
+      this.routineService.saveRoutine(routine);
     },
-    onReplaceExercise: (exerciseId: string) => {
-      const routine = this.routine();
-      if (routine) {
-        this.router.navigate(['/add-exercise'], {
-          queryParams: {
-            workoutId: routine.id,
-            source: WorkoutSource.PersistedRoutine,
-            replaceExerciseId: exerciseId,
-            returnUrl: this.router.url
-          }
-        });
-      }
-    }
+    source: WorkoutSource.PersistedRoutine
   });
-
-  draggedExerciseId = signal<string | null>(null);
-  dragOverExerciseId = signal<string | null>(null);
-
-  menuItems: MenuItem[] = [
-    {
-      action: 'replace',
-      icon: MenuIcons.replace,
-      text: 'Replace Exercise'
-    },
-    {
-      action: 'remove',
-      icon: MenuIcons.remove,
-      text: 'Remove Exercise',
-      danger: true
-    }
-  ];
-
-  // Set Type Menu (via controller)
-  showSetTypeMenu = this.exerciseCardController.showSetTypeMenu;
-  selectedSet = this.exerciseCardController.selectedSet;
+  
+  // Expose editor properties for template
+  draggedExerciseId = this.entityEditor.draggedExerciseId;
+  dragOverExerciseId = this.entityEditor.dragOverExerciseId;
+  menuItems = this.entityEditor.menuItems;
+  showSetTypeMenu = this.entityEditor.showSetTypeMenu;
+  selectedSet = this.entityEditor.selectedSet;
   headerLeftButton = EditorButtons.cancel();
   headerRightButton = EditorButtons.update();
   bottomPrimaryButton = EditorButtons.addExercisePlus('secondary');
   emptyState = EmptyStates.editRoutine();
 
   closeSetTypeMenu(): void {
-    this.exerciseCardController.closeSetTypeMenu();
+    this.entityEditor.closeSetTypeMenu();
   }
 
   onRoutineUpdated(routine: Routine): void {
-    this.routine.set(routine);
-    this.routineService.saveRoutine(routine);
+    this.entityEditor.onEntityUpdated(routine);
   }
 
   cancel(): void {
@@ -135,33 +106,14 @@ export class EditRoutineComponent {
   }
 
   addExercise(): void {
-    const routine = this.routine();
-    if (routine) {
-      this.router.navigate(['/add-exercise'], {
-        queryParams: {
-          workoutId: routine.id,
-          source: WorkoutSource.PersistedRoutine,
-          returnUrl: this.router.url
-        }
-      });
-    }
+    this.entityEditor.navigateToAddExercise();
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {
-    const routine = this.routine();
-    if (!routine) return;
-
-    if (this.exerciseCardController.handleAction(event)) {
-      return;
-    }
+    this.entityEditor.onExerciseAction(event);
   }
 
   onExerciseReorder(event: DragReorderEvent): void {
-    const routine = this.routine();
-    if (!routine) return;
-
-    const reordered = this.workoutEditor.reorderExercises(routine, event.fromId, event.toId);
-    this.routine.set(reordered);
-    this.routineService.saveRoutine(reordered);
+    this.entityEditor.onExerciseReorder(event);
   }
 }

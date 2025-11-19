@@ -1,21 +1,19 @@
-import { Component, inject, signal, OnInit, computed } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Workout, WorkoutSource } from '../../models/workout.models';
 import { WorkoutService } from '../../services/workout.service';
 import { ActiveWorkoutService } from '../../services/active-workout.service';
-import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { WorkoutUiService } from '../../services/workout-ui.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
-import { DragReorderEvent } from '../../directives/draggable.directive';
-import { MenuItem } from '../card-menu/card-menu';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
-import { ExerciseListEditorComponent, BottomButtonConfig, EditorButtonConfig, ExerciseListEditorEmptyState } from '../exercise-list-editor/exercise-list-editor';
-import { useExerciseCardController } from '../../utils/exercise-card-controller';
+import { DragReorderEvent } from '../../directives/draggable.directive';
+import { ExerciseListEditorComponent } from '../exercise-list-editor/exercise-list-editor';
 import { useDiscardGuard } from '../../utils/discard-guard';
 import { useCleanupContext } from '../../utils/navigation-context';
-import { EditorButtons, MenuIcons, EmptyStates } from '../../utils/editor-button-configs';
+import { EditorButtons, EmptyStates } from '../../utils/editor-button-configs';
+import { useWorkoutEntityEditor } from '../../utils/workout-entity-editor';
 
 @Component({
   selector: 'app-add-workout',
@@ -23,10 +21,9 @@ import { EditorButtons, MenuIcons, EmptyStates } from '../../utils/editor-button
   templateUrl: './add-workout.html',
   styleUrl: './add-workout.css'
 })
-export class AddWorkoutComponent implements OnInit {
+export class AddWorkoutComponent {
   private workoutService = inject(WorkoutService);
   private activeWorkoutService = inject(ActiveWorkoutService);
-  private workoutEditor = inject(WorkoutEditorService);
   private uiService = inject(WorkoutUiService);
   private router = inject(Router);
   
@@ -48,46 +45,19 @@ export class AddWorkoutComponent implements OnInit {
     onConfirm: () => this.handleDiscardConfirm()
   });
   
-  private exerciseCardController = useExerciseCardController<Workout>(this.workoutEditor, {
-    getWorkout: () => this.activeWorkout(),
-    onWorkoutUpdated: (workout) => {
-      this.activeWorkoutService.setActiveWorkout(workout);
-    },
-    onReplaceExercise: (exerciseId: string) => {
-      const workout = this.activeWorkout();
-      if (workout) {
-        this.router.navigate(['/add-exercise'], {
-          queryParams: {
-            workoutId: workout.id,
-            source: WorkoutSource.ActiveWorkout,
-            replaceExerciseId: exerciseId,
-            returnUrl: this.router.url
-          }
-        });
-      }
-    }
+  // Entity editor provides all exercise editing functionality
+  private entityEditor = useWorkoutEntityEditor<Workout>({
+    getEntity: () => this.activeWorkout(),
+    onEntityUpdated: (workout) => this.activeWorkoutService.setActiveWorkout(workout),
+    source: WorkoutSource.ActiveWorkout
   });
   
-  draggedExerciseId = signal<string | null>(null);
-  
-  // Set Type Menu (via controller)
-  showSetTypeMenu = this.exerciseCardController.showSetTypeMenu;
-  selectedSet = this.exerciseCardController.selectedSet;
-
-  menuItems: MenuItem[] = [
-    {
-      action: 'replace',
-      icon: MenuIcons.replace,
-      text: 'Replace Exercise'
-    },
-    {
-      action: 'remove',
-      icon: MenuIcons.remove,
-      text: 'Remove Exercise',
-      danger: true
-    }
-  ];
-  dragOverExerciseId = signal<string | null>(null);
+  // Expose editor properties for template
+  draggedExerciseId = this.entityEditor.draggedExerciseId;
+  dragOverExerciseId = this.entityEditor.dragOverExerciseId;
+  menuItems = this.entityEditor.menuItems;
+  showSetTypeMenu = this.entityEditor.showSetTypeMenu;
+  selectedSet = this.entityEditor.selectedSet;
 
   headerLeftButton = EditorButtons.back();
   headerRightButton = EditorButtons.finish();
@@ -97,11 +67,11 @@ export class AddWorkoutComponent implements OnInit {
   emptyState = EmptyStates.addWorkout();
   
   closeSetTypeMenu(): void {
-    this.exerciseCardController.closeSetTypeMenu();
+    this.entityEditor.closeSetTypeMenu();
   }
 
   onWorkoutUpdated(workout: Workout): void {
-    this.activeWorkoutService.setActiveWorkout(workout);
+    this.entityEditor.onEntityUpdated(workout);
   }
 
   ngOnInit(): void {
@@ -138,16 +108,7 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   addExercise(): void {
-    const workout = this.activeWorkout();
-    if (workout) {
-      this.router.navigate(['/add-exercise'], {
-        queryParams: {
-          workoutId: workout.id,
-          source: WorkoutSource.ActiveWorkout,
-          returnUrl: this.router.url
-        }
-      });
-    }
+    this.entityEditor.navigateToAddExercise();
   }
 
   discardWorkout(): void {
@@ -155,19 +116,11 @@ export class AddWorkoutComponent implements OnInit {
   }
 
   onExerciseReorder(event: DragReorderEvent): void {
-    const workout = this.activeWorkout();
-    if (workout) {
-      const updatedWorkout = this.workoutEditor.reorderExercises(workout, event.fromId, event.toId);
-      this.workoutService.updateActiveWorkout(updatedWorkout);
-    }
+    this.entityEditor.onExerciseReorder(event);
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {
-    if (!this.activeWorkout()) {
-      return;
-    }
-
-    this.exerciseCardController.handleAction(event);
+    this.entityEditor.onExerciseAction(event);
   }
 
   private handleDiscardConfirm(): void {
