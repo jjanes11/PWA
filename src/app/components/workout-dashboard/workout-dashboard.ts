@@ -7,11 +7,12 @@ import { ActiveWorkoutService } from '../../services/active-workout.service';
 import { RoutineDraftService } from '../../services/routine-draft.service';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
+import { StatCardComponent } from '../stat-card/stat-card';
 
 @Component({
   selector: 'app-workout-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, CardMenuComponent, ConfirmationDialog],
+  imports: [CommonModule, RouterModule, CardMenuComponent, ConfirmationDialog, StatCardComponent],
   templateUrl: './workout-dashboard.html',
   styleUrl: './workout-dashboard.css'
 })

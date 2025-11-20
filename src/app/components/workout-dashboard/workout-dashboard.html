@@ -11,54 +11,35 @@
 
   <!-- Quick Stats -->
   <section class="jacaona-stats-grid">
-    <div class="jacaona-stat-card">
-      <div class="jacaona-stat-icon jacaona-stat-workouts">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/>
-        </svg>
-      </div>
-      <div class="jacaona-stat-content">
-        <div class="jacaona-stat-number">{{ totalWorkouts() }}</div>
-        <div class="jacaona-stat-label">Workouts</div>
-      </div>
-    </div>
+    <app-stat-card
+      [value]="totalWorkouts()"
+      [label]="'Workouts'"
+      [color]="'blue'"
+      [iconPath]="'M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z'"
+    />
 
-    <div class="jacaona-stat-card">
-      <div class="jacaona-stat-icon jacaona-stat-volume">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2.5-9H19v2h-1.5v16.5c0 1.33-1.17 2.5-2.5 2.5H9c-1.33 0-2.5-1.17-2.5-2.5V4H5V2h3.5l1-1h5l1 1H19z"/>
-        </svg>
-      </div>
-      <div class="jacaona-stat-content">
-        <div class="jacaona-stat-number">{{ totalVolume() }}<span class="jacaona-stat-unit">kg</span></div>
-        <div class="jacaona-stat-label">Volume</div>
-      </div>
-    </div>
+    <app-stat-card
+      [value]="totalVolume()"
+      [label]="'Volume'"
+      [unit]="'kg'"
+      [color]="'green'"
+      [iconPath]="'M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2.5-9H19v2h-1.5v16.5c0 1.33-1.17 2.5-2.5 2.5H9c-1.33 0-2.5-1.17-2.5-2.5V4H5V2h3.5l1-1h5l1 1H19z'"
+    />
 
-    <div class="jacaona-stat-card">
-      <div class="jacaona-stat-icon jacaona-stat-streak">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M7.5 11L10 7.5 12.5 11 15 7.5 17.5 11H19c1.1 0 2 .9 2 2v8c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2v-8c0-1.1.9-2 2-2h2.5z"/>
-        </svg>
-      </div>
-      <div class="jacaona-stat-content">
-        <div class="jacaona-stat-number">{{ currentStreak() }}</div>
-        <div class="jacaona-stat-label">Day Streak</div>
-      </div>
-    </div>
+    <app-stat-card
+      [value]="currentStreak()"
+      [label]="'Day Streak'"
+      [color]="'yellow'"
+      [iconPath]="'M7.5 11L10 7.5 12.5 11 15 7.5 17.5 11H19c1.1 0 2 .9 2 2v8c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2v-8c0-1.1.9-2 2-2h2.5z'"
+    />
 
-    <div class="jacaona-stat-card">
-      <div class="jacaona-stat-icon jacaona-stat-time">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
-          <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
-        </svg>
-      </div>
-      <div class="jacaona-stat-content">
-        <div class="jacaona-stat-number">{{ avgWorkoutTime() }}<span class="jacaona-stat-unit">min</span></div>
-        <div class="jacaona-stat-label">Avg Time</div>
-      </div>
-    </div>
+    <app-stat-card
+      [value]="avgWorkoutTime()"
+      [label]="'Avg Time'"
+      [unit]="'min'"
+      [color]="'red'"
+      [iconPath]="'M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'"
+    />
   </section>
 
   <!-- Recent Workouts -->
