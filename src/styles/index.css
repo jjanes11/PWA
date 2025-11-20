@@ -1,0 +1,20 @@
+/**
+ * Jacaona Design System
+ * 
+ * Main CSS entry point that imports all style layers in the correct order.
+ * 
+ * Layer Order (matters for CSS specificity):
+ * 1. Tokens    - CSS variables (no selectors)
+ * 2. Base      - Element resets (low specificity)
+ * 3. Layout    - Page structure (medium specificity)
+ * 4. Components - UI components (medium-high specificity)
+ * 5. Utilities - Single-purpose classes (highest specificity)
+ * 
+ * @see https://cube.fyi/ - Inspired by CUBE CSS methodology
+ */
+
+@import './tokens.css';
+@import './base.css';
+@import './layout.css';
+@import './components.css';
+@import './utilities.css';

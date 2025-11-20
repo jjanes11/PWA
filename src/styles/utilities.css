@@ -1,0 +1,279 @@
+/**
+ * Utility Classes
+ * 
+ * Single-purpose utility classes for rapid UI development.
+ * These can be composed in HTML for quick styling.
+ */
+
+/* ========================================
+   TYPOGRAPHY
+   ======================================== */
+
+/* Font Sizes */
+.jacaona-text-xs { font-size: var(--jacaona-font-xs); }
+.jacaona-text-sm { font-size: var(--jacaona-font-sm); }
+.jacaona-text-base { font-size: var(--jacaona-font-base); }
+.jacaona-text-lg { font-size: var(--jacaona-font-lg); }
+.jacaona-text-xl { font-size: var(--jacaona-font-xl); }
+.jacaona-text-2xl { font-size: var(--jacaona-font-2xl); }
+
+/* Font Weights */
+.jacaona-font-normal { font-weight: var(--jacaona-font-weight-normal); }
+.jacaona-font-medium { font-weight: var(--jacaona-font-weight-medium); }
+.jacaona-font-semibold { font-weight: var(--jacaona-font-weight-semibold); }
+.jacaona-font-bold { font-weight: var(--jacaona-font-weight-bold); }
+
+/* Text Colors */
+.jacaona-text-primary { color: var(--jacaona-text-primary); }
+.jacaona-text-secondary { color: var(--jacaona-text-secondary); }
+.jacaona-text-muted { color: var(--jacaona-text-muted); }
+.jacaona-text-accent { color: var(--jacaona-accent-blue); }
+.jacaona-text-success { color: var(--jacaona-success); }
+.jacaona-text-warning { color: var(--jacaona-warning); }
+.jacaona-text-danger { color: var(--jacaona-danger); }
+
+/* Text Alignment */
+.jacaona-text-left { text-align: left; }
+.jacaona-text-center { text-align: center; }
+.jacaona-text-right { text-align: right; }
+
+/* Text Transform */
+.jacaona-uppercase { text-transform: uppercase; }
+.jacaona-lowercase { text-transform: lowercase; }
+.jacaona-capitalize { text-transform: capitalize; }
+
+
+/* ========================================
+   FLEXBOX
+   ======================================== */
+
+.jacaona-flex { display: flex; }
+.jacaona-inline-flex { display: inline-flex; }
+
+/* Flex Direction */
+.jacaona-flex-row { flex-direction: row; }
+.jacaona-flex-col { flex-direction: column; }
+.jacaona-flex-row-reverse { flex-direction: row-reverse; }
+.jacaona-flex-col-reverse { flex-direction: column-reverse; }
+
+/* Flex Wrap */
+.jacaona-flex-wrap { flex-wrap: wrap; }
+.jacaona-flex-nowrap { flex-wrap: nowrap; }
+
+/* Align Items */
+.jacaona-items-start { align-items: flex-start; }
+.jacaona-items-center { align-items: center; }
+.jacaona-items-end { align-items: flex-end; }
+.jacaona-items-stretch { align-items: stretch; }
+
+/* Justify Content */
+.jacaona-justify-start { justify-content: flex-start; }
+.jacaona-justify-center { justify-content: center; }
+.jacaona-justify-end { justify-content: flex-end; }
+.jacaona-justify-between { justify-content: space-between; }
+.jacaona-justify-around { justify-content: space-around; }
+.jacaona-justify-evenly { justify-content: space-evenly; }
+
+/* Flex Grow/Shrink */
+.jacaona-flex-1 { flex: 1; }
+.jacaona-flex-auto { flex: auto; }
+.jacaona-flex-none { flex: none; }
+.jacaona-flex-grow { flex-grow: 1; }
+.jacaona-flex-shrink { flex-shrink: 1; }
+
+
+/* ========================================
+   GAP
+   ======================================== */
+
+.jacaona-gap-xs { gap: var(--jacaona-space-xs); }
+.jacaona-gap-sm { gap: var(--jacaona-space-sm); }
+.jacaona-gap-md { gap: var(--jacaona-space-md); }
+.jacaona-gap-lg { gap: var(--jacaona-space-lg); }
+.jacaona-gap-xl { gap: var(--jacaona-space-xl); }
+.jacaona-gap-2xl { gap: var(--jacaona-space-2xl); }
+
+
+/* ========================================
+   SPACING - MARGIN
+   ======================================== */
+
+/* Margin All Sides */
+.jacaona-m-0 { margin: 0; }
+.jacaona-m-xs { margin: var(--jacaona-space-xs); }
+.jacaona-m-sm { margin: var(--jacaona-space-sm); }
+.jacaona-m-md { margin: var(--jacaona-space-md); }
+.jacaona-m-lg { margin: var(--jacaona-space-lg); }
+.jacaona-m-xl { margin: var(--jacaona-space-xl); }
+.jacaona-m-2xl { margin: var(--jacaona-space-2xl); }
+
+/* Margin Top */
+.jacaona-mt-0 { margin-top: 0; }
+.jacaona-mt-xs { margin-top: var(--jacaona-space-xs); }
+.jacaona-mt-sm { margin-top: var(--jacaona-space-sm); }
+.jacaona-mt-md { margin-top: var(--jacaona-space-md); }
+.jacaona-mt-lg { margin-top: var(--jacaona-space-lg); }
+.jacaona-mt-xl { margin-top: var(--jacaona-space-xl); }
+.jacaona-mt-2xl { margin-top: var(--jacaona-space-2xl); }
+
+/* Margin Bottom */
+.jacaona-mb-0 { margin-bottom: 0; }
+.jacaona-mb-xs { margin-bottom: var(--jacaona-space-xs); }
+.jacaona-mb-sm { margin-bottom: var(--jacaona-space-sm); }
+.jacaona-mb-md { margin-bottom: var(--jacaona-space-md); }
+.jacaona-mb-lg { margin-bottom: var(--jacaona-space-lg); }
+.jacaona-mb-xl { margin-bottom: var(--jacaona-space-xl); }
+.jacaona-mb-2xl { margin-bottom: var(--jacaona-space-2xl); }
+
+/* Margin Left */
+.jacaona-ml-0 { margin-left: 0; }
+.jacaona-ml-xs { margin-left: var(--jacaona-space-xs); }
+.jacaona-ml-sm { margin-left: var(--jacaona-space-sm); }
+.jacaona-ml-md { margin-left: var(--jacaona-space-md); }
+.jacaona-ml-lg { margin-left: var(--jacaona-space-lg); }
+.jacaona-ml-xl { margin-left: var(--jacaona-space-xl); }
+
+/* Margin Right */
+.jacaona-mr-0 { margin-right: 0; }
+.jacaona-mr-xs { margin-right: var(--jacaona-space-xs); }
+.jacaona-mr-sm { margin-right: var(--jacaona-space-sm); }
+.jacaona-mr-md { margin-right: var(--jacaona-space-md); }
+.jacaona-mr-lg { margin-right: var(--jacaona-space-lg); }
+.jacaona-mr-xl { margin-right: var(--jacaona-space-xl); }
+
+
+/* ========================================
+   SPACING - PADDING
+   ======================================== */
+
+/* Padding All Sides */
+.jacaona-p-0 { padding: 0; }
+.jacaona-p-xs { padding: var(--jacaona-space-xs); }
+.jacaona-p-sm { padding: var(--jacaona-space-sm); }
+.jacaona-p-md { padding: var(--jacaona-space-md); }
+.jacaona-p-lg { padding: var(--jacaona-space-lg); }
+.jacaona-p-xl { padding: var(--jacaona-space-xl); }
+.jacaona-p-2xl { padding: var(--jacaona-space-2xl); }
+
+/* Padding Top */
+.jacaona-pt-0 { padding-top: 0; }
+.jacaona-pt-xs { padding-top: var(--jacaona-space-xs); }
+.jacaona-pt-sm { padding-top: var(--jacaona-space-sm); }
+.jacaona-pt-md { padding-top: var(--jacaona-space-md); }
+.jacaona-pt-lg { padding-top: var(--jacaona-space-lg); }
+.jacaona-pt-xl { padding-top: var(--jacaona-space-xl); }
+
+/* Padding Bottom */
+.jacaona-pb-0 { padding-bottom: 0; }
+.jacaona-pb-xs { padding-bottom: var(--jacaona-space-xs); }
+.jacaona-pb-sm { padding-bottom: var(--jacaona-space-sm); }
+.jacaona-pb-md { padding-bottom: var(--jacaona-space-md); }
+.jacaona-pb-lg { padding-bottom: var(--jacaona-space-lg); }
+.jacaona-pb-xl { padding-bottom: var(--jacaona-space-xl); }
+
+/* Padding Left */
+.jacaona-pl-0 { padding-left: 0; }
+.jacaona-pl-xs { padding-left: var(--jacaona-space-xs); }
+.jacaona-pl-sm { padding-left: var(--jacaona-space-sm); }
+.jacaona-pl-md { padding-left: var(--jacaona-space-md); }
+.jacaona-pl-lg { padding-left: var(--jacaona-space-lg); }
+.jacaona-pl-xl { padding-left: var(--jacaona-space-xl); }
+
+/* Padding Right */
+.jacaona-pr-0 { padding-right: 0; }
+.jacaona-pr-xs { padding-right: var(--jacaona-space-xs); }
+.jacaona-pr-sm { padding-right: var(--jacaona-space-sm); }
+.jacaona-pr-md { padding-right: var(--jacaona-space-md); }
+.jacaona-pr-lg { padding-right: var(--jacaona-space-lg); }
+.jacaona-pr-xl { padding-right: var(--jacaona-space-xl); }
+
+
+/* ========================================
+   SIZING
+   ======================================== */
+
+.jacaona-w-full { width: 100%; }
+.jacaona-w-auto { width: auto; }
+.jacaona-h-full { height: 100%; }
+.jacaona-h-auto { height: auto; }
+.jacaona-min-h-screen { min-height: 100vh; }
+
+
+/* ========================================
+   DISPLAY
+   ======================================== */
+
+.jacaona-block { display: block; }
+.jacaona-inline-block { display: inline-block; }
+.jacaona-inline { display: inline; }
+.jacaona-hidden { display: none; }
+
+
+/* ========================================
+   POSITION
+   ======================================== */
+
+.jacaona-relative { position: relative; }
+.jacaona-absolute { position: absolute; }
+.jacaona-fixed { position: fixed; }
+.jacaona-sticky { position: sticky; }
+
+
+/* ========================================
+   OVERFLOW
+   ======================================== */
+
+.jacaona-overflow-auto { overflow: auto; }
+.jacaona-overflow-hidden { overflow: hidden; }
+.jacaona-overflow-scroll { overflow: scroll; }
+
+
+/* ========================================
+   CURSOR
+   ======================================== */
+
+.jacaona-cursor-pointer { cursor: pointer; }
+.jacaona-cursor-not-allowed { cursor: not-allowed; }
+.jacaona-cursor-default { cursor: default; }
+
+
+/* ========================================
+   OPACITY
+   ======================================== */
+
+.jacaona-opacity-0 { opacity: 0; }
+.jacaona-opacity-25 { opacity: 0.25; }
+.jacaona-opacity-50 { opacity: 0.5; }
+.jacaona-opacity-75 { opacity: 0.75; }
+.jacaona-opacity-100 { opacity: 1; }
+
+
+/* ========================================
+   BORDER RADIUS
+   ======================================== */
+
+.jacaona-rounded-sm { border-radius: var(--jacaona-radius-sm); }
+.jacaona-rounded-md { border-radius: var(--jacaona-radius-md); }
+.jacaona-rounded-lg { border-radius: var(--jacaona-radius-lg); }
+.jacaona-rounded-full { border-radius: var(--jacaona-radius-full); }
+
+
+/* ========================================
+   RESPONSIVE UTILITIES
+   ======================================== */
+
+.jacaona-hide-mobile { display: block; }
+.jacaona-show-mobile { display: none; }
+
+@media (max-width: 768px) {
+  .jacaona-hide-mobile { display: none; }
+  .jacaona-show-mobile { display: block; }
+  
+  .jacaona-stack-mobile {
+    flex-direction: column;
+  }
+  
+  .jacaona-text-center-mobile {
+    text-align: center;
+  }
+}

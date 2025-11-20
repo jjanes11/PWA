@@ -1,0 +1,116 @@
+/**
+ * Layout Styles
+ * 
+ * Reusable layout patterns and containers.
+ * Grid systems, flexbox utilities, and page structure.
+ */
+
+/* ========================================
+   CONTAINERS
+   ======================================== */
+
+.jacaona-container {
+  flex: 1;
+  padding: var(--jacaona-space-lg);
+  background: var(--jacaona-bg-primary);
+}
+
+.jacaona-container--with-nav {
+  /* Account for bottom navigation */
+  padding-bottom: calc(80px + var(--jacaona-space-xl));
+}
+
+.jacaona-container--full-height {
+  min-height: 100vh;
+}
+
+/* ========================================
+   GRID SYSTEMS
+   ======================================== */
+
+.jacaona-grid {
+  display: grid;
+  gap: var(--jacaona-space-lg);
+}
+
+.jacaona-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--jacaona-space-lg);
+}
+
+.jacaona-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--jacaona-space-lg);
+}
+
+.jacaona-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--jacaona-space-lg);
+}
+
+.jacaona-grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--jacaona-space-lg);
+}
+
+/* ========================================
+   SECTIONS & DIVIDERS
+   ======================================== */
+
+.jacaona-section {
+  margin-bottom: var(--jacaona-space-2xl);
+}
+
+.jacaona-section-header {
+  font-size: var(--jacaona-font-lg);
+  font-weight: var(--jacaona-font-weight-semibold);
+  color: var(--jacaona-text-primary);
+  margin-bottom: var(--jacaona-space-lg);
+}
+
+.jacaona-section-title {
+  font-size: var(--jacaona-font-lg);
+  font-weight: var(--jacaona-font-weight-semibold);
+  color: var(--jacaona-text-primary);
+  margin: 0 0 var(--jacaona-space-lg) 0;
+}
+
+.jacaona-divider {
+  height: 1px;
+  background: var(--jacaona-border);
+  margin: var(--jacaona-space-xl) 0;
+  border: none;
+}
+
+.jacaona-divider--thick {
+  height: 2px;
+}
+
+/* ========================================
+   RESPONSIVE LAYOUTS
+   ======================================== */
+
+@media (max-width: 768px) {
+  .jacaona-container {
+    padding: var(--jacaona-space-md);
+  }
+  
+  .jacaona-grid-2,
+  .jacaona-grid-3,
+  .jacaona-grid-4 {
+    grid-template-columns: 1fr;
+    gap: var(--jacaona-space-md);
+  }
+  
+  .jacaona-grid-2.jacaona-grid-2--keep-mobile {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .jacaona-section {
+    margin-bottom: var(--jacaona-space-xl);
+  }
+}

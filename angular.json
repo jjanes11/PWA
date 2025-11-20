@@ -25,7 +25,7 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles/index.css"
             ]
           },
           "configurations": {
@@ -79,7 +79,7 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles/index.css"
             ]
           }
         }

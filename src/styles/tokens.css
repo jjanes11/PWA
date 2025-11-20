@@ -1,0 +1,116 @@
+/**
+ * Design Tokens
+ * 
+ * Central source of truth for design system values.
+ * All CSS variables (custom properties) live here.
+ */
+
+:root {
+  /* ========================================
+     COLOR PALETTE
+     ======================================== */
+  
+  /* Background Colors */
+  --jacaona-bg-primary: #0d1117;
+  --jacaona-bg-secondary: #161b22;
+  --jacaona-bg-tertiary: #21262d;
+  --jacaona-bg-quaternary: #30363d;
+  
+  /* Accent Colors */
+  --jacaona-accent-blue: #3b82f6;
+  --jacaona-accent-blue-hover: #2563eb;
+  
+  /* Text Colors */
+  --jacaona-text-primary: #f0f6fc;
+  --jacaona-text-secondary: #8b949e;
+  --jacaona-text-muted: #6e7681;
+  
+  /* Border Colors */
+  --jacaona-border: #30363d;
+  
+  /* Semantic Colors */
+  --jacaona-success: #3fb950;
+  --jacaona-warning: #d29922;
+  --jacaona-danger: #f85149;
+  
+  
+  /* ========================================
+     TYPOGRAPHY
+     ======================================== */
+  
+  /* Font Families */
+  --jacaona-font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+  
+  /* Font Weights */
+  --jacaona-font-weight-normal: 400;
+  --jacaona-font-weight-medium: 500;
+  --jacaona-font-weight-semibold: 600;
+  --jacaona-font-weight-bold: 700;
+  
+  /* Font Sizes */
+  --jacaona-font-xs: 12px;
+  --jacaona-font-sm: 14px;
+  --jacaona-font-base: 16px;
+  --jacaona-font-lg: 18px;
+  --jacaona-font-xl: 20px;
+  --jacaona-font-2xl: 24px;
+  
+  /* Line Heights */
+  --jacaona-leading-tight: 1.25;
+  --jacaona-leading-normal: 1.5;
+  --jacaona-leading-relaxed: 1.75;
+  
+  
+  /* ========================================
+     SPACING SCALE
+     ======================================== */
+  
+  --jacaona-space-xs: 4px;
+  --jacaona-space-sm: 8px;
+  --jacaona-space-md: 12px;
+  --jacaona-space-lg: 16px;
+  --jacaona-space-xl: 20px;
+  --jacaona-space-2xl: 24px;
+  --jacaona-space-3xl: 32px;
+  --jacaona-space-4xl: 40px;
+  
+  
+  /* ========================================
+     BORDER RADIUS
+     ======================================== */
+  
+  --jacaona-radius-sm: 6px;
+  --jacaona-radius-md: 8px;
+  --jacaona-radius-lg: 12px;
+  --jacaona-radius-full: 9999px;
+  
+  
+  /* ========================================
+     SHADOWS
+     ======================================== */
+  
+  --jacaona-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --jacaona-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --jacaona-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --jacaona-shadow-focus: 0 0 0 3px rgba(88, 166, 255, 0.1);
+  
+  
+  /* ========================================
+     TRANSITIONS
+     ======================================== */
+  
+  --jacaona-transition-fast: 0.15s ease;
+  --jacaona-transition-base: 0.2s ease;
+  --jacaona-transition-slow: 0.3s ease;
+  
+  
+  /* ========================================
+     Z-INDEX SCALE
+     ======================================== */
+  
+  --jacaona-z-base: 0;
+  --jacaona-z-dropdown: 1000;
+  --jacaona-z-modal: 2000;
+  --jacaona-z-notification: 3000;
+  --jacaona-z-tooltip: 4000;
+}
