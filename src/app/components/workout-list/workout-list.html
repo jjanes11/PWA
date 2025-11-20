@@ -28,43 +28,15 @@
     @if (routines().length > 0) {
       <div class="jacaona-saved-routines">
         @for (routine of routines(); track routine.id) {
-          <div 
-            class="jacaona-routine-template-card"
-            [class.jacaona-drag-over]="dragOverRoutineId() === routine.id"
-            draggable="true"
-            appDraggable
-            [dragItemId]="routine.id"
-            [draggedId]="draggedRoutineId"
-            [dragOverId]="dragOverRoutineId"
+          <app-routine-card
+            [routine]="routine"
+            [draggedIdSignal]="draggedRoutineId"
+            [dragOverIdSignal]="dragOverRoutineId"
+            [menuItems]="menuItems"
+            (startRoutine)="startRoutine($event)"
+            (menuAction)="handleMenuAction($event)"
             (dragReorder)="onRoutineReorder($event)"
-          >
-            <div class="jacaona-routine-header">
-              <div class="jacaona-routine-info">
-                <h3 class="jacaona-routine-name">{{ routine.name }}</h3>
-                <div class="jacaona-routine-exercises">
-                  @for (exercise of routine.exercises; track exercise.id; let i = $index) {
-                    <span class="jacaona-exercise-name">{{ exercise.name }}</span>
-                    @if (i < routine.exercises.length - 1) {
-                      <span class="jacaona-exercise-separator">•</span>
-                    }
-                  }
-                </div>
-              </div>
-              <app-card-menu 
-                [menuId]="routine.id"
-                [items]="menuItems"
-                (action)="handleMenuAction(routine.id, $event)">
-                <button class="jacaona-routine-menu-btn">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-                  </svg>
-                </button>
-              </app-card-menu>
-            </div>
-            <button class="jacaona-start-routine-btn" (click)="startRoutine(routine)">
-              Start Routine
-            </button>
-          </div>
+          />
         }
       </div>
     }
@@ -80,21 +52,15 @@
     (cancelled)="cancelDelete()"
   />
 
-  @if (showWorkoutInProgressDialog()) {
-    <div class="jacaona-dialog-overlay" (click)="cancelStartNewWorkout()">
-      <div class="jacaona-dialog" (click)="$event.stopPropagation()">
-        <p class="jacaona-dialog-message">You have a workout in progress</p>
-        <p class="jacaona-dialog-submessage">If you start a new workout, your old workout will be permanently deleted.</p>
-        <button class="jacaona-dialog-btn jacaona-dialog-btn-primary" (click)="resumeWorkout()">
-          Resume Workout in Progress
-        </button>
-        <button class="jacaona-dialog-btn jacaona-dialog-btn-danger-text" (click)="confirmStartNewWorkout()">
-          Start New Workout
-        </button>
-        <button class="jacaona-dialog-btn jacaona-dialog-btn-cancel" (click)="cancelStartNewWorkout()">
-          Cancel
-        </button>
-      </div>
-    </div>
-  }
+  <app-three-button-dialog
+    [isVisible]="showWorkoutInProgressDialog()"
+    [message]="'You have a workout in progress'"
+    [submessage]="'If you start a new workout, your old workout will be permanently deleted.'"
+    [primaryText]="'Resume Workout in Progress'"
+    [dangerText]="'Start New Workout'"
+    [cancelText]="'Cancel'"
+    (primaryAction)="resumeWorkout()"
+    (dangerAction)="confirmStartNewWorkout()"
+    (cancelled)="cancelStartNewWorkout()"
+  />
 </div>

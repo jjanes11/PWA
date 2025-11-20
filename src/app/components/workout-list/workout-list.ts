@@ -8,10 +8,12 @@ import { Routine } from '../../models/workout.models';
 import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
+import { ThreeButtonDialog } from '../three-button-dialog/three-button-dialog';
+import { RoutineCardComponent } from '../routine-card/routine-card';
 
 @Component({
   selector: 'app-workout-list',
-  imports: [CommonModule, DraggableDirective, CardMenuComponent, ConfirmationDialog],
+  imports: [CommonModule, ConfirmationDialog, ThreeButtonDialog, RoutineCardComponent],
   templateUrl: './workout-list.html',
   styleUrl: './workout-list.css'
 })
@@ -108,12 +110,12 @@ export class WorkoutListComponent {
     this.router.navigate(['/workout/new']);
   }
 
-  handleMenuAction(routineId: string, action: string): void {
-    this.selectedRoutineId.set(routineId);
+  handleMenuAction(event: {routineId: string, action: string}): void {
+    this.selectedRoutineId.set(event.routineId);
     
-    switch (action) {
+    switch (event.action) {
       case 'edit':
-        this.router.navigate(['/routine/edit', routineId]);
+        this.router.navigate(['/routine/edit', event.routineId]);
         break;
       case 'delete':
         this.showDeleteDialog.set(true);

@@ -46,9 +46,11 @@ import { filter, map, startWith } from 'rxjs/operators';
     />
   `,
   styles: [`
+    /* Override global dialog-overlay for bottom positioning */
     .jacaona-dialog-overlay {
       position: fixed;
-      bottom: calc(56px + env(safe-area-inset-bottom)); /* Touch top of navbar */
+      top: auto;
+      bottom: calc(56px + env(safe-area-inset-bottom));
       left: 0;
       right: 0;
       background: transparent;
@@ -56,6 +58,8 @@ import { filter, map, startWith } from 'rxjs/operators';
       padding: 0;
       animation: slideUp 0.3s ease;
       pointer-events: none;
+      align-items: stretch;
+      justify-content: stretch;
     }
 
     @keyframes slideUp {
@@ -72,7 +76,8 @@ import { filter, map, startWith } from 'rxjs/operators';
       border-radius: 0;
       border-top: 1px solid var(--jacaona-border);
       padding: var(--jacaona-space-lg) var(--jacaona-space-xl);
-      max-width: 100%;
+      width: 100%;
+      max-width: none;
       margin: 0;
       box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
       pointer-events: auto;
