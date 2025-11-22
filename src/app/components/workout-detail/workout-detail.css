@@ -92,7 +92,7 @@
 
 /* Set Type Badges */
 .jacaona-set-type-warmup {
-  color: #facc15;
+  color: var(--jacaona-warning-yellow);
 }
 
 .jacaona-set-type-failure {

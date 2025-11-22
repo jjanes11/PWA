@@ -31,7 +31,16 @@
   /* Semantic Colors */
   --jacaona-success: #3fb950;
   --jacaona-warning: #d29922;
+  --jacaona-warning-yellow: #facc15;
   --jacaona-danger: #f85149;
+  
+  /* Light Theme Colors (for bottom nav, etc.) */
+  --jacaona-light-bg: #ffffff;
+  --jacaona-light-border: #e0e0e0;
+  --jacaona-light-gray: #f5f5f5;
+  --jacaona-light-text-muted: #6b7280;
+  --jacaona-light-accent: #667eea;
+  --jacaona-light-accent-bg: #f0f4ff;
   
   
   /* ========================================
@@ -86,13 +95,41 @@
   
   
   /* ========================================
+     BORDERS
+     ======================================== */
+  
+  --jacaona-border-width-thin: 1px;
+  --jacaona-border-width-medium: 2px;
+  
+  
+  /* ========================================
+     OTHER VALUES
+     ======================================== */
+  
+  /* Transforms */
+  --jacaona-transform-lift: translateY(-2px);
+  --jacaona-transform-press: translateY(1px);
+  
+  /* Fixed Heights */
+  --jacaona-bottom-nav-height: 80px;
+  
+  /* Breakpoints (use in media queries) */
+  --jacaona-breakpoint-mobile: 480px;
+  --jacaona-breakpoint-tablet: 768px;
+  
+  
+  /* ========================================
      SHADOWS
      ======================================== */
   
+  /* Shadows */
   --jacaona-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --jacaona-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --jacaona-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   --jacaona-shadow-focus: 0 0 0 3px rgba(88, 166, 255, 0.1);
+  --jacaona-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --jacaona-shadow-nav: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  --jacaona-shadow-sticky: 0 -2px 8px rgba(0, 0, 0, 0.2);
   
   
   /* ========================================

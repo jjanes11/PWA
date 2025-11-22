@@ -6,7 +6,7 @@
 }
 
 .jacaona-field {
-  padding: 4px 0 10px 0;
+  padding: var(--jacaona-space-xs) 0 var(--jacaona-space-lg) 0;
 }
 
 .jacaona-input-title {
@@ -14,8 +14,8 @@
   background: transparent;
   color: var(--jacaona-text-primary);
   border: 0;
-  border-bottom: 1px solid var(--jacaona-border);
-  padding: 12px 4px;
+  border-bottom: var(--jacaona-border-width-thin) solid var(--jacaona-border);
+  padding: var(--jacaona-space-md) var(--jacaona-space-xs);
   font-size: 16px;
   outline: none;
 }

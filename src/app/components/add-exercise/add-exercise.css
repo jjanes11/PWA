@@ -137,7 +137,7 @@
 .jacaona-custom-badge {
   background: var(--jacaona-accent-blue);
   color: white;
-  padding: 4px 8px;
+  padding: var(--jacaona-space-xs) var(--jacaona-space-sm);
   border-radius: var(--jacaona-radius-sm);
   font-size: 12px;
   font-weight: var(--jacaona-font-weight-medium);
@@ -190,9 +190,9 @@
   right: 0;
   padding: var(--jacaona-space-lg);
   background: var(--jacaona-bg-primary);
-  border-top: 1px solid var(--jacaona-border);
-  z-index: 1000;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+  border-top: var(--jacaona-border-width-thin) solid var(--jacaona-border);
+  z-index: var(--jacaona-z-dropdown);
+  box-shadow: var(--jacaona-shadow-sticky);
 }
 
 .jacaona-add-exercise-btn {
@@ -210,9 +210,9 @@
 }
 
 .jacaona-add-exercise-btn:hover {
-  background: #2563eb;
+  background: var(--jacaona-accent-blue-hover);
 }
 
 .jacaona-add-exercise-btn:active {
-  transform: translateY(1px);
+  transform: var(--jacaona-transform-press);
 }

@@ -1,6 +1,6 @@
 .jacaona-dashboard {
   padding: var(--jacaona-space-lg);
-  padding-bottom: calc(80px + var(--jacaona-space-xl)); /* Account for bottom nav */
+  padding-bottom: calc(var(--jacaona-bottom-nav-height) + var(--jacaona-space-xl)); /* Account for bottom nav */
   background: var(--jacaona-bg-primary);
   min-height: 100vh;
 }
@@ -91,7 +91,7 @@
 @media (max-width: 480px) {
   .jacaona-dashboard {
     padding: var(--jacaona-space-md);
-    padding-bottom: calc(80px + var(--jacaona-space-lg));
+    padding-bottom: calc(var(--jacaona-bottom-nav-height) + var(--jacaona-space-lg));
   }
 
   .jacaona-stats-grid {
