@@ -1,0 +1,72 @@
+/**
+ * Form Input Components
+ * 
+ * Text inputs, textareas, and form labels.
+ * Follow BEM naming: .jacaona-input / .jacaona-input--variant
+ */
+
+/* ========================================
+   BASE INPUT
+   ======================================== */
+
+.jacaona-input {
+  width: 100%;
+  padding: var(--jacaona-space-lg);
+  background: var(--jacaona-bg-secondary);
+  border: var(--jacaona-border-width-thin) solid var(--jacaona-border);
+  border-radius: var(--jacaona-radius-md);
+  color: var(--jacaona-text-primary);
+  font-family: var(--jacaona-font-primary);
+  font-size: var(--jacaona-font-base);
+  outline: none;
+  transition: border-color var(--jacaona-transition-fast);
+}
+
+.jacaona-input:focus {
+  border-color: var(--jacaona-accent-blue);
+}
+
+.jacaona-input::placeholder {
+  color: var(--jacaona-text-muted);
+}
+
+
+/* ========================================
+   INPUT VARIANTS
+   ======================================== */
+
+.jacaona-input--sm {
+  padding: var(--jacaona-space-md);
+  font-size: var(--jacaona-font-sm);
+}
+
+.jacaona-input--underline {
+  background: transparent;
+  border: 0;
+  border-bottom: var(--jacaona-border-width-thin) solid var(--jacaona-border);
+  border-radius: 0;
+  padding: var(--jacaona-space-md) var(--jacaona-space-xs);
+}
+
+
+/* ========================================
+   TEXTAREA
+   ======================================== */
+
+.jacaona-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+
+/* ========================================
+   FORM LABELS
+   ======================================== */
+
+.jacaona-form-label {
+  display: block;
+  color: var(--jacaona-text-muted);
+  font-size: var(--jacaona-font-sm);
+  font-weight: var(--jacaona-font-weight-medium);
+  margin-bottom: var(--jacaona-space-md);
+}

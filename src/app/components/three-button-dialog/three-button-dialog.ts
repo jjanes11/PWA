@@ -33,7 +33,7 @@ import { Component, input, output } from '@angular/core';
       right: 0;
       bottom: 0;
       background: rgba(0, 0, 0, 0.6);
-      z-index: 3000;
+      z-index: var(--jacaona-z-notification);
       display: flex;
       align-items: center;
       justify-content: center;

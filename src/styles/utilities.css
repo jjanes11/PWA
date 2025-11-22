@@ -210,25 +210,6 @@
 
 
 /* ========================================
-   POSITION
-   ======================================== */
-
-.jacaona-relative { position: relative; }
-.jacaona-absolute { position: absolute; }
-.jacaona-fixed { position: fixed; }
-.jacaona-sticky { position: sticky; }
-
-
-/* ========================================
-   OVERFLOW
-   ======================================== */
-
-.jacaona-overflow-auto { overflow: auto; }
-.jacaona-overflow-hidden { overflow: hidden; }
-.jacaona-overflow-scroll { overflow: scroll; }
-
-
-/* ========================================
    CURSOR
    ======================================== */
 
@@ -277,3 +258,44 @@
     text-align: center;
   }
 }
+
+
+/* ========================================
+   POSITION
+   ======================================== */
+
+.jacaona-relative { position: relative; }
+.jacaona-absolute { position: absolute; }
+.jacaona-fixed { position: fixed; }
+.jacaona-sticky { position: sticky; }
+.jacaona-static { position: static; }
+
+/* Position values */
+.jacaona-top-0 { top: 0; }
+.jacaona-right-0 { right: 0; }
+.jacaona-bottom-0 { bottom: 0; }
+.jacaona-left-0 { left: 0; }
+
+.jacaona-inset-0 {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+
+/* ========================================
+   OVERFLOW
+   ======================================== */
+
+.jacaona-overflow-auto { overflow: auto; }
+.jacaona-overflow-hidden { overflow: hidden; }
+.jacaona-overflow-visible { overflow: visible; }
+.jacaona-overflow-scroll { overflow: scroll; }
+
+.jacaona-overflow-x-auto { overflow-x: auto; }
+.jacaona-overflow-x-hidden { overflow-x: hidden; }
+
+.jacaona-overflow-y-auto { overflow-y: auto; }
+.jacaona-overflow-y-hidden { overflow-y: hidden; }
+

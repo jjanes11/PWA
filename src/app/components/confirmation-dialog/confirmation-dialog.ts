@@ -35,7 +35,7 @@ import { Component, signal, output, input } from '@angular/core';
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
+      z-index: var(--jacaona-z-tooltip);
       padding: var(--jacaona-space-lg);
     }
 

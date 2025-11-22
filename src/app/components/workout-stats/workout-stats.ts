@@ -10,7 +10,7 @@ export interface WorkoutStatsData {
   selector: 'app-workout-stats',
   standalone: true,
   template: `
-    <div class="jacaona-stats-row">
+    <div class="jacaona-flex jacaona-gap-lg" style="margin-bottom: var(--jacaona-space-xl);">
       <div class="jacaona-stat-item">
         <div class="jacaona-stat-label">Duration</div>
         <div class="jacaona-stat-value jacaona-stat-primary">{{ stats().duration }}</div>
@@ -26,12 +26,6 @@ export interface WorkoutStatsData {
     </div>
   `,
   styles: [`
-    .jacaona-stats-row {
-      display: flex;
-      gap: var(--jacaona-space-lg);
-      margin-bottom: var(--jacaona-space-xl);
-    }
-
     .jacaona-stat-item {
       flex: 1;
       text-align: center;

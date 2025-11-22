@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
   imports: [FormsModule],
   template: `
     <div class="jacaona-description-section">
-      <div class="jacaona-section-title">Description</div>
+      <div class="jacaona-form-label" style="text-transform: uppercase; letter-spacing: 0.5px;">Description</div>
       <textarea 
         class="jacaona-input jacaona-textarea" 
         [placeholder]="placeholder()"
@@ -20,15 +20,6 @@ import { FormsModule } from '@angular/forms';
   styles: [`
     .jacaona-description-section {
       margin-bottom: var(--jacaona-space-lg);
-    }
-
-    .jacaona-section-title {
-      color: var(--jacaona-text-muted);
-      font-size: var(--jacaona-font-xs);
-      font-weight: var(--jacaona-font-weight-medium);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: var(--jacaona-space-sm);
     }
   `]
 })

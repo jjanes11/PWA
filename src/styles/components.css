@@ -69,23 +69,6 @@
   background: #dc2626;
 }
 
-.jacaona-btn--sm {
-  padding: var(--jacaona-space-sm) var(--jacaona-space-md);
-  font-size: var(--jacaona-font-xs);
-  min-height: 28px;
-}
-
-.jacaona-btn--lg {
-  padding: var(--jacaona-space-lg) var(--jacaona-space-xl);
-  font-size: var(--jacaona-font-base);
-  min-height: 44px;
-}
-
-/* Legacy class names for backwards compatibility */
-.jacaona-btn-primary { @apply jacaona-btn jacaona-btn--primary; }
-.jacaona-btn-secondary { @apply jacaona-btn jacaona-btn--secondary; }
-.jacaona-btn-ghost { @apply jacaona-btn jacaona-btn--ghost; }
-
 
 /* ========================================
    CARDS
@@ -97,11 +80,6 @@
   background: var(--jacaona-bg-secondary);
   border-radius: var(--jacaona-radius-lg);
   padding: var(--jacaona-space-lg);
-}
-
-/* Card with border */
-.jacaona-card--bordered {
-  border: var(--jacaona-border-width-thin) solid var(--jacaona-border);
 }
 
 /* Interactive card states */
@@ -121,19 +99,6 @@
 .jacaona-card--hoverable:hover {
   box-shadow: var(--jacaona-shadow-card);
 }
-
-/* Card size variants */
-.jacaona-card--compact {
-  padding: var(--jacaona-space-md);
-}
-
-/* Card elevation */
-.jacaona-card--elevated {
-  box-shadow: var(--jacaona-shadow-md);
-}
-
-
-
 
 /* ========================================
    BADGES & TAGS
@@ -209,10 +174,6 @@
   padding: var(--jacaona-space-md) var(--jacaona-space-xs);
 }
 
-.jacaona-input--error {
-  border-color: var(--jacaona-danger);
-}
-
 /* Textarea specific */
 .jacaona-textarea {
   resize: vertical;
@@ -223,10 +184,6 @@
 /* ========================================
    FORM SECTIONS
    ======================================== */
-
-.jacaona-form-section {
-  margin-bottom: var(--jacaona-space-xl);
-}
 
 .jacaona-form-label {
   display: block;

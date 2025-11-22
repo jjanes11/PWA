@@ -30,8 +30,7 @@
   
   /* Semantic Colors */
   --jacaona-success: #3fb950;
-  --jacaona-warning: #d29922;
-  --jacaona-warning-yellow: #facc15;
+  --jacaona-warning-yellow: #facc15;  /* Used for warning states in sets-table, workout-detail */
   --jacaona-danger: #f85149;
   
   /* Bottom Nav Colors (light-themed navigation bar) */

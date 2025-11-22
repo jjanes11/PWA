@@ -1,0 +1,75 @@
+/**
+ * Button Components
+ * 
+ * Reusable button styles with variants.
+ * Follow BEM naming: .jacaona-btn / .jacaona-btn--variant
+ */
+
+/* ========================================
+   BASE BUTTON
+   ======================================== */
+
+.jacaona-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--jacaona-space-sm);
+  padding: var(--jacaona-space-md) var(--jacaona-space-lg);
+  border: none;
+  border-radius: var(--jacaona-radius-md);
+  font-family: var(--jacaona-font-primary);
+  font-weight: var(--jacaona-font-weight-medium);
+  font-size: var(--jacaona-font-sm);
+  cursor: pointer;
+  transition: all var(--jacaona-transition-fast);
+  text-decoration: none;
+  min-height: 36px;
+}
+
+.jacaona-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+
+/* ========================================
+   BUTTON VARIANTS
+   ======================================== */
+
+.jacaona-btn--primary {
+  background: var(--jacaona-accent-blue);
+  color: var(--jacaona-bg-primary);
+}
+
+.jacaona-btn--primary:hover:not(:disabled) {
+  background: var(--jacaona-accent-blue-hover);
+}
+
+.jacaona-btn--secondary {
+  background: var(--jacaona-bg-tertiary);
+  color: var(--jacaona-text-primary);
+  border: 1px solid var(--jacaona-border);
+}
+
+.jacaona-btn--secondary:hover:not(:disabled) {
+  background: var(--jacaona-bg-secondary);
+}
+
+.jacaona-btn--ghost {
+  background: transparent;
+  color: var(--jacaona-text-secondary);
+}
+
+.jacaona-btn--ghost:hover:not(:disabled) {
+  color: var(--jacaona-text-primary);
+  background: var(--jacaona-bg-tertiary);
+}
+
+.jacaona-btn--danger {
+  background: var(--jacaona-danger);
+  color: white;
+}
+
+.jacaona-btn--danger:hover:not(:disabled) {
+  background: #dc2626;
+}

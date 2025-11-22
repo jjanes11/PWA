@@ -1,0 +1,39 @@
+/**
+ * Card Components
+ * 
+ * Reusable card container styles with modifiers.
+ * Follow BEM naming: .jacaona-card / .jacaona-card--modifier
+ */
+
+/* ========================================
+   BASE CARD
+   ======================================== */
+
+.jacaona-card {
+  background: var(--jacaona-bg-secondary);
+  border-radius: var(--jacaona-radius-lg);
+  padding: var(--jacaona-space-lg);
+}
+
+
+/* ========================================
+   CARD MODIFIERS
+   ======================================== */
+
+/* Interactive card states */
+.jacaona-card--clickable {
+  cursor: pointer;
+  transition: background-color var(--jacaona-transition-fast);
+}
+
+.jacaona-card--clickable:hover {
+  background: var(--jacaona-bg-tertiary);
+}
+
+.jacaona-card--hoverable {
+  transition: box-shadow var(--jacaona-transition-fast);
+}
+
+.jacaona-card--hoverable:hover {
+  box-shadow: var(--jacaona-shadow-card);
+}

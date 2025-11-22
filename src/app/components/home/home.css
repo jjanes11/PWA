@@ -33,14 +33,6 @@
   margin-bottom: var(--jacaona-space-2xl);
 }
 
-/* Section Styles */
-.jacaona-section-title {
-  font-size: 18px;
-  font-weight: var(--jacaona-font-weight-semibold);
-  color: var(--jacaona-text-primary);
-  margin: 0 0 var(--jacaona-space-lg) 0;
-}
-
 .jacaona-section-header {
   display: flex;
   justify-content: space-between;

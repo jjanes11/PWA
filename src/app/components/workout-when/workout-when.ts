@@ -5,7 +5,7 @@ import { Component, input } from '@angular/core';
   standalone: true,
   template: `
     <div class="jacaona-when-section">
-      <div class="jacaona-section-title">When</div>
+      <div class="jacaona-form-label" style="text-transform: uppercase; letter-spacing: 0.5px;">When</div>
       <div class="jacaona-when-value">{{ dateTime() }}</div>
     </div>
   `,

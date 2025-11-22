@@ -23,7 +23,7 @@ import { Component, Input, Output, EventEmitter, HostListener } from '@angular/c
       right: 0;
       bottom: 0;
       background: rgba(0, 0, 0, 0.6);
-      z-index: 2000;
+      z-index: var(--jacaona-z-modal);
       display: flex;
       align-items: flex-end;
       animation: fadeIn 0.2s ease;

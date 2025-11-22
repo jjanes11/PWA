@@ -73,7 +73,7 @@ export interface TopBarButton {
       border-radius: var(--jacaona-radius-md);
       display: flex;
       align-items: center;
-      transition: background-color 0.15s ease;
+      transition: background-color var(--jacaona-transition-fast);
     }
 
     .jacaona-back-btn:hover {
@@ -89,7 +89,7 @@ export interface TopBarButton {
       border-radius: var(--jacaona-radius-md);
       display: flex;
       align-items: center;
-      transition: background-color 0.15s ease;
+      transition: background-color var(--jacaona-transition-fast);
     }
 
     .jacaona-menu-btn:hover {
@@ -104,7 +104,7 @@ export interface TopBarButton {
       padding: var(--jacaona-space-sm) var(--jacaona-space-md);
       border-radius: var(--jacaona-radius-md);
       font-size: 16px;
-      transition: background-color 0.15s ease;
+      transition: background-color var(--jacaona-transition-fast);
     }
 
     .jacaona-text-btn:hover {
@@ -120,7 +120,7 @@ export interface TopBarButton {
       border-radius: var(--jacaona-radius-md);
       font-size: 16px;
       font-weight: var(--jacaona-font-weight-medium);
-      transition: background-color 0.15s ease;
+      transition: background-color var(--jacaona-transition-fast);
     }
 
     .jacaona-save-btn:hover:not(:disabled) {

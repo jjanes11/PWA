@@ -47,7 +47,7 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
       flex-direction: column;
       gap: var(--jacaona-space-md);
       cursor: grab;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform var(--jacaona-transition-base), box-shadow var(--jacaona-transition-base);
       touch-action: pan-y;
       -webkit-user-select: none;
       user-select: none;
@@ -114,7 +114,7 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
       font-size: 16px;
       font-weight: var(--jacaona-font-weight-semibold);
       cursor: pointer;
-      transition: background-color 0.15s ease;
+      transition: background-color var(--jacaona-transition-fast);
     }
 
     .jacaona-start-routine-btn:hover {

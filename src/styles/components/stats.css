@@ -1,0 +1,116 @@
+/**
+ * Stats Display Components
+ * 
+ * Statistics display components for dashboards and summaries.
+ * Includes simple stats and stat cards with icons.
+ */
+
+/* ========================================
+   SIMPLE STATS
+   ======================================== */
+
+.jacaona-stat {
+  text-align: center;
+}
+
+.jacaona-stat__label {
+  display: block;
+  color: var(--jacaona-text-muted);
+  font-size: var(--jacaona-font-xs);
+  font-weight: var(--jacaona-font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--jacaona-space-xs);
+}
+
+.jacaona-stat__value {
+  display: block;
+  color: var(--jacaona-text-primary);
+  font-size: var(--jacaona-font-2xl);
+  font-weight: var(--jacaona-font-weight-bold);
+  line-height: var(--jacaona-leading-tight);
+}
+
+.jacaona-stat__value--primary {
+  color: var(--jacaona-accent-blue);
+}
+
+.jacaona-stat__value--success {
+  color: var(--jacaona-success);
+}
+
+.jacaona-stat__value--warning {
+  color: var(--jacaona-warning);
+}
+
+.jacaona-stat__value--danger {
+  color: var(--jacaona-danger);
+}
+
+.jacaona-stat__unit {
+  font-size: var(--jacaona-font-sm);
+  font-weight: var(--jacaona-font-weight-medium);
+  color: var(--jacaona-text-secondary);
+}
+
+
+/* ========================================
+   STAT CARDS
+   ======================================== */
+
+.jacaona-stat-card {
+  background: var(--jacaona-bg-secondary);
+  border: none;
+  border-radius: var(--jacaona-radius-lg);
+  padding: var(--jacaona-space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--jacaona-space-md);
+}
+
+.jacaona-stat-card__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--jacaona-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.jacaona-stat-card__icon--blue {
+  background: rgba(88, 166, 255, 0.1);
+  color: var(--jacaona-accent-blue);
+}
+
+.jacaona-stat-card__icon--green {
+  background: rgba(63, 185, 80, 0.1);
+  color: var(--jacaona-success);
+}
+
+.jacaona-stat-card__icon--yellow {
+  background: rgba(210, 153, 34, 0.1);
+  color: var(--jacaona-warning);
+}
+
+.jacaona-stat-card__icon--red {
+  background: rgba(248, 81, 73, 0.1);
+  color: var(--jacaona-danger);
+}
+
+.jacaona-stat-card__content {
+  flex: 1;
+}
+
+.jacaona-stat-card__number {
+  font-size: var(--jacaona-font-xl);
+  font-weight: var(--jacaona-font-weight-bold);
+  color: var(--jacaona-text-primary);
+  line-height: 1;
+}
+
+.jacaona-stat-card__label {
+  font-size: var(--jacaona-font-xs);
+  color: var(--jacaona-text-secondary);
+  margin-top: var(--jacaona-space-xs);
+}

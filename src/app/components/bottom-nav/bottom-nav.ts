@@ -72,7 +72,7 @@ import { filter } from 'rxjs/operators';
       right: 0;
       background: var(--jacaona-bg-secondary);
       border-top: 1px solid var(--jacaona-border);
-      z-index: 1000;
+      z-index: var(--jacaona-z-dropdown);
       padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
     }
 

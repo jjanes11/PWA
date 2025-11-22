@@ -25,6 +25,8 @@ export type StatCardColor = 'blue' | 'green' | 'yellow' | 'red';
     </div>
   `,
   styles: [`
+    /* NOTE: Base .jacaona-stat-card styles in src/styles/components.css */
+    /* This overrides for component-specific layout */
     .jacaona-stat-card {
       display: flex;
       align-items: center;

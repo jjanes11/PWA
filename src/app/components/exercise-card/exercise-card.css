@@ -42,7 +42,7 @@
   font-size: 16px;
   font-weight: var(--jacaona-font-weight-medium);
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color var(--jacaona-transition-fast);
 }
 
 .jacaona-add-set-btn:hover {

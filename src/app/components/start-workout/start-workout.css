@@ -5,14 +5,6 @@
   min-height: 100vh;
 }
 
-/* Section Styles */
-.jacaona-section-title {
-  font-size: 18px;
-  font-weight: var(--jacaona-font-weight-semibold);
-  color: var(--jacaona-text-primary);
-  margin: 0 0 var(--jacaona-space-lg) 0;
-}
-
 /* Quick Start */
 .jacaona-quick-start {
   margin-bottom: var(--jacaona-space-2xl);

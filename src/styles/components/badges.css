@@ -1,0 +1,48 @@
+/**
+ * Badge Components
+ * 
+ * Small label/tag components for categorization and status.
+ * Follow BEM naming: .jacaona-badge / .jacaona-badge--variant
+ */
+
+/* ========================================
+   BASE BADGE
+   ======================================== */
+
+.jacaona-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--jacaona-space-xs) var(--jacaona-space-sm);
+  border-radius: var(--jacaona-radius-sm);
+  font-size: 12px;
+  font-weight: var(--jacaona-font-weight-medium);
+  line-height: 1;
+}
+
+
+/* ========================================
+   BADGE VARIANTS
+   ======================================== */
+
+/* Default neutral badge */
+.jacaona-badge--neutral {
+  background: var(--jacaona-bg-tertiary);
+  color: var(--jacaona-text-secondary);
+}
+
+/* Primary accent badge */
+.jacaona-badge--primary {
+  background: var(--jacaona-accent-blue);
+  color: white;
+}
+
+
+/* ========================================
+   BADGE MODIFIERS
+   ======================================== */
+
+/* Uppercase badge variant (for labels like "CUSTOM") */
+.jacaona-badge--uppercase {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

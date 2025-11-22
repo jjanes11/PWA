@@ -54,7 +54,7 @@ import { filter, map, startWith } from 'rxjs/operators';
       left: 0;
       right: 0;
       background: transparent;
-      z-index: 1001;
+      z-index: calc(var(--jacaona-z-dropdown) + 1);
       padding: 0;
       animation: slideUp 0.3s ease;
       pointer-events: none;

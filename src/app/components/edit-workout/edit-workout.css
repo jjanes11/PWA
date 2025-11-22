@@ -18,13 +18,7 @@
   margin-top: var(--jacaona-space-xl);
 }
 
-.jacaona-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  color: var(--jacaona-text-muted);
-}
+/* Loading State - using global .jacaona-loading from components.css */
 
 @media (max-width: 768px) {
   .jacaona-main-content {

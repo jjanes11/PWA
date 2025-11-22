@@ -1,0 +1,52 @@
+/**
+ * Feedback Components
+ * 
+ * Loading states, empty states, and user feedback components.
+ */
+
+/* ========================================
+   LOADING STATE
+   ======================================== */
+
+.jacaona-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: var(--jacaona-text-muted);
+}
+
+
+/* ========================================
+   EMPTY STATES
+   ======================================== */
+
+.jacaona-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--jacaona-space-2xl);
+  color: var(--jacaona-text-muted);
+}
+
+.jacaona-empty-state__icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--jacaona-space-lg);
+  opacity: 0.5;
+}
+
+.jacaona-empty-state__title {
+  font-size: var(--jacaona-font-lg);
+  font-weight: var(--jacaona-font-weight-semibold);
+  color: var(--jacaona-text-secondary);
+  margin-bottom: var(--jacaona-space-sm);
+}
+
+.jacaona-empty-state__message {
+  font-size: var(--jacaona-font-sm);
+  color: var(--jacaona-text-muted);
+  max-width: 300px;
+}
