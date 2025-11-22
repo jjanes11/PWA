@@ -10,13 +10,13 @@ import { StatCardComponent } from '../stat-card/stat-card';
 import { WorkoutCardComponent } from '../workout-card/workout-card';
 
 @Component({
-  selector: 'app-workout-dashboard',
+  selector: 'app-home',
   standalone: true,
   imports: [CommonModule, RouterModule, ConfirmationDialog, StatCardComponent, WorkoutCardComponent],
-  templateUrl: './workout-dashboard.html',
-  styleUrl: './workout-dashboard.css'
+  templateUrl: './home.html',
+  styleUrl: './home.css'
 })
-export class WorkoutDashboardComponent {
+export class HomeComponent {
   private workoutService = inject(WorkoutService);
   private activeWorkoutService = inject(ActiveWorkoutService);
   private routineDraftService = inject(RoutineDraftService);

@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WorkoutDashboard } from './workout-dashboard';
+import { HomeComponent } from './home';
 
-describe('WorkoutDashboard', () => {
-  let component: WorkoutDashboard;
-  let fixture: ComponentFixture<WorkoutDashboard>;
+describe('HomeComponent', () => {
+  let component: HomeComponent;
+  let fixture: ComponentFixture<HomeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

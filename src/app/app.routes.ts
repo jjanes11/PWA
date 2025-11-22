@@ -33,7 +33,7 @@ export const routes: Routes = [
   },
   { 
     path: 'home', 
-    loadComponent: () => import('./components/workout-dashboard/workout-dashboard').then(m => m.WorkoutDashboardComponent)
+    loadComponent: () => import('./components/home/home').then(m => m.HomeComponent)
   },
   { 
     path: 'start-workout', 
@@ -41,11 +41,11 @@ export const routes: Routes = [
   },
   { 
     path: 'analytics', 
-    loadComponent: () => import('./components/workout-dashboard/workout-dashboard').then(m => m.WorkoutDashboardComponent) // Temporary placeholder
+    loadComponent: () => import('./components/home/home').then(m => m.HomeComponent) // Temporary placeholder
   },
   { 
     path: 'profile', 
-    loadComponent: () => import('./components/workout-dashboard/workout-dashboard').then(m => m.WorkoutDashboardComponent) // Temporary placeholder
+    loadComponent: () => import('./components/home/home').then(m => m.HomeComponent) // Temporary placeholder
   },
   { 
     path: 'workout/:id', 
