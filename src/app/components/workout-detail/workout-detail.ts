@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { Workout } from '../../models/workout.models';
 
 @Component({
   selector: 'app-workout-detail',
-  imports: [CommonModule, ConfirmationDialog, BottomMenuComponent, TopBarComponent, ExerciseCardComponent, WorkoutStatsComponent],
+  imports: [ConfirmationDialog, BottomMenuComponent, TopBarComponent, ExerciseCardComponent, WorkoutStatsComponent],
   templateUrl: './workout-detail.html',
   styleUrl: './workout-detail.css',
 })

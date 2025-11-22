@@ -1,12 +1,12 @@
 import { Component, input, output, computed, WritableSignal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Routine } from '../../models/workout.models';
 import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
 
 @Component({
   selector: 'app-routine-card',
-  imports: [CommonModule, DraggableDirective, CardMenuComponent],
+  imports: [DraggableDirective, CardMenuComponent],
   template: `
     <div 
       class="jacaona-routine-template-card"

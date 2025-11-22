@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
@@ -11,7 +11,7 @@ import { WorkoutDescriptionComponent } from '../workout-description/workout-desc
 
 @Component({
   selector: 'app-save-workout',
-  imports: [CommonModule, FormsModule, WorkoutStatsComponent, TopBarComponent, WorkoutTitleInputComponent, WorkoutWhenComponent, WorkoutDescriptionComponent],
+  imports: [FormsModule, WorkoutStatsComponent, TopBarComponent, WorkoutTitleInputComponent, WorkoutWhenComponent, WorkoutDescriptionComponent],
   templateUrl: './save-workout.html',
   styleUrl: './save-workout.css'
 })

@@ -1,33 +1,45 @@
 <div class="editor-container" [class.editor-container--loading]="loading">
   <header class="editor-header">
-    <button
-      *ngIf="leftButton"
-      type="button"
-      class="{{ buttonClasses(leftButton) }}"
-      [attr.aria-label]="leftButton.ariaLabel || leftButton.label"
-      [disabled]="leftButton.disabled"
-      (click)="onLeftClick()"
-    >
-      <svg *ngIf="leftButton.iconPath" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path [attr.d]="leftButton.iconPath" />
-      </svg>
-      <span *ngIf="leftButton.label">{{ leftButton.label }}</span>
-    </button>
+    @if (leftButton) {
+      <button
+        type="button"
+        class="{{ buttonClasses(leftButton) }}"
+        [attr.aria-label]="leftButton.ariaLabel || leftButton.label"
+        [disabled]="leftButton.disabled"
+        (click)="onLeftClick()"
+        >
+        @if (leftButton.iconPath) {
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path [attr.d]="leftButton.iconPath" />
+          </svg>
+        }
+        @if (leftButton.label) {
+          <span>{{ leftButton.label }}</span>
+        }
+      </button>
+    }
 
-    <div class="editor-header__titles" *ngIf="title || subtitle">
-      <h1 *ngIf="title" class="editor-header__title">{{ title }}</h1>
-      <p *ngIf="subtitle" class="editor-header__subtitle">{{ subtitle }}</p>
-    </div>
+    @if (title || subtitle) {
+      <div class="editor-header__titles">
+        @if (title) {
+          <h1 class="editor-header__title">{{ title }}</h1>
+        }
+        @if (subtitle) {
+          <p class="editor-header__subtitle">{{ subtitle }}</p>
+        }
+      </div>
+    }
 
-    <button
-      *ngIf="rightButton"
-      type="button"
-      class="{{ buttonClasses(rightButton) }}"
-      [disabled]="rightButton.disabled"
-      (click)="onRightClick()"
-    >
-      <span>{{ rightButton.label }}</span>
-    </button>
+    @if (rightButton) {
+      <button
+        type="button"
+        class="{{ buttonClasses(rightButton) }}"
+        [disabled]="rightButton.disabled"
+        (click)="onRightClick()"
+        >
+        <span>{{ rightButton.label }}</span>
+      </button>
+    }
   </header>
 
   <main class="editor-main">
@@ -35,82 +47,94 @@
       <ng-content select="[editor-before-list]"></ng-content>
     </section>
 
-    <section class="editor-exercises" *ngIf="hasExercises(); else emptyStateBlock">
-      <ng-container *ngFor="let exercise of workout?.exercises; trackBy: trackExercise">
-        <div
-          class="editor-exercise-card"
-          [class.editor-exercise-card--drag-over]="isDragOver(exercise.id)"
-          [class.editor-exercise-card--dragging]="isDragging(exercise.id)"
-          [attr.draggable]="enableReorder ? true : null"
-          *ngIf="enableReorder; else nonDraggableCard"
-          appDraggable
-          [dragItemId]="exercise.id"
-          [draggedId]="resolvedDraggedId"
-          [dragOverId]="resolvedDragOverId"
-          (dragReorder)="exerciseReorder.emit($event)"
-        >
-          <app-exercise-card
-            [exercise]="exercise"
-            [mode]="exerciseMode"
-            [showMenu]="showMenu"
-            [showAddSetButton]="showAddSetButton"
-            [showCompleteColumn]="showCompleteColumn"
-            [menuItems]="menuItems"
-            (action)="exerciseAction.emit($event)"
-          ></app-exercise-card>
-        </div>
-        <ng-template #nonDraggableCard>
-          <div class="editor-exercise-card">
-            <app-exercise-card
-              [exercise]="exercise"
-              [mode]="exerciseMode"
-              [showMenu]="showMenu"
-              [showAddSetButton]="showAddSetButton"
-              [showCompleteColumn]="showCompleteColumn"
-              [menuItems]="menuItems"
-              (action)="exerciseAction.emit($event)"
-            ></app-exercise-card>
-          </div>
-        </ng-template>
-      </ng-container>
-    </section>
-
-    <ng-template #emptyStateBlock>
-      <section class="editor-empty" *ngIf="!loading">
-        <div *ngIf="emptyState?.iconPath" class="editor-empty__icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path [attr.d]="emptyState?.iconPath" />
-          </svg>
-        </div>
-        <h2 *ngIf="emptyState?.title" class="editor-empty__title">{{ emptyState?.title }}</h2>
-        <p *ngIf="emptyState?.message" class="editor-empty__message">{{ emptyState?.message }}</p>
+    @if (hasExercises()) {
+      <section class="editor-exercises">
+        @for (exercise of workout?.exercises; track trackExercise($index, exercise)) {
+          @if (enableReorder) {
+            <div
+              class="editor-exercise-card"
+              [class.editor-exercise-card--drag-over]="isDragOver(exercise.id)"
+              [class.editor-exercise-card--dragging]="isDragging(exercise.id)"
+              [attr.draggable]="enableReorder ? true : null"
+              appDraggable
+              [dragItemId]="exercise.id"
+              [draggedId]="resolvedDraggedId"
+              [dragOverId]="resolvedDragOverId"
+              (dragReorder)="exerciseReorder.emit($event)"
+              >
+              <app-exercise-card
+                [exercise]="exercise"
+                [mode]="exerciseMode"
+                [showMenu]="showMenu"
+                [showAddSetButton]="showAddSetButton"
+                [showCompleteColumn]="showCompleteColumn"
+                [menuItems]="menuItems"
+                (action)="exerciseAction.emit($event)"
+              ></app-exercise-card>
+            </div>
+          } @else {
+            <div class="editor-exercise-card">
+              <app-exercise-card
+                [exercise]="exercise"
+                [mode]="exerciseMode"
+                [showMenu]="showMenu"
+                [showAddSetButton]="showAddSetButton"
+                [showCompleteColumn]="showCompleteColumn"
+                [menuItems]="menuItems"
+                (action)="exerciseAction.emit($event)"
+              ></app-exercise-card>
+            </div>
+          }
+        }
       </section>
-    </ng-template>
+    } @else {
+      @if (!loading) {
+        <section class="editor-empty">
+          @if (emptyState?.iconPath) {
+            <div class="editor-empty__icon">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path [attr.d]="emptyState?.iconPath" />
+              </svg>
+            </div>
+          }
+          @if (emptyState?.title) {
+            <h2 class="editor-empty__title">{{ emptyState?.title }}</h2>
+          }
+          @if (emptyState?.message) {
+            <p class="editor-empty__message">{{ emptyState?.message }}</p>
+          }
+        </section>
+      }
+    }
+
 
     <section class="editor-after-list">
       <ng-content select="[editor-after-list]"></ng-content>
     </section>
   </main>
 
-  <footer class="editor-footer" *ngIf="bottomPrimary || bottomSecondary">
-    <button
-      *ngIf="bottomPrimary"
-      type="button"
-      class="{{ buttonClasses(bottomPrimary) }}"
-      [disabled]="bottomPrimary.disabled"
-      (click)="triggerBottomPrimary()"
-    >
-      {{ bottomPrimary.label }}
-    </button>
-
-    <button
-      *ngIf="bottomSecondary"
-      type="button"
-      class="{{ buttonClasses(bottomSecondary) }}"
-      [disabled]="bottomSecondary.disabled"
-      (click)="triggerBottomSecondary()"
-    >
-      {{ bottomSecondary.label }}
-    </button>
-  </footer>
+  @if (bottomPrimary || bottomSecondary) {
+    <footer class="editor-footer">
+      @if (bottomPrimary) {
+        <button
+          type="button"
+          class="{{ buttonClasses(bottomPrimary) }}"
+          [disabled]="bottomPrimary.disabled"
+          (click)="triggerBottomPrimary()"
+          >
+          {{ bottomPrimary.label }}
+        </button>
+      }
+      @if (bottomSecondary) {
+        <button
+          type="button"
+          class="{{ buttonClasses(bottomSecondary) }}"
+          [disabled]="bottomSecondary.disabled"
+          (click)="triggerBottomSecondary()"
+          >
+          {{ bottomSecondary.label }}
+        </button>
+      }
+    </footer>
+  }
 </div>

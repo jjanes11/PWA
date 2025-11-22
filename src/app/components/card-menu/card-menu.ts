@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, signal, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { BottomMenuComponent, BottomMenuItem } from '../bottom-menu/bottom-menu';
 
 // Re-export for backwards compatibility
@@ -8,7 +8,7 @@ export type MenuItem = BottomMenuItem;
 @Component({
   selector: 'app-card-menu',
   standalone: true,
-  imports: [CommonModule, BottomMenuComponent],
+  imports: [BottomMenuComponent],
   templateUrl: './card-menu.html',
   host: {
     '(click)': 'onHostClick($event)'

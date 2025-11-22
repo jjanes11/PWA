@@ -1,12 +1,12 @@
 import { Component, signal, inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-bottom-nav',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <nav class="jacaona-bottom-nav">
       <div class="jacaona-nav-items">

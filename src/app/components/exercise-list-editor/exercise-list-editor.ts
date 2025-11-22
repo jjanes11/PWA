@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, WritableSignal, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Workout, Routine, Exercise } from '../../models/workout.models';
 import { ExerciseCardComponent, ExerciseActionEvent, ExerciseCardMode } from '../exercise-card/exercise-card';
 import { MenuItem } from '../card-menu/card-menu';
@@ -28,7 +28,7 @@ export interface ExerciseListEditorEmptyState {
 @Component({
   selector: 'app-exercise-list-editor',
   standalone: true,
-  imports: [CommonModule, ExerciseCardComponent, DraggableDirective],
+  imports: [ExerciseCardComponent, DraggableDirective],
   templateUrl: './exercise-list-editor.html',
   styleUrl: './exercise-list-editor.css'
 })

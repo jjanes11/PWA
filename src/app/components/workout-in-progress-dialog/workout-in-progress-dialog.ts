@@ -1,5 +1,5 @@
 import { Component, inject, computed, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, NavigationEnd } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { WorkoutUiService } from '../../services/workout-ui.service';
@@ -10,7 +10,7 @@ import { filter, map, startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-workout-in-progress-dialog',
   standalone: true,
-  imports: [CommonModule, ConfirmationDialog],
+  imports: [ConfirmationDialog],
   template: `
     @if (showDialog()) {
       <div class="jacaona-dialog-overlay">

@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { RoutineService } from '../../services/routine.service';
@@ -13,7 +13,7 @@ import { RoutineCardComponent } from '../routine-card/routine-card';
 
 @Component({
   selector: 'app-start-workout',
-  imports: [CommonModule, ConfirmationDialog, ThreeButtonDialog, RoutineCardComponent],
+  imports: [ConfirmationDialog, ThreeButtonDialog, RoutineCardComponent],
   templateUrl: './start-workout.html',
   styleUrl: './start-workout.css'
 })

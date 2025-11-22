@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -20,7 +20,7 @@ import { useWorkoutEntityEditor } from '../../utils/workout-entity-editor';
 @Component({
   selector: 'app-create-routine',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConfirmationDialog, SetTypeMenuComponent, ExerciseListEditorComponent],
+  imports: [FormsModule, ConfirmationDialog, SetTypeMenuComponent, ExerciseListEditorComponent],
   templateUrl: './create-routine.html',
   styleUrl: './create-routine.css'
 })

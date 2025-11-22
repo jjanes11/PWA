@@ -1,5 +1,5 @@
 import { Component, signal, computed, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule, Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { ActiveWorkoutService } from '../../services/active-workout.service';
@@ -12,7 +12,7 @@ import { WorkoutCardComponent } from '../workout-card/workout-card';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, ConfirmationDialog, StatCardComponent, WorkoutCardComponent],
+  imports: [RouterModule, ConfirmationDialog, StatCardComponent, WorkoutCardComponent],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

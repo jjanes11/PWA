@@ -1,11 +1,11 @@
 import { Component, input, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Workout } from '../../models/workout.models';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
 
 @Component({
   selector: 'app-workout-card',
-  imports: [CommonModule, CardMenuComponent],
+  imports: [CardMenuComponent],
   template: `
     <div class="jacaona-workout-card">
       <div class="jacaona-workout-card-content" (click)="cardClick.emit()">

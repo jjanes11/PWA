@@ -1,5 +1,5 @@
 import { Component, inject, effect, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
@@ -18,7 +18,7 @@ import { useEntityLoader } from '../../utils/entity-loader';
 
 @Component({
   selector: 'app-edit-workout',
-  imports: [CommonModule, FormsModule, SetTypeMenuComponent, ExerciseListEditorComponent, WorkoutStatsComponent, WorkoutTitleInputComponent, WorkoutWhenComponent, WorkoutDescriptionComponent],
+  imports: [FormsModule, SetTypeMenuComponent, ExerciseListEditorComponent, WorkoutStatsComponent, WorkoutTitleInputComponent, WorkoutWhenComponent, WorkoutDescriptionComponent],
   templateUrl: './edit-workout.html',
   styleUrl: './edit-workout.css',
 })

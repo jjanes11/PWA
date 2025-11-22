@@ -1,5 +1,5 @@
 import { Component, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -9,7 +9,7 @@ import { TopBarComponent } from '../top-bar/top-bar';
 
 @Component({
   selector: 'app-create-exercise',
-  imports: [CommonModule, FormsModule, TopBarComponent],
+  imports: [FormsModule, TopBarComponent],
   templateUrl: './create-exercise.html',
   styleUrl: './create-exercise.css'
 })

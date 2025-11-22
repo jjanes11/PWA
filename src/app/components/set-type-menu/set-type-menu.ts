@@ -7,7 +7,7 @@ import {
   effect,
   inject
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { WorkoutEditorService } from '../../services/workout-editor.service';
 import { BottomMenuComponent, BottomMenuItem } from '../bottom-menu/bottom-menu';
 import { SetType, WorkoutEntity } from '../../models/workout.models';
@@ -15,7 +15,7 @@ import { SetType, WorkoutEntity } from '../../models/workout.models';
 @Component({
   selector: 'app-set-type-menu',
   standalone: true,
-  imports: [CommonModule, BottomMenuComponent],
+  imports: [BottomMenuComponent],
   templateUrl: './set-type-menu.html'
 })
 export class SetTypeMenuComponent<T extends WorkoutEntity = WorkoutEntity> {

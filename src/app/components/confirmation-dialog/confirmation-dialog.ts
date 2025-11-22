@@ -1,9 +1,9 @@
 import { Component, signal, output, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-confirmation-dialog',
-  imports: [CommonModule],
+  imports: [],
   template: `
     @if (isVisible()) {
       <div class="jacaona-dialog-overlay" (click)="onOverlayClick()">

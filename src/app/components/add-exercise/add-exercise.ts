@@ -1,5 +1,5 @@
 import { Component, signal, computed, inject, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -14,7 +14,7 @@ import { Workout, Routine, WorkoutSource, WorkoutEntity } from '../../models/wor
 
 @Component({
   selector: 'app-add-exercise',
-  imports: [CommonModule, FormsModule, TopBarComponent],
+  imports: [FormsModule, TopBarComponent],
   templateUrl: './add-exercise.html',
   styleUrl: './add-exercise.css'
 })

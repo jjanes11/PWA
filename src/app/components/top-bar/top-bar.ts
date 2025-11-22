@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 export type TopBarButtonType = 'back' | 'menu' | 'text';
 
@@ -13,7 +13,7 @@ export interface TopBarButton {
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="jacaona-top-bar">
       <!-- Left Button -->

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Set } from '../../models/workout.models';
 import { getSetTypeDisplay, getSetTypeClass } from '../../utils/set-type.utils';
@@ -25,7 +25,7 @@ export interface SetTypeClickEvent {
 @Component({
   selector: 'app-sets-table',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './sets-table.html',
   styleUrl: './sets-table.css'
 })

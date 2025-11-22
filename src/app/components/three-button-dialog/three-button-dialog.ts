@@ -1,9 +1,9 @@
 import { Component, input, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-three-button-dialog',
-  imports: [CommonModule],
+  imports: [],
   template: `
     @if (isVisible()) {
       <div class="jacaona-dialog-overlay" (click)="onOverlayClick()">

@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { BottomSheetDialog } from '../bottom-sheet-dialog/bottom-sheet-dialog';
 
 export interface BottomMenuItem {
@@ -14,7 +14,7 @@ export interface BottomMenuItem {
 @Component({
   selector: 'app-bottom-menu',
   standalone: true,
-  imports: [CommonModule, BottomSheetDialog],
+  imports: [BottomSheetDialog],
   template: `
     <app-bottom-sheet-dialog [isOpen]="isOpen()" (closed)="closed.emit()">
       @if (title()) {

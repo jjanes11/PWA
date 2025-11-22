@@ -1,5 +1,5 @@
 import { Component, inject, effect, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Routine, WorkoutSource } from '../../models/workout.models';
@@ -15,7 +15,7 @@ import { useEntityLoader } from '../../utils/entity-loader';
 @Component({
   selector: 'app-edit-routine',
   standalone: true,
-  imports: [CommonModule, FormsModule, SetTypeMenuComponent, ExerciseListEditorComponent],
+  imports: [FormsModule, SetTypeMenuComponent, ExerciseListEditorComponent],
   templateUrl: './edit-routine.html',
   styleUrl: './edit-routine.css'
 })

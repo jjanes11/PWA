@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-bottom-sheet-dialog',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     @if (isOpen) {
       <div class="jacaona-menu-overlay" (click)="onOverlayClick()">

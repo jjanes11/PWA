@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Exercise } from '../../models/workout.models';
 import { SetsTableComponent, SetChangeEvent, SetCompleteEvent, SetTypeClickEvent } from '../sets-table/sets-table';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
@@ -15,7 +15,7 @@ export interface ExerciseActionEvent {
 @Component({
   selector: 'app-exercise-card',
   standalone: true,
-  imports: [CommonModule, SetsTableComponent, CardMenuComponent],
+  imports: [SetsTableComponent, CardMenuComponent],
   templateUrl: './exercise-card.html',
   styleUrl: './exercise-card.css'
 })
