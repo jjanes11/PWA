@@ -34,13 +34,13 @@
   --jacaona-warning-yellow: #facc15;
   --jacaona-danger: #f85149;
   
-  /* Light Theme Colors (for bottom nav, etc.) */
-  --jacaona-light-bg: #ffffff;
-  --jacaona-light-border: #e0e0e0;
-  --jacaona-light-gray: #f5f5f5;
-  --jacaona-light-text-muted: #6b7280;
-  --jacaona-light-accent: #667eea;
-  --jacaona-light-accent-bg: #f0f4ff;
+  /* Bottom Nav Colors (light-themed navigation bar) */
+  --jacaona-nav-bg: #ffffff;
+  --jacaona-nav-border: #e0e0e0;
+  --jacaona-nav-hover-bg: #f5f5f5;
+  --jacaona-nav-text: #6b7280;
+  --jacaona-nav-active: #667eea;
+  --jacaona-nav-active-bg: #f0f4ff;
   
   
   /* ========================================

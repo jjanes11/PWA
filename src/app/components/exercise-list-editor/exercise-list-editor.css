@@ -74,7 +74,7 @@
 
 .jacaona-exercise-editor__btn--primary {
   background: var(--jacaona-accent-blue);
-  color: var(--jacaona-light-bg);
+  color: #ffffff;
 }
 
 .jacaona-exercise-editor__btn--secondary {
