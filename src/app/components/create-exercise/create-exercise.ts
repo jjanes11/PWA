@@ -5,10 +5,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { computed } from '@angular/core';
 import { ExerciseService } from '../../services/exercise.service';
+import { TopBarComponent } from '../top-bar/top-bar';
 
 @Component({
   selector: 'app-create-exercise',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TopBarComponent],
   templateUrl: './create-exercise.html',
   styleUrl: './create-exercise.css'
 })

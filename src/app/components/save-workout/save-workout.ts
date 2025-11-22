@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { WorkoutStatsComponent } from '../workout-stats/workout-stats';
+import { TopBarComponent } from '../top-bar/top-bar';
 import { WorkoutTitleInputComponent } from '../workout-title-input/workout-title-input';
 import { WorkoutWhenComponent } from '../workout-when/workout-when';
 import { WorkoutDescriptionComponent } from '../workout-description/workout-description';
 
 @Component({
   selector: 'app-save-workout',
-  imports: [CommonModule, FormsModule, WorkoutStatsComponent, WorkoutTitleInputComponent, WorkoutWhenComponent, WorkoutDescriptionComponent],
+  imports: [CommonModule, FormsModule, WorkoutStatsComponent, TopBarComponent, WorkoutTitleInputComponent, WorkoutWhenComponent, WorkoutDescriptionComponent],
   templateUrl: './save-workout.html',
   styleUrl: './save-workout.css'
 })

@@ -4,62 +4,6 @@
   padding-bottom: 80px;
 }
 
-/* Top Bar */
-.jacaona-top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--jacaona-space-lg);
-  background: var(--jacaona-bg-secondary);
-  border-bottom: 1px solid var(--jacaona-border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.jacaona-back-btn {
-  background: transparent;
-  border: none;
-  color: var(--jacaona-text-primary);
-  cursor: pointer;
-  padding: var(--jacaona-space-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--jacaona-radius-md);
-  transition: background-color 0.15s ease;
-}
-
-.jacaona-back-btn:hover {
-  background: var(--jacaona-bg-tertiary);
-}
-
-.jacaona-page-title {
-  color: var(--jacaona-text-primary);
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0;
-  flex: 1;
-  text-align: center;
-}
-
-.jacaona-menu-btn {
-  background: transparent;
-  border: none;
-  color: var(--jacaona-text-primary);
-  cursor: pointer;
-  padding: var(--jacaona-space-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--jacaona-radius-md);
-  transition: background-color 0.15s ease;
-}
-
-.jacaona-menu-btn:hover {
-  background: var(--jacaona-bg-tertiary);
-}
-
 /* Main Content */
 .jacaona-main-content {
   padding: var(--jacaona-space-xl);

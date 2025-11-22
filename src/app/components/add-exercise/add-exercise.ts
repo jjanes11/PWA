@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ExerciseService, Exercise } from '../../services/exercise.service';
+import { TopBarComponent } from '../top-bar/top-bar';
 import { WorkoutService } from '../../services/workout.service';
 import { ActiveWorkoutService } from '../../services/active-workout.service';
 import { RoutineDraftService } from '../../services/routine-draft.service';
@@ -13,7 +14,7 @@ import { Workout, Routine, WorkoutSource, WorkoutEntity } from '../../models/wor
 
 @Component({
   selector: 'app-add-exercise',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TopBarComponent],
   templateUrl: './add-exercise.html',
   styleUrl: './add-exercise.css'
 })

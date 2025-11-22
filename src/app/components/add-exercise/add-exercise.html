@@ -1,14 +1,12 @@
 <div class="jacaona-add-exercise-container">
   <!-- Top Bar -->
-  <div class="jacaona-top-bar">
-    <button class="jacaona-cancel-btn" (click)="cancel()">
-      Cancel
-    </button>
-    <h1 class="jacaona-page-title">{{ isReplaceMode() ? 'Replace Exercise' : 'Add Exercise' }}</h1>
-    <button class="jacaona-create-btn" (click)="create()">
-      Create
-    </button>
-  </div>
+  <app-top-bar
+    [title]="isReplaceMode() ? 'Replace Exercise' : 'Add Exercise'"
+    [leftButton]="{ type: 'text', text: 'Cancel' }"
+    [rightButton]="{ type: 'text', text: 'Create' }"
+    (leftAction)="cancel()"
+    (rightAction)="create()"
+  />
 
   <!-- Search Field -->
   <div class="jacaona-search-container">

@@ -6,13 +6,14 @@ import { map } from 'rxjs/operators';
 import { WorkoutService } from '../../services/workout.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { BottomMenuComponent, BottomMenuItem } from '../bottom-menu/bottom-menu';
+import { TopBarComponent } from '../top-bar/top-bar';
 import { ExerciseCardComponent } from '../exercise-card/exercise-card';
 import { WorkoutStatsComponent } from '../workout-stats/workout-stats';
 import { Workout } from '../../models/workout.models';
 
 @Component({
   selector: 'app-workout-detail',
-  imports: [CommonModule, ConfirmationDialog, BottomMenuComponent, ExerciseCardComponent, WorkoutStatsComponent],
+  imports: [CommonModule, ConfirmationDialog, BottomMenuComponent, TopBarComponent, ExerciseCardComponent, WorkoutStatsComponent],
   templateUrl: './workout-detail.html',
   styleUrl: './workout-detail.css',
 })
