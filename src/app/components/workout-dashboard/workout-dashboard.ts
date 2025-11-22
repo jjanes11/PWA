@@ -152,10 +152,9 @@ export class WorkoutDashboardComponent {
   private saveAsRoutine(): void {
     const workoutId = this.selectedWorkoutId();
     if (workoutId) {
-      // Navigate to routine/new with workout data in state, don't create a draft yet
+      // Navigate to routine/new with workout ID as query param
       this.router.navigate(['/routine/new'], {
-        state: { 
-          returnUrl: '/home',
+        queryParams: { 
           sourceWorkoutId: workoutId
         }
       });

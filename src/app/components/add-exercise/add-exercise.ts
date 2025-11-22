@@ -51,7 +51,7 @@ export class AddExercise {
 
       if (!workoutId || !sourceParam) {
         console.error('Missing workoutId or source in query params');
-        this.router.navigate(['/workouts']);
+        this.router.navigate(['/start-workout']);
         return;
       }
 
@@ -79,7 +79,7 @@ export class AddExercise {
 
       if (!entity) {
         console.error(`Entity not found: ${workoutId} (source: ${sourceParam})`);
-        this.router.navigate(['/workouts']);
+        this.router.navigate(['/start-workout']);
         return;
       }
 

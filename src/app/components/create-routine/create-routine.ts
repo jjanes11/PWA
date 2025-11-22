@@ -90,7 +90,7 @@ export class CreateRoutineComponent {
     if (sourceWorkoutId) {
       const sourceWorkout = this.workoutService.findWorkoutById(sourceWorkoutId);
       if (!sourceWorkout) {
-        this.router.navigate(['/workouts']);
+        this.router.navigate(['/start-workout']);
         return;
       }
       const draftWorkout = this.routineDraftService.createDraftFromWorkout(sourceWorkout);

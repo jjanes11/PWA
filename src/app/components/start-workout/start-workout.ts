@@ -12,12 +12,12 @@ import { ThreeButtonDialog } from '../three-button-dialog/three-button-dialog';
 import { RoutineCardComponent } from '../routine-card/routine-card';
 
 @Component({
-  selector: 'app-workout-list',
+  selector: 'app-start-workout',
   imports: [CommonModule, ConfirmationDialog, ThreeButtonDialog, RoutineCardComponent],
-  templateUrl: './workout-list.html',
-  styleUrl: './workout-list.css'
+  templateUrl: './start-workout.html',
+  styleUrl: './start-workout.css'
 })
-export class WorkoutListComponent {
+export class StartWorkoutComponent {
   private router = inject(Router);
   private workoutService = inject(WorkoutService);
   private routineService = inject(RoutineService);

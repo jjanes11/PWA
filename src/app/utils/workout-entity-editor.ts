@@ -213,15 +213,15 @@ export function useWorkoutEntityEditor<T extends WorkoutEntity>(
 function getDefaultReturnUrl(source: WorkoutSource): string {
   switch (source) {
     case WorkoutSource.ActiveWorkout:
-      return '/workouts';
+      return '/start-workout';
     case WorkoutSource.RoutineDraft:
-      return '/workouts';
+      return '/start-workout';
     case WorkoutSource.PersistedWorkout:
       return '/home';
     case WorkoutSource.PersistedRoutine:
-      return '/workouts';
+      return '/start-workout';
     default:
-      return '/workouts';
+      return '/start-workout';
   }
 }
 

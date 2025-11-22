@@ -87,11 +87,11 @@ export class AddWorkoutComponent {
     // Only show dialog if workout has exercises
     if (workout && workout.exercises.length > 0) {
       this.uiService.showWorkoutInProgressDialog();
-      this.router.navigate(['/workouts']);
+      this.router.navigate(['/start-workout']);
     } else {
       // No exercises, perform cleanup and navigate back
       this.cleanup.performCleanup();
-      this.router.navigate(['/workouts']);
+      this.router.navigate(['/start-workout']);
     }
   }
 
@@ -103,7 +103,7 @@ export class AddWorkoutComponent {
     } else {
       // If no exercises, just go back
       this.cleanup.performCleanup();
-      this.router.navigate(['/workouts']);
+      this.router.navigate(['/start-workout']);
     }
   }
 
@@ -125,6 +125,6 @@ export class AddWorkoutComponent {
 
   private handleDiscardConfirm(): void {
     this.cleanup.performCleanup();
-    this.router.navigate(['/workouts']);
+    this.router.navigate(['/start-workout']);
   }
 }
