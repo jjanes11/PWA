@@ -15,14 +15,10 @@
   <!-- Main Content -->
   <div class="jacaona-main-content">
     <!-- Workout Title Input -->
-    <div class="jacaona-input-section">
-      <input 
-        type="text" 
-        class="jacaona-title-input" 
-        placeholder="Workout title"
-        [(ngModel)]="workoutTitle"
-      />
-    </div>
+    <app-workout-title-input
+      [value]="workoutTitle()"
+      (valueChange)="workoutTitle.set($event)"
+    />
 
     <!-- Workout Summary -->
     <div class="jacaona-summary-section">
@@ -33,23 +29,15 @@
     <div class="jacaona-separator"></div>
 
     <!-- When Section -->
-    <div class="jacaona-when-section">
-      <div class="jacaona-section-title">When</div>
-      <div class="jacaona-when-value">{{ workoutDateTime() }}</div>
-    </div>
+    <app-workout-when [dateTime]="workoutDateTime()" />
 
     <!-- Separator -->
     <div class="jacaona-separator"></div>
 
     <!-- Description Section -->
-    <div class="jacaona-description-section">
-      <div class="jacaona-section-title">Description</div>
-      <textarea 
-        class="jacaona-description-input" 
-        placeholder="How did your workout go? Leave some notes"
-        [(ngModel)]="workoutDescription"
-        rows="4"
-      ></textarea>
-    </div>
+    <app-workout-description
+      [value]="workoutDescription()"
+      (valueChange)="workoutDescription.set($event)"
+    />
   </div>
 </div>

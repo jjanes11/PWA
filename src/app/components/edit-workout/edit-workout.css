@@ -4,31 +4,6 @@
   background: var(--jacaona-bg-primary);
 }
 
-.jacaona-input-section {
-  margin-bottom: var(--jacaona-space-xl);
-}
-
-.jacaona-title-input {
-  width: 100%;
-  background: var(--jacaona-bg-secondary);
-  border: 1px solid var(--jacaona-border);
-  border-radius: var(--jacaona-radius-md);
-  padding: var(--jacaona-space-lg);
-  color: white;
-  font-size: 16px;
-  font-family: var(--jacaona-font-primary);
-  outline: none;
-  transition: border-color 0.15s ease;
-}
-
-.jacaona-title-input::placeholder {
-  color: var(--jacaona-text-muted);
-}
-
-.jacaona-title-input:focus {
-  border-color: var(--jacaona-accent-blue);
-}
-
 .jacaona-summary-section {
   margin-bottom: var(--jacaona-space-lg);
 }
@@ -37,50 +12,6 @@
   height: 1px;
   background: var(--jacaona-border);
   margin: var(--jacaona-space-xl) 0;
-}
-
-.jacaona-when-section {
-  margin-bottom: var(--jacaona-space-lg);
-}
-
-.jacaona-section-title {
-  color: var(--jacaona-text-muted);
-  font-size: 14px;
-  font-weight: var(--jacaona-font-weight-medium);
-  margin-bottom: var(--jacaona-space-md);
-}
-
-.jacaona-when-value {
-  color: var(--jacaona-text-secondary);
-  font-size: 16px;
-  font-weight: var(--jacaona-font-weight-medium);
-}
-
-.jacaona-description-section {
-  margin-bottom: var(--jacaona-space-lg);
-}
-
-.jacaona-description-input {
-  width: 100%;
-  background: var(--jacaona-bg-secondary);
-  border: 1px solid var(--jacaona-border);
-  border-radius: var(--jacaona-radius-md);
-  padding: var(--jacaona-space-lg);
-  color: white;
-  font-size: 16px;
-  font-family: var(--jacaona-font-primary);
-  outline: none;
-  resize: vertical;
-  min-height: 100px;
-  transition: border-color 0.15s ease;
-}
-
-.jacaona-description-input::placeholder {
-  color: var(--jacaona-text-muted);
-}
-
-.jacaona-description-input:focus {
-  border-color: var(--jacaona-accent-blue);
 }
 
 .jacaona-exercises-section {
