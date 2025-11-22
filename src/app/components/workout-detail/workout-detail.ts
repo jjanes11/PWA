@@ -7,11 +7,12 @@ import { WorkoutService } from '../../services/workout.service';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { BottomMenuComponent, BottomMenuItem } from '../bottom-menu/bottom-menu';
 import { ExerciseCardComponent } from '../exercise-card/exercise-card';
+import { WorkoutStatsComponent } from '../workout-stats/workout-stats';
 import { Workout } from '../../models/workout.models';
 
 @Component({
   selector: 'app-workout-detail',
-  imports: [CommonModule, ConfirmationDialog, BottomMenuComponent, ExerciseCardComponent],
+  imports: [CommonModule, ConfirmationDialog, BottomMenuComponent, ExerciseCardComponent, WorkoutStatsComponent],
   templateUrl: './workout-detail.html',
   styleUrl: './workout-detail.css',
 })

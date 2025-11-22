@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
+import { WorkoutStatsComponent } from '../workout-stats/workout-stats';
 
 @Component({
   selector: 'app-save-workout',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, WorkoutStatsComponent],
   templateUrl: './save-workout.html',
   styleUrl: './save-workout.css'
 })

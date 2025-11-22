@@ -82,36 +82,6 @@
   opacity: 0.9;
 }
 
-/* Stats Row */
-.jacaona-stats-row {
-  display: flex;
-  gap: var(--jacaona-space-lg);
-  margin-bottom: var(--jacaona-space-xl);
-}
-
-.jacaona-stat-item {
-  flex: 1;
-  text-align: center;
-}
-
-.jacaona-stat-label {
-  color: var(--jacaona-text-muted);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: var(--jacaona-space-xs);
-}
-
-.jacaona-stat-value {
-  color: var(--jacaona-text-primary);
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.jacaona-stat-primary {
-  color: var(--jacaona-accent-blue);
-}
-
 /* Separator */
 .jacaona-separator {
   height: 1px;
@@ -169,14 +139,6 @@
 @media (max-width: 768px) {
   .jacaona-main-content {
     padding: var(--jacaona-space-lg);
-  }
-
-  .jacaona-stats-row {
-    gap: var(--jacaona-space-md);
-  }
-
-  .jacaona-stat-value {
-    font-size: 20px;
   }
 
   .jacaona-exercise-item {

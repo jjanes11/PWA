@@ -94,35 +94,6 @@
   margin-bottom: var(--jacaona-space-lg);
 }
 
-.jacaona-stats-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--jacaona-space-lg);
-}
-
-.jacaona-stat-item {
-  text-align: center;
-}
-
-.jacaona-stat-label {
-  color: var(--jacaona-text-muted);
-  font-size: 12px;
-  font-weight: var(--jacaona-font-weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: var(--jacaona-space-xs);
-}
-
-.jacaona-stat-value {
-  color: white;
-  font-size: 18px;
-  font-weight: var(--jacaona-font-weight-semibold);
-}
-
-.jacaona-stat-primary {
-  color: var(--jacaona-accent-blue);
-}
-
 /* Separator */
 .jacaona-separator {
   height: 1px;
@@ -182,13 +153,5 @@
 @media (max-width: 480px) {
   .jacaona-main-content {
     padding: var(--jacaona-space-md);
-  }
-  
-  .jacaona-stats-row {
-    gap: var(--jacaona-space-md);
-  }
-  
-  .jacaona-stat-value {
-    font-size: 16px;
   }
 }

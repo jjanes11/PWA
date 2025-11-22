@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
+import { WorkoutStatsComponent } from '../workout-stats/workout-stats';
 import { Workout, WorkoutSource } from '../../models/workout.models';
 import { SetTypeMenuComponent } from '../set-type-menu/set-type-menu';
 import { ExerciseActionEvent } from '../exercise-card/exercise-card';
@@ -14,7 +15,7 @@ import { useEntityLoader } from '../../utils/entity-loader';
 
 @Component({
   selector: 'app-edit-workout',
-  imports: [CommonModule, FormsModule, SetTypeMenuComponent, ExerciseListEditorComponent],
+  imports: [CommonModule, FormsModule, SetTypeMenuComponent, ExerciseListEditorComponent, WorkoutStatsComponent],
   templateUrl: './edit-workout.html',
   styleUrl: './edit-workout.css',
 })

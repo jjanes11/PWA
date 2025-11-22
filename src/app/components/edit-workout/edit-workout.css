@@ -33,35 +33,6 @@
   margin-bottom: var(--jacaona-space-lg);
 }
 
-.jacaona-stats-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--jacaona-space-lg);
-}
-
-.jacaona-stat-item {
-  text-align: center;
-}
-
-.jacaona-stat-label {
-  color: var(--jacaona-text-muted);
-  font-size: 12px;
-  font-weight: var(--jacaona-font-weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: var(--jacaona-space-xs);
-}
-
-.jacaona-stat-value {
-  color: white;
-  font-size: 24px;
-  font-weight: var(--jacaona-font-weight-bold);
-}
-
-.jacaona-stat-primary {
-  color: var(--jacaona-accent-blue);
-}
-
 .jacaona-separator {
   height: 1px;
   background: var(--jacaona-border);
@@ -127,13 +98,5 @@
 @media (max-width: 768px) {
   .jacaona-main-content {
     padding: var(--jacaona-space-md);
-  }
-
-  .jacaona-stats-row {
-    gap: var(--jacaona-space-md);
-  }
-
-  .jacaona-stat-value {
-    font-size: 20px;
   }
 }

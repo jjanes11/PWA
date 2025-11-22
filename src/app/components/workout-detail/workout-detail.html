@@ -24,20 +24,7 @@
       }
       
       <!-- Workout Stats -->
-      <div class="jacaona-stats-row">
-        <div class="jacaona-stat-item">
-          <div class="jacaona-stat-label">Duration</div>
-          <div class="jacaona-stat-value jacaona-stat-primary">{{ workoutStats().duration }}</div>
-        </div>
-        <div class="jacaona-stat-item">
-          <div class="jacaona-stat-label">Volume</div>
-          <div class="jacaona-stat-value">{{ workoutStats().volume }} kg</div>
-        </div>
-        <div class="jacaona-stat-item">
-          <div class="jacaona-stat-label">Sets</div>
-          <div class="jacaona-stat-value">{{ workoutStats().sets }}</div>
-        </div>
-      </div>
+      <app-workout-stats [stats]="workoutStats()" />
 
       <!-- Separator -->
       <div class="jacaona-separator"></div>
