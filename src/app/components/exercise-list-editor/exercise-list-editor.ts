@@ -114,15 +114,15 @@ export class ExerciseListEditorComponent {
     const variant = config.variant || 'primary';
     switch (variant) {
       case 'icon':
-        return 'editor-btn editor-btn--icon';
+        return 'jacaona-exercise-editor__btn jacaona-exercise-editor__btn--icon';
       case 'ghost':
-        return 'editor-btn editor-btn--ghost';
+        return 'jacaona-exercise-editor__btn jacaona-exercise-editor__btn--ghost';
       case 'secondary':
-        return 'editor-btn editor-btn--secondary';
+        return 'jacaona-exercise-editor__btn jacaona-exercise-editor__btn--secondary';
       case 'danger':
-        return 'editor-btn editor-btn--danger';
+        return 'jacaona-exercise-editor__btn jacaona-exercise-editor__btn--danger';
       default:
-        return 'editor-btn editor-btn--primary';
+        return 'jacaona-exercise-editor__btn jacaona-exercise-editor__btn--primary';
     }
   }
 

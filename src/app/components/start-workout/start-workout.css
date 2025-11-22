@@ -1,4 +1,4 @@
-.start-workout-container {
+.jacaona-start-workout {
   padding: var(--jacaona-space-lg);
   padding-bottom: calc(80px + var(--jacaona-space-xl)); /* Account for bottom nav */
   background: var(--jacaona-bg-primary);
@@ -94,7 +94,7 @@
 
 /* Responsive */
 @media (max-width: 480px) {
-  .start-workout-container {
+  .jacaona-start-workout {
     padding: var(--jacaona-space-md);
     padding-bottom: calc(80px + var(--jacaona-space-lg));
   }

@@ -1,5 +1,5 @@
-<div class="editor-container" [class.editor-container--loading]="loading">
-  <header class="editor-header">
+<div class="jacaona-exercise-editor" [class.jacaona-exercise-editor--loading]="loading">
+  <header class="jacaona-exercise-editor__header">
     @if (leftButton) {
       <button
         type="button"
@@ -20,12 +20,12 @@
     }
 
     @if (title || subtitle) {
-      <div class="editor-header__titles">
+      <div class="jacaona-exercise-editor__titles">
         @if (title) {
-          <h1 class="editor-header__title">{{ title }}</h1>
+          <h1 class="jacaona-exercise-editor__title">{{ title }}</h1>
         }
         @if (subtitle) {
-          <p class="editor-header__subtitle">{{ subtitle }}</p>
+          <p class="jacaona-exercise-editor__subtitle">{{ subtitle }}</p>
         }
       </div>
     }
@@ -42,19 +42,19 @@
     }
   </header>
 
-  <main class="editor-main">
-    <section class="editor-before-list">
+  <main class="jacaona-exercise-editor__main">
+    <section class="jacaona-exercise-editor__before-list">
       <ng-content select="[editor-before-list]"></ng-content>
     </section>
 
     @if (hasExercises()) {
-      <section class="editor-exercises">
+      <section class="jacaona-exercise-editor__exercises">
         @for (exercise of workout?.exercises; track trackExercise($index, exercise)) {
           @if (enableReorder) {
             <div
-              class="editor-exercise-card"
-              [class.editor-exercise-card--drag-over]="isDragOver(exercise.id)"
-              [class.editor-exercise-card--dragging]="isDragging(exercise.id)"
+              class="jacaona-exercise-editor__exercise-card"
+              [class.jacaona-exercise-editor__exercise-card--drag-over]="isDragOver(exercise.id)"
+              [class.jacaona-exercise-editor__exercise-card--dragging]="isDragging(exercise.id)"
               [attr.draggable]="enableReorder ? true : null"
               appDraggable
               [dragItemId]="exercise.id"
@@ -73,7 +73,7 @@
               ></app-exercise-card>
             </div>
           } @else {
-            <div class="editor-exercise-card">
+            <div class="jacaona-exercise-editor__exercise-card">
               <app-exercise-card
                 [exercise]="exercise"
                 [mode]="exerciseMode"
@@ -89,32 +89,32 @@
       </section>
     } @else {
       @if (!loading) {
-        <section class="editor-empty">
+        <section class="jacaona-exercise-editor__empty">
           @if (emptyState?.iconPath) {
-            <div class="editor-empty__icon">
+            <div class="jacaona-exercise-editor__empty-icon">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path [attr.d]="emptyState?.iconPath" />
               </svg>
             </div>
           }
           @if (emptyState?.title) {
-            <h2 class="editor-empty__title">{{ emptyState?.title }}</h2>
+            <h2 class="jacaona-exercise-editor__empty-title">{{ emptyState?.title }}</h2>
           }
           @if (emptyState?.message) {
-            <p class="editor-empty__message">{{ emptyState?.message }}</p>
+            <p class="jacaona-exercise-editor__empty-message">{{ emptyState?.message }}</p>
           }
         </section>
       }
     }
 
 
-    <section class="editor-after-list">
+    <section class="jacaona-exercise-editor__after-list">
       <ng-content select="[editor-after-list]"></ng-content>
     </section>
   </main>
 
   @if (bottomPrimary || bottomSecondary) {
-    <footer class="editor-footer">
+    <footer class="jacaona-exercise-editor__footer">
       @if (bottomPrimary) {
         <button
           type="button"
