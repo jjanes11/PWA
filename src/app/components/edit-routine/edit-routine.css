@@ -10,14 +10,7 @@
 }
 
 .jacaona-input-title {
-  width: 100%;
-  background: transparent;
-  color: var(--jacaona-text-primary);
-  border: 0;
-  border-bottom: var(--jacaona-border-width-thin) solid var(--jacaona-border);
-  padding: var(--jacaona-space-md) var(--jacaona-space-xs);
-  font-size: 16px;
-  outline: none;
+  /* Uses .jacaona-input and .jacaona-input--underline from components.css */
 }
 
 .jacaona-input-title::placeholder {

@@ -2,21 +2,12 @@
 .jacaona-exercise-card.jacaona-drag-over {
   border: 2px solid var(--jacaona-accent-blue);
   background: var(--jacaona-bg-quaternary);
-  border-radius: var(--jacaona-radius-lg);
   box-shadow: 0 0 0 2px var(--jacaona-accent-blue) inset;
 }
+
 /* Exercise Card */
 .jacaona-exercise-card {
-  background: var(--jacaona-bg-secondary);
-  border-radius: var(--jacaona-radius-lg);
-  padding: var(--jacaona-space-lg);
-  border: none;
-  transition: box-shadow 0.15s ease;
   margin-bottom: var(--jacaona-space-xl);
-}
-
-.jacaona-exercise-card:hover {
-  box-shadow: var(--jacaona-shadow-card);
 }
 
 /* Exercise Header */

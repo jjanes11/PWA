@@ -7,7 +7,7 @@ export type StatCardColor = 'blue' | 'green' | 'yellow' | 'red';
   selector: 'app-stat-card',
   imports: [CommonModule],
   template: `
-    <div class="jacaona-stat-card">
+    <div class="jacaona-card jacaona-stat-card">
       <div class="jacaona-stat-icon" [ngClass]="'jacaona-stat-' + color()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path [attr.d]="iconPath()"/>
@@ -26,10 +26,6 @@ export type StatCardColor = 'blue' | 'green' | 'yellow' | 'red';
   `,
   styles: [`
     .jacaona-stat-card {
-      background: var(--jacaona-bg-secondary);
-      border: none;
-      border-radius: var(--jacaona-radius-lg);
-      padding: var(--jacaona-space-lg);
       display: flex;
       align-items: center;
       gap: var(--jacaona-space-md);

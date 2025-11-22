@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
     <div class="jacaona-input-section">
       <input 
         type="text" 
-        class="jacaona-title-input" 
+        class="jacaona-input" 
         [placeholder]="placeholder()"
         [value]="value()"
         (input)="onInput($event)"
@@ -19,27 +19,6 @@ import { FormsModule } from '@angular/forms';
   styles: [`
     .jacaona-input-section {
       margin-bottom: var(--jacaona-space-lg);
-    }
-
-    .jacaona-title-input {
-      width: 100%;
-      background: var(--jacaona-bg-secondary);
-      border: 1px solid var(--jacaona-border);
-      border-radius: var(--jacaona-radius-md);
-      padding: var(--jacaona-space-lg);
-      color: white;
-      font-size: 16px;
-      font-family: var(--jacaona-font-primary);
-      outline: none;
-      transition: border-color 0.15s ease;
-    }
-
-    .jacaona-title-input::placeholder {
-      color: var(--jacaona-text-muted);
-    }
-
-    .jacaona-title-input:focus {
-      border-color: var(--jacaona-accent-blue);
     }
   `]
 })

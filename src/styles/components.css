@@ -91,13 +91,20 @@
    CARDS
    ======================================== */
 
+
+   /* Base card styles - shared foundation for all card components */
 .jacaona-card {
   background: var(--jacaona-bg-secondary);
-  border: 1px solid var(--jacaona-border);
   border-radius: var(--jacaona-radius-lg);
   padding: var(--jacaona-space-lg);
 }
 
+/* Card with border */
+.jacaona-card--bordered {
+  border: var(--jacaona-border-width-thin) solid var(--jacaona-border);
+}
+
+/* Interactive card states */
 .jacaona-card--clickable {
   cursor: pointer;
   transition: background-color var(--jacaona-transition-fast);
@@ -107,10 +114,20 @@
   background: var(--jacaona-bg-tertiary);
 }
 
+.jacaona-card--hoverable {
+  transition: box-shadow var(--jacaona-transition-fast);
+}
+
+.jacaona-card--hoverable:hover {
+  box-shadow: var(--jacaona-shadow-card);
+}
+
+/* Card size variants */
 .jacaona-card--compact {
   padding: var(--jacaona-space-md);
 }
 
+/* Card elevation */
 .jacaona-card--elevated {
   box-shadow: var(--jacaona-shadow-md);
 }
@@ -120,37 +137,47 @@
    FORM INPUTS
    ======================================== */
 
+/* Base input styles - shared foundation for inputs and textareas */
 .jacaona-input {
   width: 100%;
-  padding: var(--jacaona-space-md);
-  background: var(--jacaona-bg-tertiary);
-  border: 1px solid var(--jacaona-border);
+  padding: var(--jacaona-space-lg);
+  background: var(--jacaona-bg-secondary);
+  border: var(--jacaona-border-width-thin) solid var(--jacaona-border);
   border-radius: var(--jacaona-radius-md);
   color: var(--jacaona-text-primary);
   font-family: var(--jacaona-font-primary);
-  font-size: var(--jacaona-font-sm);
+  font-size: var(--jacaona-font-base);
+  outline: none;
   transition: border-color var(--jacaona-transition-fast);
 }
 
 .jacaona-input:focus {
-  outline: none;
   border-color: var(--jacaona-accent-blue);
-  box-shadow: var(--jacaona-shadow-focus);
 }
 
 .jacaona-input::placeholder {
   color: var(--jacaona-text-muted);
 }
 
-.jacaona-input--lg {
-  padding: var(--jacaona-space-lg);
-  font-size: var(--jacaona-font-base);
+/* Input variants */
+.jacaona-input--sm {
+  padding: var(--jacaona-space-md);
+  font-size: var(--jacaona-font-sm);
+}
+
+.jacaona-input--underline {
+  background: transparent;
+  border: 0;
+  border-bottom: var(--jacaona-border-width-thin) solid var(--jacaona-border);
+  border-radius: 0;
+  padding: var(--jacaona-space-md) var(--jacaona-space-xs);
 }
 
 .jacaona-input--error {
   border-color: var(--jacaona-danger);
 }
 
+/* Textarea specific */
 .jacaona-textarea {
   resize: vertical;
   min-height: 100px;

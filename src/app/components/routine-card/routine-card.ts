@@ -9,7 +9,7 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
   imports: [DraggableDirective, CardMenuComponent],
   template: `
     <div 
-      class="jacaona-routine-template-card"
+      class="jacaona-card jacaona-routine-template-card"
       [class.jacaona-drag-over]="isDragOver()"
       draggable="true"
       appDraggable
@@ -43,10 +43,6 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
   `,
   styles: [`
     .jacaona-routine-template-card {
-      background: var(--jacaona-bg-secondary);
-      border: none;
-      border-radius: var(--jacaona-radius-lg);
-      padding: var(--jacaona-space-lg);
       display: flex;
       flex-direction: column;
       gap: var(--jacaona-space-md);
