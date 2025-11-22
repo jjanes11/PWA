@@ -133,6 +133,42 @@
 }
 
 
+
+
+/* ========================================
+   BADGES & TAGS
+   ======================================== */
+
+/* Base badge/tag styles - for labeling and categorizing */
+.jacaona-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--jacaona-space-xs) var(--jacaona-space-sm);
+  border-radius: var(--jacaona-radius-sm);
+  font-size: 12px;
+  font-weight: var(--jacaona-font-weight-medium);
+  line-height: 1;
+}
+
+/* Default neutral badge */
+.jacaona-badge--neutral {
+  background: var(--jacaona-bg-tertiary);
+  color: var(--jacaona-text-secondary);
+}
+
+/* Primary accent badge */
+.jacaona-badge--primary {
+  background: var(--jacaona-accent-blue);
+  color: white;
+}
+
+/* Uppercase badge variant (for labels like "CUSTOM") */
+.jacaona-badge--uppercase {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
 /* ========================================
    FORM INPUTS
    ======================================== */

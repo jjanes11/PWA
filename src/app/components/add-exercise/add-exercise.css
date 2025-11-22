@@ -134,17 +134,6 @@
   flex: 1;
 }
 
-.jacaona-custom-badge {
-  background: var(--jacaona-accent-blue);
-  color: white;
-  padding: var(--jacaona-space-xs) var(--jacaona-space-sm);
-  border-radius: var(--jacaona-radius-sm);
-  font-size: 12px;
-  font-weight: var(--jacaona-font-weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
 /* Empty State */
 .jacaona-empty-state {
   padding: var(--jacaona-space-2xl);

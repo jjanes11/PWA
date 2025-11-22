@@ -26,7 +26,7 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
         @if (workout().exercises && workout().exercises.length > 0) {
           <div class="jacaona-workout-preview">
             @for (exercise of workout().exercises.slice(0, 3); track exercise.id) {
-              <span class="jacaona-exercise-tag">{{ exercise.name }}</span>
+              <span class="jacaona-badge jacaona-badge--neutral">{{ exercise.name }}</span>
             }
             @if (workout().exercises.length > 3) {
               <span class="jacaona-exercise-more">+{{ workout().exercises.length - 3 }} more</span>
@@ -105,15 +105,6 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
       display: flex;
       flex-wrap: wrap;
       gap: var(--jacaona-space-sm);
-    }
-
-    .jacaona-exercise-tag {
-      background: var(--jacaona-bg-tertiary);
-      color: var(--jacaona-text-secondary);
-      padding: var(--jacaona-space-xs) var(--jacaona-space-sm);
-      border-radius: var(--jacaona-radius-sm);
-      font-size: 12px;
-      font-weight: var(--jacaona-font-weight-medium);
     }
 
     .jacaona-exercise-more {
