@@ -1,27 +1,15 @@
-import { 
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  signal,
-  effect
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BottomSheetDialog } from '../bottom-sheet-dialog/bottom-sheet-dialog';
+import { BottomMenuComponent, BottomMenuItem } from '../bottom-menu/bottom-menu';
 
-export interface MenuItem {
-  action: string;
-  icon: string;
-  text: string;
-  danger?: boolean;
-}
+// Re-export for backwards compatibility
+export type MenuItem = BottomMenuItem;
 
 @Component({
   selector: 'app-card-menu',
   standalone: true,
-  imports: [CommonModule, BottomSheetDialog],
+  imports: [CommonModule, BottomMenuComponent],
   templateUrl: './card-menu.html',
-  styleUrl: './card-menu.css',
   host: {
     '(click)': 'onHostClick($event)'
   }
@@ -83,8 +71,7 @@ export class CardMenuComponent {
     return this.isOpen();
   }
 
-  executeAction(actionName: string, event: Event): void {
-    event.stopPropagation();
+  onMenuItemSelected(actionName: string): void {
     this.closeMenu();
     this.action.emit(actionName);
   }
