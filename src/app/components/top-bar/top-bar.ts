@@ -1,5 +1,6 @@
 import { Component, input, output } from '@angular/core';
 
+import { IconComponent } from '../icon/icon';
 
 export type TopBarButtonType = 'back' | 'menu' | 'text';
 
@@ -13,16 +14,14 @@ export interface TopBarButton {
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [],
+  imports: [IconComponent],
   template: `
     <div class="jacaona-top-bar">
       <!-- Left Button -->
       @if (leftButton()) {
         @if (leftButton()!.type === 'back') {
           <button class="jacaona-back-btn" (click)="leftAction.emit()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20v-2z"/>
-            </svg>
+            <app-icon name="arrow-left" [size]="20" />
           </button>
         } @else if (leftButton()!.type === 'text') {
           <button class="jacaona-text-btn" (click)="leftAction.emit()">
@@ -40,9 +39,7 @@ export interface TopBarButton {
       @if (rightButton()) {
         @if (rightButton()!.type === 'menu') {
           <button class="jacaona-menu-btn" (click)="rightAction.emit()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-            </svg>
+            <app-icon name="menu-vertical" [size]="20" />
           </button>
         } @else if (rightButton()!.type === 'text') {
           <button 

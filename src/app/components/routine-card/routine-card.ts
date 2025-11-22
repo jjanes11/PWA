@@ -3,10 +3,11 @@ import { Component, input, output, computed, WritableSignal } from '@angular/cor
 import { Routine } from '../../models/workout.models';
 import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
+import { IconComponent } from '../icon/icon';
 
 @Component({
   selector: 'app-routine-card',
-  imports: [DraggableDirective, CardMenuComponent],
+  imports: [DraggableDirective, CardMenuComponent, IconComponent],
   template: `
     <div 
       class="jacaona-routine-template-card"
@@ -35,9 +36,7 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
           [items]="menuItems()"
           (action)="menuAction.emit({routineId: routine().id, action: $event})">
           <button class="jacaona-routine-menu-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-            </svg>
+            <app-icon name="menu-vertical" [size]="20" />
           </button>
         </app-card-menu>
       </div>

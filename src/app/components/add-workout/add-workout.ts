@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Workout, WorkoutSource } from '../../models/workout.models';
 import { WorkoutService } from '../../services/workout.service';
@@ -17,7 +17,7 @@ import { useWorkoutEntityEditor } from '../../utils/workout-entity-editor';
 
 @Component({
   selector: 'app-add-workout',
-  imports: [ConfirmationDialog, SetTypeMenuComponent, ExerciseListEditorComponent],
+  imports: [CommonModule, ConfirmationDialog, SetTypeMenuComponent, ExerciseListEditorComponent],
   templateUrl: './add-workout.html',
   styleUrl: './add-workout.css'
 })

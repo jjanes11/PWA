@@ -2,10 +2,11 @@ import { Component, input, output } from '@angular/core';
 
 import { Workout } from '../../models/workout.models';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
+import { IconComponent } from '../icon/icon';
 
 @Component({
   selector: 'app-workout-card',
-  imports: [CardMenuComponent],
+  imports: [CardMenuComponent, IconComponent],
   template: `
     <div class="jacaona-workout-card">
       <div class="jacaona-workout-card-content" (click)="cardClick.emit()">
@@ -39,9 +40,7 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
         [items]="menuItems()"
         (action)="menuAction.emit($event)">
         <button class="jacaona-workout-menu-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-          </svg>
+          <app-icon name="menu-vertical" [size]="20" />
         </button>
       </app-card-menu>
     </div>
