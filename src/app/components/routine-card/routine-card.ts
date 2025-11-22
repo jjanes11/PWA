@@ -3,11 +3,10 @@ import { Component, input, output, computed, WritableSignal } from '@angular/cor
 import { Routine } from '../../models/workout.models';
 import { DraggableDirective, DragReorderEvent } from '../../directives/draggable.directive';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
-import { IconComponent } from '../icon/icon';
 
 @Component({
   selector: 'app-routine-card',
-  imports: [DraggableDirective, CardMenuComponent, IconComponent],
+  imports: [DraggableDirective, CardMenuComponent],
   template: `
     <div 
       class="jacaona-routine-template-card"
@@ -34,11 +33,8 @@ import { IconComponent } from '../icon/icon';
         <app-card-menu 
           [menuId]="routine().id"
           [items]="menuItems()"
-          (action)="menuAction.emit({routineId: routine().id, action: $event})">
-          <button class="jacaona-routine-menu-btn">
-            <app-icon name="menu-vertical" [size]="20" />
-          </button>
-        </app-card-menu>
+          (action)="menuAction.emit({routineId: routine().id, action: $event})"
+        />
       </div>
       <button class="jacaona-start-routine-btn" (click)="startRoutine.emit(routine())">
         Start Routine
@@ -92,25 +88,6 @@ import { IconComponent } from '../icon/icon';
       font-size: 18px;
       font-weight: var(--jacaona-font-weight-semibold);
       margin: 0 0 var(--jacaona-space-xs) 0;
-    }
-
-    .jacaona-routine-menu-btn {
-      background: transparent;
-      border: none;
-      color: var(--jacaona-text-secondary);
-      cursor: pointer;
-      padding: var(--jacaona-space-xs);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--jacaona-radius-md);
-      transition: all 0.15s ease;
-      flex-shrink: 0;
-    }
-
-    .jacaona-routine-menu-btn:hover {
-      background: var(--jacaona-bg-tertiary);
-      color: var(--jacaona-text-primary);
     }
 
     .jacaona-routine-exercises {

@@ -2,11 +2,10 @@ import { Component, input, output } from '@angular/core';
 
 import { Workout } from '../../models/workout.models';
 import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
-import { IconComponent } from '../icon/icon';
 
 @Component({
   selector: 'app-workout-card',
-  imports: [CardMenuComponent, IconComponent],
+  imports: [CardMenuComponent],
   template: `
     <div class="jacaona-workout-card">
       <div class="jacaona-workout-card-content" (click)="cardClick.emit()">
@@ -38,11 +37,8 @@ import { IconComponent } from '../icon/icon';
       <app-card-menu
         [menuId]="workout().id"
         [items]="menuItems()"
-        (action)="menuAction.emit($event)">
-        <button class="jacaona-workout-menu-btn">
-          <app-icon name="menu-vertical" [size]="20" />
-        </button>
-      </app-card-menu>
+        (action)="menuAction.emit($event)"
+      />
     </div>
   `,
   styles: [`
@@ -75,26 +71,6 @@ import { IconComponent } from '../icon/icon';
     .jacaona-workout-card-content {
       flex: 1;
       cursor: pointer;
-    }
-
-    .jacaona-workout-menu-btn {
-      background: transparent;
-      border: none;
-      color: var(--jacaona-text-secondary);
-      cursor: pointer;
-      padding: var(--jacaona-space-xs);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--jacaona-radius-md);
-      transition: all 0.15s ease;
-      flex-shrink: 0;
-      margin-top: -4px;
-    }
-
-    .jacaona-workout-menu-btn:hover {
-      background: var(--jacaona-bg-tertiary);
-      color: var(--jacaona-text-primary);
     }
 
     .jacaona-workout-header {

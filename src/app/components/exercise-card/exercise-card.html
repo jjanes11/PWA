@@ -6,13 +6,8 @@
       <app-card-menu
         [menuId]="exercise.id"
         [items]="menuItems"
-        (action)="onMenuAction($event)">
-        <button class="jacaona-exercise-menu-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-          </svg>
-        </button>
-      </app-card-menu>
+        (action)="onMenuAction($event)"
+      />
     }
   </div>
 
@@ -29,9 +24,7 @@
   <!-- Add Set Button (edit mode only) -->
   @if (mode === 'edit' && showAddSetButton) {
     <button class="jacaona-add-set-btn" (click)="onAddSet()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-      </svg>
+      <app-icon name="plus" [size]="20" />
       Add Set
     </button>
   }

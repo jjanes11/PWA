@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, signal, effect } from '@angular/core';
 
 import { BottomMenuComponent, BottomMenuItem } from '../bottom-menu/bottom-menu';
+import { IconComponent } from '../icon/icon';
 
 // Re-export for backwards compatibility
 export type MenuItem = BottomMenuItem;
@@ -8,8 +9,32 @@ export type MenuItem = BottomMenuItem;
 @Component({
   selector: 'app-card-menu',
   standalone: true,
-  imports: [BottomMenuComponent],
+  imports: [BottomMenuComponent, IconComponent],
   templateUrl: './card-menu.html',
+  styles: [`
+    :host {
+      display: inline-flex;
+    }
+
+    .jacaona-card-menu-btn {
+      background: transparent;
+      border: none;
+      color: var(--jacaona-text-secondary);
+      cursor: pointer;
+      padding: var(--jacaona-space-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--jacaona-radius-md);
+      transition: all var(--jacaona-transition-fast);
+      flex-shrink: 0;
+    }
+
+    .jacaona-card-menu-btn:hover {
+      background: var(--jacaona-bg-tertiary);
+      color: var(--jacaona-text-primary);
+    }
+  `],
   host: {
     '(click)': 'onHostClick($event)'
   }

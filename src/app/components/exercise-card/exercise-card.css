@@ -35,29 +35,6 @@
   flex: 1;
 }
 
-.jacaona-exercise-menu-btn {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  border-radius: var(--jacaona-radius-sm);
-  color: var(--jacaona-text-secondary);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.jacaona-exercise-menu-btn:hover {
-  background: var(--jacaona-bg-tertiary);
-  color: var(--jacaona-text-primary);
-}
-
-.jacaona-exercise-menu-btn:active {
-  transform: scale(0.95);
-}
-
 /* Add Set Button */
 .jacaona-add-set-btn {
   display: flex;
