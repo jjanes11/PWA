@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "css:audit": "npm run build && purgecss --config ./purgecss.config.js",
+    "css:analyze": "npm run build && echo Analyzing CSS usage... && node scripts/css-analyzer.js"
   },
   "prettier": {
     "printWidth": 100,

@@ -50,3 +50,43 @@
   color: var(--jacaona-text-muted);
   max-width: 300px;
 }
+
+
+/* ========================================
+   EMPTY STATE VARIANTS
+   ======================================== */
+
+/* Home page variant - larger typography with icon background */
+.jacaona-empty-state--home h3 {
+  font-size: var(--jacaona-font-lg);
+  color: var(--jacaona-text-primary);
+  margin: 0 0 var(--jacaona-space-sm) 0;
+}
+
+.jacaona-empty-state--home p {
+  margin: 0 0 var(--jacaona-space-lg) 0;
+}
+
+.jacaona-empty-state--home .jacaona-empty-icon {
+  margin: 0 auto var(--jacaona-space-lg) auto;
+  width: 64px;
+  height: 64px;
+  background: var(--jacaona-bg-tertiary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--jacaona-text-muted);
+}
+
+/* Search results variant - compact */
+.jacaona-empty-state--search p {
+  margin: 0 0 var(--jacaona-space-sm) 0;
+  font-size: var(--jacaona-font-base);
+}
+
+.jacaona-empty-state--search .jacaona-empty-subtitle {
+  font-size: var(--jacaona-font-sm);
+  color: var(--jacaona-text-muted);
+  margin: 0;
+}

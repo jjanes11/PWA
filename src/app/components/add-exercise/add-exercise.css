@@ -134,17 +134,7 @@
   flex: 1;
 }
 
-/* Empty State */
-.jacaona-empty-state {
-  padding: var(--jacaona-space-2xl);
-  text-align: center;
-  color: var(--jacaona-text-secondary);
-}
-
-.jacaona-empty-state p {
-  margin: 0 0 var(--jacaona-space-sm) 0;
-  font-size: 16px;
-}
+/* Empty State - using global .jacaona-empty-state--search variant */
 
 .jacaona-empty-subtitle {
   font-size: 14px;
