@@ -51,44 +51,14 @@
     @if (recentWorkouts().length > 0) {
       <div class="jacaona-workout-list">
         @for (workout of recentWorkouts(); track workout.id) {
-          <div class="jacaona-workout-card">
-            <div class="jacaona-workout-card-content" (click)="navigateToWorkout(workout.id)">
-              <div class="jacaona-workout-header">
-                <div class="jacaona-workout-info">
-                  <h3 class="jacaona-workout-name">{{ workout.name }}</h3>
-                  @if (workout.notes) {
-                    <p class="jacaona-workout-description">{{ workout.notes }}</p>
-                  }
-                  <p class="jacaona-workout-meta">
-                    {{ formatWorkoutDate(workout.date) }} • 
-                    {{ workout.exercises.length || 0 }} exercises •
-                    {{ calculateWorkoutDuration(workout) }}
-                  </p>
-                </div>
-              </div>
-              
-              @if (workout.exercises && workout.exercises.length > 0) {
-                <div class="jacaona-workout-preview">
-                  @for (exercise of workout.exercises.slice(0, 3); track exercise.id) {
-                    <span class="jacaona-exercise-tag">{{ exercise.name }}</span>
-                  }
-                  @if (workout.exercises.length > 3) {
-                    <span class="jacaona-exercise-more">+{{ workout.exercises.length - 3 }} more</span>
-                  }
-                </div>
-              }
-            </div>
-            <app-card-menu
-              [menuId]="workout.id"
-              [items]="menuItems"
-              (action)="handleMenuAction(workout.id, $event)">
-              <button class="jacaona-workout-menu-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-                </svg>
-              </button>
-            </app-card-menu>
-          </div>
+          <app-workout-card
+            [workout]="workout"
+            [formattedDate]="formatWorkoutDate(workout.date)"
+            [duration]="calculateWorkoutDuration(workout)"
+            [menuItems]="menuItems"
+            (cardClick)="navigateToWorkout(workout.id)"
+            (menuAction)="handleMenuAction(workout.id, $event)"
+          />
         }
       </div>
     } @else {

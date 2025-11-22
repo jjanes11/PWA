@@ -2,17 +2,17 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
-import { RoutineService } from '../../services/routine.service';
 import { ActiveWorkoutService } from '../../services/active-workout.service';
 import { RoutineDraftService } from '../../services/routine-draft.service';
-import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
+import { MenuItem } from '../card-menu/card-menu';
 import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { StatCardComponent } from '../stat-card/stat-card';
+import { WorkoutCardComponent } from '../workout-card/workout-card';
 
 @Component({
   selector: 'app-workout-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, CardMenuComponent, ConfirmationDialog, StatCardComponent],
+  imports: [CommonModule, RouterModule, ConfirmationDialog, StatCardComponent, WorkoutCardComponent],
   templateUrl: './workout-dashboard.html',
   styleUrl: './workout-dashboard.css'
 })

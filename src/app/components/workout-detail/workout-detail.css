@@ -166,46 +166,7 @@
 }
 
 /* Bottom Menu */
-.jacaona-menu-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 2000;
-  display: flex;
-  align-items: flex-end;
-  animation: fadeIn 0.2s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.jacaona-bottom-menu {
-  width: 100%;
-  background: var(--jacaona-bg-secondary);
-  border-radius: var(--jacaona-radius-xl) var(--jacaona-radius-xl) 0 0;
-  padding: var(--jacaona-space-lg);
-  padding-bottom: calc(var(--jacaona-space-lg) + env(safe-area-inset-bottom));
-  animation: slideUp 0.3s ease;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
+/* Menu item styles for bottom sheet content */
 .jacaona-menu-item {
   width: 100%;
   display: flex;
