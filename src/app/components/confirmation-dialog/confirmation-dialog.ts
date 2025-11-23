@@ -1,4 +1,4 @@
-import { Component, signal, output, input } from '@angular/core';
+import { Component, output, input } from '@angular/core';
 
 
 @Component({
@@ -42,7 +42,6 @@ import { Component, signal, output, input } from '@angular/core';
     .jacaona-dialog-container {
       background: var(--jacaona-bg-secondary);
       border-radius: var(--jacaona-radius-lg);
-      border: 1px solid var(--jacaona-bg-quaternary);
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
       max-width: 400px;
       width: 100%;
@@ -80,20 +79,19 @@ import { Component, signal, output, input } from '@angular/core';
     }
 
     .jacaona-dialog-danger {
-      background: transparent;
-      color: #ef4444;
-      border: 1px solid #ef4444;
+      background: var(--jacaona-bg-tertiary);
+      color: var(--jacaona-danger);
+      border: none;
     }
 
     .jacaona-dialog-danger:hover {
-      background: #ef4444;
-      color: white;
+      background: var(--jacaona-bg-quaternary);
     }
 
     .jacaona-dialog-cancel {
       background: var(--jacaona-bg-tertiary);
-      color: white;
-      border: 1px solid var(--jacaona-bg-quaternary);
+      color: var(--jacaona-text-primary);
+      border: none;
     }
 
     .jacaona-dialog-cancel:hover {

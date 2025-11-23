@@ -66,10 +66,11 @@
 }
 
 .jacaona-btn--danger {
-  background: var(--jacaona-danger);
-  color: white;
+  background: var(--jacaona-bg-secondary);
+  color: var(--jacaona-danger);
+  border: none;
 }
 
 .jacaona-btn--danger:hover:not(:disabled) {
-  background: #dc2626;
+  background: var(--jacaona-bg-tertiary);
 }

@@ -84,9 +84,9 @@
 }
 
 .jacaona-exercise-editor__btn--danger {
-  background: transparent;
+  background: var(--jacaona-bg-secondary);
   color: var(--jacaona-danger);
-  border: var(--jacaona-border-width-thin) solid var(--jacaona-danger);
+  border: none;
 }
 
 .jacaona-exercise-editor__btn:disabled {
