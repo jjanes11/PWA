@@ -81,7 +81,7 @@
 
 .jacaona-divider {
   height: 1px;
-  background: var(--jacaona-border);
+  background: var(--jacaona-bg-quaternary);
   margin: var(--jacaona-space-xl) 0;
   border: none;
 }

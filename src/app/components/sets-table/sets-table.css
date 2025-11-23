@@ -19,7 +19,7 @@
   font-weight: var(--jacaona-font-weight-semibold);
   letter-spacing: 0.5px;
   padding: var(--jacaona-space-sm) var(--jacaona-space-md);
-  border-bottom: 1px solid var(--jacaona-border);
+  border-bottom: 1px solid var(--jacaona-bg-quaternary);
 }
 
 .jacaona-table-header > div {
@@ -40,7 +40,7 @@
   gap: var(--jacaona-space-md);
   align-items: center;
   padding: var(--jacaona-space-sm) var(--jacaona-space-md);
-  border-bottom: 1px solid var(--jacaona-border-subtle);
+  border-bottom: 1px solid var(--jacaona-bg-quaternary);
   min-height: 48px;
 }
 
@@ -107,7 +107,7 @@
   align-items: center;
   justify-content: center;
   background: transparent;
-  border: 2px solid var(--jacaona-border);
+  border: 2px solid var(--jacaona-bg-quaternary);
   border-radius: var(--jacaona-radius-sm);
   cursor: pointer;
   transition: all 0.15s ease;

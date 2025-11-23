@@ -42,7 +42,7 @@ import { Component, signal, output, input } from '@angular/core';
     .jacaona-dialog-container {
       background: var(--jacaona-bg-secondary);
       border-radius: var(--jacaona-radius-lg);
-      border: 1px solid var(--jacaona-border);
+      border: 1px solid var(--jacaona-bg-quaternary);
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
       max-width: 400px;
       width: 100%;
@@ -93,7 +93,7 @@ import { Component, signal, output, input } from '@angular/core';
     .jacaona-dialog-cancel {
       background: var(--jacaona-bg-tertiary);
       color: white;
-      border: 1px solid var(--jacaona-border);
+      border: 1px solid var(--jacaona-bg-quaternary);
     }
 
     .jacaona-dialog-cancel:hover {

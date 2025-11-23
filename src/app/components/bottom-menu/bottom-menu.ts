@@ -118,7 +118,7 @@ export interface BottomMenuItem {
 
     .jacaona-menu-separator {
       height: 1px;
-      background: var(--jacaona-border);
+      background: var(--jacaona-bg-quaternary);
       margin: var(--jacaona-space-xs) 0;
     }
   `]

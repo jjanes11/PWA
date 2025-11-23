@@ -12,7 +12,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--jacaona-border);
+  border-bottom: 1px solid var(--jacaona-bg-quaternary);
 }
 
 .jacaona-cancel-btn {
@@ -67,7 +67,7 @@
   display: flex;
   align-items: center;
   background: var(--jacaona-bg-secondary);
-  border: 1px solid var(--jacaona-border);
+  border: 1px solid var(--jacaona-bg-quaternary);
   border-radius: var(--jacaona-radius-md);
   padding: var(--jacaona-space-md) var(--jacaona-space-lg);
 }
@@ -103,7 +103,7 @@
 
 .jacaona-exercise-item {
   padding: var(--jacaona-space-lg) var(--jacaona-space-lg);
-  border-bottom: 1px solid var(--jacaona-border);
+  border-bottom: 1px solid var(--jacaona-bg-quaternary);
   cursor: pointer;
   transition: background-color 0.15s ease;
   display: flex;
@@ -169,7 +169,7 @@
   right: 0;
   padding: var(--jacaona-space-lg);
   background: var(--jacaona-bg-primary);
-  border-top: var(--jacaona-border-width-thin) solid var(--jacaona-border);
+  border-top: var(--jacaona-border-width-thin) solid var(--jacaona-bg-quaternary);
   z-index: var(--jacaona-z-dropdown);
   box-shadow: var(--jacaona-shadow-sticky);
 }

@@ -101,7 +101,7 @@ import { Component, input, output } from '@angular/core';
     .jacaona-dialog-btn-cancel {
       background: transparent;
       color: var(--jacaona-text-primary);
-      border: 1px solid var(--jacaona-border);
+      border: 1px solid var(--jacaona-bg-quaternary);
     }
 
     .jacaona-dialog-btn-cancel:hover {

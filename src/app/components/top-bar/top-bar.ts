@@ -61,7 +61,7 @@ export interface TopBarButton {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--jacaona-border);
+      border-bottom: 1px solid var(--jacaona-bg-quaternary);
     }
 
     .jacaona-back-btn {

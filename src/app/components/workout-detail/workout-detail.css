@@ -29,7 +29,7 @@
 /* Separator */
 .jacaona-separator {
   height: 1px;
-  background: var(--jacaona-border);
+  background: var(--jacaona-bg-quaternary);
   margin: var(--jacaona-space-xl) 0;
 }
 

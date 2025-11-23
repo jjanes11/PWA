@@ -22,7 +22,7 @@
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--jacaona-border);
+  border-bottom: 1px solid var(--jacaona-bg-quaternary);
   color: white;
   font-size: 18px;
   font-weight: var(--jacaona-font-weight-medium);

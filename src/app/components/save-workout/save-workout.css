@@ -20,7 +20,7 @@
 .jacaona-title-input {
   width: 100%;
   background: var(--jacaona-bg-secondary);
-  border: 1px solid var(--jacaona-border);
+  border: 1px solid var(--jacaona-bg-quaternary);
   border-radius: var(--jacaona-radius-md);
   padding: var(--jacaona-space-lg);
   color: white;
@@ -46,7 +46,7 @@
 /* Separator */
 .jacaona-separator {
   height: 1px;
-  background: var(--jacaona-border);
+  background: var(--jacaona-bg-quaternary);
   margin: var(--jacaona-space-lg) 0;
 }
 

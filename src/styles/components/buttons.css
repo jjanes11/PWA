@@ -48,7 +48,7 @@
 .jacaona-btn--secondary {
   background: var(--jacaona-bg-tertiary);
   color: var(--jacaona-text-primary);
-  border: 1px solid var(--jacaona-border);
+  border: 1px solid var(--jacaona-bg-quaternary);
 }
 
 .jacaona-btn--secondary:hover:not(:disabled) {

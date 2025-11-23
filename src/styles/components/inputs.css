@@ -13,7 +13,7 @@
   width: 100%;
   padding: var(--jacaona-space-lg);
   background: var(--jacaona-bg-secondary);
-  border: var(--jacaona-border-width-thin) solid var(--jacaona-border);
+  border: var(--jacaona-border-width-thin) solid var(--jacaona-bg-quaternary);
   border-radius: var(--jacaona-radius-md);
   color: var(--jacaona-text-primary);
   font-family: var(--jacaona-font-primary);
@@ -43,7 +43,7 @@
 .jacaona-input--underline {
   background: transparent;
   border: 0;
-  border-bottom: var(--jacaona-border-width-thin) solid var(--jacaona-border);
+  border-bottom: var(--jacaona-border-width-thin) solid var(--jacaona-bg-quaternary);
   border-radius: 0;
   padding: var(--jacaona-space-md) var(--jacaona-space-xs);
 }

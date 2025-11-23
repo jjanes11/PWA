@@ -74,7 +74,7 @@ import { filter, map, startWith } from 'rxjs/operators';
     .jacaona-workout-progress-dialog {
       background: var(--jacaona-bg-secondary);
       border-radius: 0;
-      border-top: 1px solid var(--jacaona-border);
+      border-top: 1px solid var(--jacaona-bg-quaternary);
       padding: var(--jacaona-space-lg) var(--jacaona-space-xl);
       width: 100%;
       max-width: none;

@@ -1,9 +1,9 @@
-import { Component, signal, computed, effect, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import * as echarts from 'echarts';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { BottomNavComponent } from '../bottom-nav/bottom-nav';
 import { BottomMenuComponent, BottomMenuItem } from '../bottom-menu/bottom-menu';
+import { AnalyticsChartComponent, ChartDataPoint } from './analytics-chart/analytics-chart';
 import { WorkoutService } from '../../services/workout.service';
 import { Workout, Exercise, Set } from '../../models/workout.models';
 
@@ -18,15 +18,11 @@ interface ChartData {
 @Component({
   selector: 'app-analytics',
   standalone: true,
-  imports: [CommonModule, TopBarComponent, BottomNavComponent, BottomMenuComponent],
+  imports: [CommonModule, TopBarComponent, BottomNavComponent, BottomMenuComponent, AnalyticsChartComponent],
   templateUrl: './analytics.html',
   styleUrl: './analytics.css'
 })
-export class AnalyticsComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('chartContainer', { static: false }) chartContainer!: ElementRef;
-
-  private chart: echarts.ECharts | null = null;
-  private resizeObserver: ResizeObserver | null = null;
+export class AnalyticsComponent {
 
   // State
   selectedMetric = signal<MetricType>('duration');
@@ -48,110 +44,9 @@ export class AnalyticsComponent implements AfterViewInit, OnDestroy {
     { action: 'All time', text: 'All time', icon: '' }
   ];
 
-  constructor(private workoutService: WorkoutService) {
-    // Update chart when metric or range changes
-    effect(() => {
-      const metric = this.selectedMetric();
-      const range = this.selectedRange();
-      const data = this.chartData();
-      
-      if (this.chart) {
-        this.updateChart(data);
-      }
-    });
-  }
+  constructor(private workoutService: WorkoutService) {}
 
-  ngAfterViewInit() {
-    this.initChart();
-    this.setupResizeObserver();
-  }
-
-  ngOnDestroy() {
-    if (this.chart) {
-      this.chart.dispose();
-    }
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-    }
-  }
-
-  private initChart() {
-    if (this.chartContainer) {
-      this.chart = echarts.init(this.chartContainer.nativeElement);
-      this.updateChart(this.chartData());
-    }
-  }
-
-  private setupResizeObserver() {
-    this.resizeObserver = new ResizeObserver(() => {
-      if (this.chart) {
-        this.chart.resize();
-      }
-    });
-    this.resizeObserver.observe(this.chartContainer.nativeElement);
-  }
-
-  private updateChart(data: ChartData[]) {
-    if (!this.chart) return;
-
-    const option: echarts.EChartsOption = {
-      backgroundColor: 'transparent',
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        top: '10%',
-        containLabel: true
-      },
-      xAxis: {
-        type: 'category',
-        data: data.map(d => d.date),
-        axisLine: {
-          lineStyle: {
-            color: '#30363d' // --jacaona-border
-          }
-        },
-        axisLabel: {
-          color: '#8b949e', // --jacaona-text-secondary
-          fontSize: 12
-        }
-      },
-      yAxis: {
-        type: 'value',
-        axisLine: {
-          show: false
-        },
-        axisTick: {
-          show: false
-        },
-        axisLabel: {
-          color: '#8b949e', // --jacaona-text-secondary
-          fontSize: 12
-        },
-        splitLine: {
-          lineStyle: {
-            color: '#30363d', // --jacaona-border
-            type: 'dashed'
-          }
-        }
-      },
-      series: [
-        {
-          data: data.map(d => d.value),
-          type: 'bar',
-          itemStyle: {
-            color: '#3b82f6', // --jacaona-accent-blue
-            borderRadius: [4, 4, 0, 0]
-          },
-          barWidth: '60%'
-        }
-      ]
-    };
-
-    this.chart.setOption(option);
-  }
-
-  private getChartData(): ChartData[] {
+  private getChartData(): ChartDataPoint[] {
     const workouts = this.workoutService.workoutsSignal()();
     const metric = this.selectedMetric();
     const range = this.selectedRange();
@@ -222,6 +117,16 @@ export class AnalyticsComponent implements AfterViewInit, OnDestroy {
 
   onRangeMenuClose() {
     this.showRangeMenu.set(false);
+  }
+
+  navigateToExercises() {
+    // TODO: Implement navigation to exercises history
+    console.log('Navigate to exercises history');
+  }
+
+  navigateToCalendar() {
+    // TODO: Implement navigation to calendar view
+    console.log('Navigate to calendar view');
   }
 
   private getWeekSummary(): string {

@@ -13,7 +13,7 @@
 /* Update Banner Styles for Jacaona Theme */
 .update-banner {
   background: var(--jacaona-bg-tertiary);
-  border-bottom: 1px solid var(--jacaona-border);
+  border-bottom: 1px solid var(--jacaona-bg-quaternary);
   padding: var(--jacaona-space-md);
 }
 
@@ -55,7 +55,7 @@
 .dismiss-button {
   background: transparent;
   color: var(--jacaona-text-secondary);
-  border: 1px solid var(--jacaona-border);
+  border: 1px solid var(--jacaona-bg-quaternary);
   padding: var(--jacaona-space-sm) var(--jacaona-space-md);
   border-radius: var(--jacaona-radius-sm);
   font-weight: var(--jacaona-font-weight-medium);

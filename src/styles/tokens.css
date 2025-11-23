@@ -10,36 +10,25 @@
      COLOR PALETTE
      ======================================== */
   
-  /* Background Colors */
-  --jacaona-bg-primary: #0d1117;
-  --jacaona-bg-secondary: #161b22;
-  --jacaona-bg-tertiary: #21262d;
-  --jacaona-bg-quaternary: #30363d;
-  
-  /* Accent Colors */
-  --jacaona-accent-blue: #3b82f6;
-  --jacaona-accent-blue-hover: #2563eb;
-  
-  /* Text Colors */
-  --jacaona-text-primary: #f0f6fc;
-  --jacaona-text-secondary: #8b949e;
-  --jacaona-text-muted: #6e7681;
-  
-  /* Border Colors */
-  --jacaona-border: #30363d;
+   /* Backgrounds (4 shades ) */
+   --jacaona-bg-primary: #0d1117;    /* Page background */
+   --jacaona-bg-secondary: #161b22;  /* Cards, nav bars */
+   --jacaona-bg-tertiary: #21262d;   /* Hover states */
+   --jacaona-bg-quaternary: #30363d; /* Inputs, borders */
+
+   /* Accents (2 tokens) */
+   --jacaona-accent-blue: #3b82f6;
+   --jacaona-accent-blue-hover: #2563eb;
+
+   /* Text (3 shades - each semantically distinct) */
+   --jacaona-text-primary: #f0f6fc;   /* Main content */
+   --jacaona-text-secondary: #8b949e; /* Labels, metadata */
+   --jacaona-text-muted: #6e7681;     /* Placeholders, disabled */
   
   /* Semantic Colors */
   --jacaona-success: #3fb950;
   --jacaona-warning-yellow: #facc15;  /* Used for warning states in sets-table, workout-detail */
   --jacaona-danger: #f85149;
-  
-  /* Bottom Nav Colors (light-themed navigation bar) */
-  --jacaona-nav-bg: #ffffff;
-  --jacaona-nav-border: #e0e0e0;
-  --jacaona-nav-hover-bg: #f5f5f5;
-  --jacaona-nav-text: #6b7280;
-  --jacaona-nav-active: #667eea;
-  --jacaona-nav-active-bg: #f0f4ff;
   
   
   /* ========================================

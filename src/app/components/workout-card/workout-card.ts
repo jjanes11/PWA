@@ -45,7 +45,7 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
     .jacaona-workout-card {
       background: transparent;
       border: none;
-      border-bottom: 1px solid var(--jacaona-border);
+      border-bottom: 1px solid var(--jacaona-bg-quaternary);
       border-radius: 0;
       padding: var(--jacaona-space-md);
       cursor: pointer;

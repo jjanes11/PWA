@@ -15,9 +15,9 @@
     </button>
   </div>
 
-  <!-- Chart Container -->
+  <!-- Chart -->
   <div class="jacaona-analytics__chart-wrapper">
-    <div #chartContainer class="jacaona-analytics__chart"></div>
+    <app-analytics-chart [data]="chartData()" />
   </div>
 
   <!-- Metric Selector Buttons -->
@@ -43,6 +43,25 @@
     >
       Reps
     </button>
+  </div>
+
+  <!-- History Section -->
+  <div class="jacaona-analytics__history">
+    <h3 class="jacaona-analytics__history-title">History</h3>
+    <div class="jacaona-analytics__history-nav">
+      <button class="jacaona-analytics__history-btn" (click)="navigateToExercises()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/>
+        </svg>
+        <span>Exercises</span>
+      </button>
+      <button class="jacaona-analytics__history-btn" (click)="navigateToCalendar()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"/>
+        </svg>
+        <span>Calendar</span>
+      </button>
+    </div>
   </div>
 </div>
 

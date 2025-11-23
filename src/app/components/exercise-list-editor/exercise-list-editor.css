@@ -18,7 +18,7 @@
   gap: 12px;
   padding: 12px 16px;
   background: var(--jacaona-bg-secondary);
-  border-bottom: 1px solid var(--jacaona-border);
+  border-bottom: 1px solid var(--jacaona-bg-quaternary);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -80,7 +80,7 @@
 .jacaona-exercise-editor__btn--secondary {
   background: var(--jacaona-bg-tertiary);
   color: var(--jacaona-text-primary);
-  border: var(--jacaona-border-width-thin) solid var(--jacaona-border);
+  border: var(--jacaona-border-width-thin) solid var(--jacaona-bg-quaternary);
 }
 
 .jacaona-exercise-editor__btn--danger {
@@ -163,7 +163,7 @@
   gap: var(--jacaona-space-md);
   padding: var(--jacaona-space-xl) var(--jacaona-space-lg) var(--jacaona-space-3xl) var(--jacaona-space-lg);
   background: var(--jacaona-bg-primary);
-  border-top: var(--jacaona-border-width-thin) solid var(--jacaona-border);
+  border-top: var(--jacaona-border-width-thin) solid var(--jacaona-bg-quaternary);
 }
 
 .jacaona-exercise-editor__footer .jacaona-exercise-editor__btn {
