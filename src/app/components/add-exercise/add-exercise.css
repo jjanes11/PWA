@@ -101,6 +101,17 @@
   min-height: 0; /* Allow flex child to shrink */
 }
 
+.jacaona-section-title {
+  padding: var(--jacaona-space-lg) var(--jacaona-space-lg) var(--jacaona-space-sm);
+  color: var(--jacaona-text-secondary);
+  font-size: var(--jacaona-font-sm);
+  font-weight: var(--jacaona-font-weight-semibold);
+  background: var(--jacaona-bg-primary);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
 .jacaona-exercise-item {
   padding: var(--jacaona-space-lg) var(--jacaona-space-lg);
   border-bottom: 1px solid var(--jacaona-bg-quaternary);
@@ -129,7 +140,7 @@
 
 .jacaona-exercise-name {
   color: white;
-  font-size: 16px;
+  font-size: var(--jacaona-font-base);
   font-weight: var(--jacaona-font-weight-medium);
   flex: 1;
 }

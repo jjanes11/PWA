@@ -26,24 +26,59 @@
 
   <!-- Exercise List -->
   <div class="jacaona-exercise-list">
-    @for (exercise of filteredExercises(); track exercise.id) {
-      <div 
-        class="jacaona-exercise-item"
-        [class.jacaona-exercise-selected]="isExerciseSelected(exercise)"
-        (click)="selectExercise(exercise)"
-      >
-        <span class="jacaona-exercise-name">{{ exercise.name }}</span>
-        @if (exercise.isCustom) {
-          <span class="jacaona-badge jacaona-badge--primary jacaona-badge--uppercase">Custom</span>
+    @if (searchQuery().trim()) {
+      <!-- Search Results -->
+      @for (exercise of allExercises(); track exercise.id) {
+        <div 
+          class="jacaona-exercise-item"
+          [class.jacaona-exercise-selected]="isExerciseSelected(exercise)"
+          (click)="selectExercise(exercise)"
+        >
+          <span class="jacaona-exercise-name">{{ exercise.name }}</span>
+          @if (exercise.isCustom) {
+            <span class="jacaona-badge jacaona-badge--primary jacaona-badge--uppercase">Custom</span>
+          }
+        </div>
+      }
+      
+      @if (allExercises().length === 0) {
+        <div class="jacaona-empty-state jacaona-empty-state--search">
+          <p>No exercises found</p>
+          <p class="jacaona-empty-subtitle">Try a different search term</p>
+        </div>
+      }
+    } @else {
+      <!-- Recent Exercises Section -->
+      @if (recentExercises().length > 0) {
+        <div class="jacaona-section-title">Recent exercises</div>
+        @for (exercise of recentExercises(); track exercise.id) {
+          <div 
+            class="jacaona-exercise-item"
+            [class.jacaona-exercise-selected]="isExerciseSelected(exercise)"
+            (click)="selectExercise(exercise)"
+          >
+            <span class="jacaona-exercise-name">{{ exercise.name }}</span>
+            @if (exercise.isCustom) {
+              <span class="jacaona-badge jacaona-badge--primary jacaona-badge--uppercase">Custom</span>
+            }
+          </div>
         }
-      </div>
-    }
-    
-    @if (filteredExercises().length === 0) {
-      <div class="jacaona-empty-state jacaona-empty-state--search">
-        <p>No exercises found</p>
-        <p class="jacaona-empty-subtitle">Try a different search term</p>
-      </div>
+      }
+
+      <!-- All Exercises Section -->
+      <div class="jacaona-section-title">All exercises</div>
+      @for (exercise of allExercises(); track exercise.id) {
+        <div 
+          class="jacaona-exercise-item"
+          [class.jacaona-exercise-selected]="isExerciseSelected(exercise)"
+          (click)="selectExercise(exercise)"
+        >
+          <span class="jacaona-exercise-name">{{ exercise.name }}</span>
+          @if (exercise.isCustom) {
+            <span class="jacaona-badge jacaona-badge--primary jacaona-badge--uppercase">Custom</span>
+          }
+        </div>
+      }
     }
   </div>
 

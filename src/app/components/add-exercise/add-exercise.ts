@@ -99,6 +99,40 @@ export class AddExercise {
     );
   });
 
+  recentExercises = computed(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    if (query) {
+      return []; // Don't show recent exercises when searching
+    }
+
+    const workouts = this.dataStore.workoutsSignal()();
+    const finishedWorkouts = workouts
+      .filter(w => w.completed)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 10); // Get last 10 finished workouts
+
+    const recentExerciseNames = new Set<string>();
+    const recentExercisesList: Exercise[] = [];
+
+    for (const workout of finishedWorkouts) {
+      for (const exercise of workout.exercises) {
+        if (!recentExerciseNames.has(exercise.name)) {
+          recentExerciseNames.add(exercise.name);
+          const exerciseData = this.exerciseService.allExercises().find(e => e.name === exercise.name);
+          if (exerciseData) {
+            recentExercisesList.push(exerciseData);
+          }
+        }
+      }
+    }
+
+    return recentExercisesList.slice(0, 8); // Show max 8 recent exercises
+  });
+
+  allExercises = computed(() => {
+    return this.filteredExercises();
+  });
+
   cancel(): void {
     this.router.navigateByUrl(this.returnUrl());
   }
