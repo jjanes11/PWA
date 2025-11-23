@@ -1,0 +1,16 @@
+<div class="jacaona-exercises-container">
+  <!-- Top Bar -->
+  <app-top-bar
+    title="Exercises"
+    [leftButton]="{ type: 'back' }"
+    (leftAction)="goBack()"
+  />
+
+  <!-- Exercise List Component -->
+  <app-exercise-list
+    [allExercises]="allExercises()"
+    [recentExercises]="recentExercises()"
+    [selectedExercises]="[]"
+    (exerciseClick)="onExerciseClick($event)"
+  />
+</div>

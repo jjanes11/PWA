@@ -1,10 +1,9 @@
 import { Component, signal, computed, inject, effect } from '@angular/core';
-
-import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ExerciseService, Exercise } from '../../services/exercise.service';
 import { TopBarComponent } from '../top-bar/top-bar';
+import { ExerciseListComponent } from '../exercise-list/exercise-list';
 import { WorkoutService } from '../../services/workout.service';
 import { ActiveWorkoutService } from '../../services/active-workout.service';
 import { RoutineDraftService } from '../../services/routine-draft.service';
@@ -14,7 +13,7 @@ import { Workout, Routine, WorkoutSource, WorkoutEntity } from '../../models/wor
 
 @Component({
   selector: 'app-add-exercise',
-  imports: [FormsModule, TopBarComponent],
+  imports: [TopBarComponent, ExerciseListComponent],
   templateUrl: './add-exercise.html',
   styleUrl: './add-exercise.css'
 })
@@ -41,6 +40,33 @@ export class AddExercise {
   returnUrl = computed(() => this.queryParams()?.['returnUrl'] || '/workout/new');
   isReplaceMode = computed(() => !!this.queryParams()?.['replaceExerciseId']);
   replaceExerciseId = computed(() => this.queryParams()?.['replaceExerciseId'] || null);
+
+  allExercises = computed(() => this.exerciseService.allExercises());
+
+  recentExercises = computed(() => {
+    const workouts = this.dataStore.workoutsSignal()();
+    const finishedWorkouts = workouts
+      .filter(w => w.completed)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 10);
+
+    const recentExerciseNames = new Set<string>();
+    const recentExercisesList: Exercise[] = [];
+
+    for (const workout of finishedWorkouts) {
+      for (const exercise of workout.exercises) {
+        if (!recentExerciseNames.has(exercise.name)) {
+          recentExerciseNames.add(exercise.name);
+          const exerciseData = this.exerciseService.allExercises().find(e => e.name === exercise.name);
+          if (exerciseData) {
+            recentExercisesList.push(exerciseData);
+          }
+        }
+      }
+    }
+
+    return recentExercisesList.slice(0, 8);
+  });
 
   constructor() {
     // Load workout context from query params
@@ -88,51 +114,6 @@ export class AddExercise {
     });
   }
 
-  filteredExercises = computed(() => {
-    const query = this.searchQuery().toLowerCase().trim();
-    if (!query) {
-      return this.exerciseService.allExercises();
-    }
-    return this.exerciseService.allExercises().filter(exercise => 
-      exercise.name.toLowerCase().includes(query) ||
-      exercise.category.toLowerCase().includes(query)
-    );
-  });
-
-  recentExercises = computed(() => {
-    const query = this.searchQuery().toLowerCase().trim();
-    if (query) {
-      return []; // Don't show recent exercises when searching
-    }
-
-    const workouts = this.dataStore.workoutsSignal()();
-    const finishedWorkouts = workouts
-      .filter(w => w.completed)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 10); // Get last 10 finished workouts
-
-    const recentExerciseNames = new Set<string>();
-    const recentExercisesList: Exercise[] = [];
-
-    for (const workout of finishedWorkouts) {
-      for (const exercise of workout.exercises) {
-        if (!recentExerciseNames.has(exercise.name)) {
-          recentExerciseNames.add(exercise.name);
-          const exerciseData = this.exerciseService.allExercises().find(e => e.name === exercise.name);
-          if (exerciseData) {
-            recentExercisesList.push(exerciseData);
-          }
-        }
-      }
-    }
-
-    return recentExercisesList.slice(0, 8); // Show max 8 recent exercises
-  });
-
-  allExercises = computed(() => {
-    return this.filteredExercises();
-  });
-
   cancel(): void {
     this.router.navigateByUrl(this.returnUrl());
   }
@@ -144,11 +125,7 @@ export class AddExercise {
     });
   }
 
-  onSearchChange(): void {
-    // Search is handled by the computed filteredExercises
-  }
-
-  selectExercise(exercise: Exercise): void {
+  onExerciseClick(exercise: Exercise): void {
     if (this.isReplaceMode()) {
       this.replaceExercise(exercise);
     } else {

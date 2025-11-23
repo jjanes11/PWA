@@ -44,6 +44,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/analytics/analytics').then(m => m.AnalyticsComponent)
   },
   { 
+    path: 'exercises', 
+    loadComponent: () => import('./components/exercises/exercises').then(m => m.ExercisesComponent)
+  },
+  { 
     path: 'profile', 
     loadComponent: () => import('./components/home/home').then(m => m.HomeComponent) // Temporary placeholder
   },

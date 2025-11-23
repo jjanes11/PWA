@@ -5,197 +5,28 @@
   flex-direction: column;
 }
 
-/* Top Bar */
-.jacaona-top-bar {
-  background: var(--jacaona-bg-secondary);
-  padding: var(--jacaona-space-lg) var(--jacaona-space-lg);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--jacaona-bg-quaternary);
-}
-
-.jacaona-cancel-btn {
-  background: transparent;
-  border: none;
-  color: var(--jacaona-accent-blue);
-  cursor: pointer;
-  padding: var(--jacaona-space-sm);
-  border-radius: var(--jacaona-radius-md);
-  font-weight: var(--jacaona-font-weight-medium);
-  font-size: 16px;
-  transition: background-color 0.15s ease;
-}
-
-.jacaona-cancel-btn:hover {
-  background: var(--jacaona-bg-tertiary);
-}
-
-.jacaona-page-title {
-  color: white;
-  font-size: 18px;
-  font-weight: var(--jacaona-font-weight-semibold);
-  margin: 0;
-  flex: 1;
-  text-align: center;
-}
-
-.jacaona-create-btn {
-  background: transparent;
-  border: none;
-  color: var(--jacaona-accent-blue);
-  cursor: pointer;
-  padding: var(--jacaona-space-sm);
-  border-radius: var(--jacaona-radius-md);
-  font-weight: var(--jacaona-font-weight-medium);
-  font-size: 16px;
-  transition: background-color 0.15s ease;
-}
-
-.jacaona-create-btn:hover {
-  background: var(--jacaona-bg-tertiary);
-}
-
-/* Search Container */
-.jacaona-search-container {
-  padding: var(--jacaona-space-lg);
-  background: var(--jacaona-bg-primary);
-}
-
-.jacaona-search-field {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background: var(--jacaona-bg-secondary);
-  border: 1px solid var(--jacaona-bg-quaternary);
-  border-radius: var(--jacaona-radius-md);
-  padding: var(--jacaona-space-md) var(--jacaona-space-lg);
-}
-
-.jacaona-search-icon {
-  color: var(--jacaona-text-muted);
-  margin-right: var(--jacaona-space-md);
-  flex-shrink: 0;
-}
-
-.jacaona-search-input {
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 16px;
-  width: 100%;
-  outline: none;
-  font-family: var(--jacaona-font-primary);
-}
-
-.jacaona-search-input::placeholder {
-  color: var(--jacaona-text-muted);
-}
-
-/* Exercise List */
-.jacaona-exercise-list {
-  flex: 1;
-  background: var(--jacaona-bg-primary);
-  overflow-y: auto;
-  padding-bottom: 100px; /* Space for bottom button when visible */
-  min-height: 0; /* Allow flex child to shrink */
-}
-
-.jacaona-section-title {
-  padding: var(--jacaona-space-lg) var(--jacaona-space-lg) var(--jacaona-space-sm);
-  color: var(--jacaona-text-secondary);
-  font-size: var(--jacaona-font-sm);
-  font-weight: var(--jacaona-font-weight-semibold);
-  background: var(--jacaona-bg-primary);
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.jacaona-exercise-item {
-  padding: var(--jacaona-space-lg) var(--jacaona-space-lg);
-  border-bottom: 1px solid var(--jacaona-bg-quaternary);
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.jacaona-exercise-item:hover {
-  background: var(--jacaona-bg-secondary);
-}
-
-.jacaona-exercise-item:last-child {
-  border-bottom: none;
-}
-
-.jacaona-exercise-item.jacaona-exercise-selected {
-  background: var(--jacaona-accent-blue);
-}
-
-.jacaona-exercise-item.jacaona-exercise-selected:hover {
-  background: var(--jacaona-accent-blue);
-}
-
-.jacaona-exercise-name {
-  color: white;
-  font-size: var(--jacaona-font-base);
-  font-weight: var(--jacaona-font-weight-medium);
-  flex: 1;
-}
-
-/* Empty State - using global .jacaona-empty-state--search variant */
-
-.jacaona-empty-subtitle {
-  font-size: 14px;
-  color: var(--jacaona-text-muted);
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .jacaona-search-container {
-    padding: var(--jacaona-space-md);
-  }
-  
-  .jacaona-exercise-item {
-    padding: var(--jacaona-space-md) var(--jacaona-space-lg);
-  }
-  
-  .jacaona-page-title {
-    font-size: 16px;
-  }
-  
-  .jacaona-cancel-btn,
-  .jacaona-create-btn {
-    font-size: 14px;
-  }
-}
-
-/* Bottom Button */
+/* Bottom Button Container */
 .jacaona-bottom-button-container {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   padding: var(--jacaona-space-lg);
-  background: var(--jacaona-bg-primary);
-  border-top: var(--jacaona-border-width-thin) solid var(--jacaona-bg-quaternary);
-  z-index: var(--jacaona-z-dropdown);
-  box-shadow: var(--jacaona-shadow-sticky);
+  background: linear-gradient(to top, var(--jacaona-bg-primary) 70%, transparent);
+  z-index: 10;
 }
 
 .jacaona-add-exercise-btn {
   width: 100%;
   background: var(--jacaona-accent-blue);
-  color: white;
+  color: var(--jacaona-text-primary);
   border: none;
   padding: var(--jacaona-space-lg);
   border-radius: var(--jacaona-radius-md);
-  font-size: 16px;
+  font-size: var(--jacaona-font-base);
   font-weight: var(--jacaona-font-weight-semibold);
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color var(--jacaona-transition-fast);
   font-family: var(--jacaona-font-primary);
 }
 

@@ -1,5 +1,6 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { BottomNavComponent } from '../bottom-nav/bottom-nav';
 import { BottomMenuComponent, BottomMenuItem } from '../bottom-menu/bottom-menu';
@@ -23,6 +24,7 @@ interface ChartData {
   styleUrl: './analytics.css'
 })
 export class AnalyticsComponent {
+  private router = inject(Router);
 
   // State
   selectedMetric = signal<MetricType>('duration');
@@ -120,8 +122,7 @@ export class AnalyticsComponent {
   }
 
   navigateToExercises() {
-    // TODO: Implement navigation to exercises history
-    console.log('Navigate to exercises history');
+    this.router.navigate(['/exercises']);
   }
 
   navigateToCalendar() {

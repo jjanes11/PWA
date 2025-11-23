@@ -1,0 +1,104 @@
+/* Search Container */
+.jacaona-search-container {
+  padding: var(--jacaona-space-lg);
+  background: var(--jacaona-bg-primary);
+}
+
+.jacaona-search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--jacaona-bg-secondary);
+  border: 1px solid var(--jacaona-bg-quaternary);
+  border-radius: var(--jacaona-radius-md);
+  padding: var(--jacaona-space-md) var(--jacaona-space-lg);
+}
+
+.jacaona-search-icon {
+  color: var(--jacaona-text-muted);
+  margin-right: var(--jacaona-space-md);
+  flex-shrink: 0;
+}
+
+.jacaona-search-input {
+  background: transparent;
+  border: none;
+  color: var(--jacaona-text-primary);
+  font-size: var(--jacaona-font-base);
+  width: 100%;
+  outline: none;
+  font-family: var(--jacaona-font-primary);
+}
+
+.jacaona-search-input::placeholder {
+  color: var(--jacaona-text-muted);
+}
+
+/* Exercise List */
+.jacaona-exercise-list {
+  flex: 1;
+  background: var(--jacaona-bg-primary);
+  overflow-y: auto;
+  padding-bottom: var(--jacaona-space-2xl);
+  min-height: 0;
+}
+
+.jacaona-section-title {
+  padding: var(--jacaona-space-lg) var(--jacaona-space-lg) var(--jacaona-space-sm);
+  color: var(--jacaona-text-secondary);
+  font-size: var(--jacaona-font-sm);
+  font-weight: var(--jacaona-font-weight-semibold);
+  background: var(--jacaona-bg-primary);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.jacaona-exercise-item {
+  padding: var(--jacaona-space-lg) var(--jacaona-space-lg);
+  border-bottom: 1px solid var(--jacaona-bg-quaternary);
+  cursor: pointer;
+  transition: background-color var(--jacaona-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.jacaona-exercise-item:hover {
+  background: var(--jacaona-bg-secondary);
+}
+
+.jacaona-exercise-item:last-child {
+  border-bottom: none;
+}
+
+.jacaona-exercise-item.jacaona-exercise-selected {
+  background: var(--jacaona-accent-blue);
+}
+
+.jacaona-exercise-item.jacaona-exercise-selected:hover {
+  background: var(--jacaona-accent-blue);
+}
+
+.jacaona-exercise-name {
+  color: var(--jacaona-text-primary);
+  font-size: var(--jacaona-font-sm);
+  font-weight: var(--jacaona-font-weight-medium);
+  flex: 1;
+}
+
+.jacaona-empty-subtitle {
+  font-size: var(--jacaona-font-sm);
+  color: var(--jacaona-text-muted);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .jacaona-search-container {
+    padding: var(--jacaona-space-md);
+  }
+  
+  .jacaona-exercise-item {
+    padding: var(--jacaona-space-md);
+  }
+}
