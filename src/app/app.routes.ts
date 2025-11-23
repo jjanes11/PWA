@@ -41,7 +41,7 @@ export const routes: Routes = [
   },
   { 
     path: 'analytics', 
-    loadComponent: () => import('./components/home/home').then(m => m.HomeComponent) // Temporary placeholder
+    loadComponent: () => import('./components/analytics/analytics').then(m => m.AnalyticsComponent)
   },
   { 
     path: 'profile', 

@@ -1,0 +1,60 @@
+<app-top-bar title="Analytics" />
+
+<div class="jacaona-analytics">
+  <!-- Week Summary & Range Selector -->
+  <div class="jacaona-analytics__range-wrapper">
+    <div class="jacaona-analytics__week-summary">{{ weekSummary() }}</div>
+    <button 
+      class="jacaona-btn jacaona-btn--ghost jacaona-analytics__range-btn"
+      (click)="toggleRangeMenu()"
+    >
+      <span>{{ selectedRange() }}</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M7 10l5 5 5-5z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Chart Container -->
+  <div class="jacaona-analytics__chart-wrapper">
+    <div #chartContainer class="jacaona-analytics__chart"></div>
+  </div>
+
+  <!-- Metric Selector Buttons -->
+  <div class="jacaona-analytics__metric-selector">
+    <button
+      class="jacaona-analytics__metric-btn"
+      [class.jacaona-analytics__metric-btn--active]="selectedMetric() === 'duration'"
+      (click)="selectMetric('duration')"
+    >
+      Duration
+    </button>
+    <button
+      class="jacaona-analytics__metric-btn"
+      [class.jacaona-analytics__metric-btn--active]="selectedMetric() === 'volume'"
+      (click)="selectMetric('volume')"
+    >
+      Volume
+    </button>
+    <button
+      class="jacaona-analytics__metric-btn"
+      [class.jacaona-analytics__metric-btn--active]="selectedMetric() === 'reps'"
+      (click)="selectMetric('reps')"
+    >
+      Reps
+    </button>
+  </div>
+</div>
+
+<app-bottom-nav />
+
+<!-- Range Selection Menu -->
+@if (showRangeMenu()) {
+  <app-bottom-menu
+    [isOpen]="showRangeMenu()"
+    title="Time Range"
+    [items]="rangeMenuItems"
+    (itemSelected)="onRangeMenuAction($event)"
+    (closed)="onRangeMenuClose()"
+  />
+}
