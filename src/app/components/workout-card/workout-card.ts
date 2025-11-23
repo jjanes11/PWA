@@ -43,9 +43,8 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
   `,
   styles: [`
     .jacaona-workout-card {
-      background: transparent;
+      background: var(--jacaona-bg-secondary);
       border: none;
-      border-bottom: 1px solid var(--jacaona-bg-quaternary);
       border-radius: 0;
       padding: var(--jacaona-space-md);
       cursor: pointer;

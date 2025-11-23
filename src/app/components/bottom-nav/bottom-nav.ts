@@ -71,7 +71,6 @@ import { filter } from 'rxjs/operators';
       left: 0;
       right: 0;
       background: var(--jacaona-bg-secondary);
-      border-top: 1px solid var(--jacaona-bg-quaternary);
       z-index: var(--jacaona-z-dropdown);
       padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
     }
@@ -106,6 +105,10 @@ import { filter } from 'rxjs/operators';
 
     .jacaona-bottom-nav__item--active {
       color: var(--jacaona-accent-blue);
+    }
+
+    .jacaona-bottom-nav__item:active {
+      background: var(--jacaona-bg-tertiary);
     }
 
     .jacaona-bottom-nav__icon {

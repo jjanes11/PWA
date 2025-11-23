@@ -44,9 +44,9 @@
 .jacaona-workout-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 1px;
   width: 100%;
-  background: var(--jacaona-bg-secondary);
+  background: var(--jacaona-bg-quaternary);
   border-radius: var(--jacaona-radius-lg);
   overflow: hidden;
 }
