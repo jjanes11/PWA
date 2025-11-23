@@ -104,11 +104,7 @@ import { filter } from 'rxjs/operators';
     }
 
     .jacaona-bottom-nav__item--active {
-      color: var(--jacaona-accent-blue);
-    }
-
-    .jacaona-bottom-nav__item:active {
-      background: var(--jacaona-bg-tertiary);
+      color: var(--jacaona-accent-blue) !important;
     }
 
     .jacaona-bottom-nav__icon {
@@ -155,6 +151,7 @@ export class BottomNavComponent {
   }
 
   navigateToTab(tab: string) {
+    this.activeTab.set(tab); // Update immediately for instant feedback
     this.router.navigate([`/${tab}`]);
   }
 
