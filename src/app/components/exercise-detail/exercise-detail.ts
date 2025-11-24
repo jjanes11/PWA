@@ -2,9 +2,10 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TopBarComponent } from '../top-bar/top-bar';
-import { BaseChartComponent } from '../base-chart/base-chart';
+import { BaseChartComponent, ChartSelectionEvent } from '../base-chart/base-chart';
 import { TimeRangeSelectorComponent, TimeRange } from '../time-range-selector/time-range-selector';
 import { MetricSelectorComponent, MetricOption } from '../metric-selector/metric-selector';
+import { ChartInfoDisplayComponent } from '../chart-info-display/chart-info-display';
 import { DataStoreService } from '../../services/data-store.service';
 import { Workout, Exercise as WorkoutExercise } from '../../models/workout.models';
 
@@ -13,7 +14,7 @@ type MetricType = 'heaviest' | 'oneRepMax' | 'bestSetVolume' | 'workoutVolume' |
 @Component({
   selector: 'app-exercise-detail',
   standalone: true,
-  imports: [CommonModule, TopBarComponent, BaseChartComponent, TimeRangeSelectorComponent, MetricSelectorComponent],
+  imports: [CommonModule, TopBarComponent, BaseChartComponent, TimeRangeSelectorComponent, MetricSelectorComponent, ChartInfoDisplayComponent],
   templateUrl: './exercise-detail.html',
   styleUrl: './exercise-detail.css'
 })
@@ -25,6 +26,7 @@ export class ExerciseDetailComponent {
   exerciseName = signal<string>('');
   selectedMetric = signal<MetricType>('heaviest');
   selectedRange = signal<TimeRange>('Last 3 months');
+  selectedDataPoint = signal<ChartSelectionEvent | null>(null);
 
   metricOptions: MetricOption<MetricType>[] = [
     { id: 'heaviest', label: 'Heaviest Weight' },
@@ -87,6 +89,26 @@ export class ExerciseDetailComponent {
     return option?.label || '';
   });
 
+  chartInfoText = computed(() => {
+    const selected = this.selectedDataPoint();
+    if (selected) {
+      return this.formatDataPointInfo(selected);
+    }
+    
+    // Show last data point info by default
+    const data = this.chartData();
+    if (data.length > 0) {
+      const lastPoint = data[data.length - 1];
+      return this.formatDataPointInfo({
+        date: lastPoint.date,
+        value: lastPoint.value,
+        dataIndex: data.length - 1
+      });
+    }
+    
+    return 'No data available';
+  });
+
   private filterWorkoutsByRange(workouts: Workout[], range: TimeRange): Workout[] {
     const now = new Date();
     const cutoffDate = new Date();
@@ -135,10 +157,55 @@ export class ExerciseDetailComponent {
 
   onMetricChange(metric: MetricType): void {
     this.selectedMetric.set(metric);
+    this.selectedDataPoint.set(null); // Clear selection when metric changes
   }
 
   onRangeChange(range: TimeRange): void {
     this.selectedRange.set(range);
+    this.selectedDataPoint.set(null); // Clear selection when range changes
+  }
+
+  onDataPointSelected(event: ChartSelectionEvent): void {
+    this.selectedDataPoint.set(event);
+  }
+
+  private formatDataPointInfo(event: ChartSelectionEvent): string {
+    const metric = this.selectedMetric();
+    const value = event.value;
+    const date = event.date;
+    const relativeTime = this.getRelativeTime(date);
+    const metricLabel = this.metricOptions.find(m => m.id === metric)?.label || '';
+
+    if (metric === 'heaviest' || metric === 'oneRepMax' || metric === 'bestSetVolume') {
+      return `${Math.round(value)} kg ${relativeTime}`;
+    } else if (metric === 'workoutVolume') {
+      return `${Math.round(value)} kg ${relativeTime}`;
+    } else {
+      return `${Math.round(value)} reps ${relativeTime}`;
+    }
+  }
+
+  private getRelativeTime(dateStr: string): string {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const parsedDate = new Date(`${dateStr}, ${currentYear}`);
+    
+    if (parsedDate > now) {
+      parsedDate.setFullYear(currentYear - 1);
+    }
+    
+    const diffMs = now.getTime() - parsedDate.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+    
+    if (diffDays === 0) return 'today';
+    if (diffDays === 1) return 'yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffWeeks === 1) return '1 week ago';
+    if (diffWeeks < 4) return `${diffWeeks} weeks ago`;
+    if (diffMonths === 1) return '1 month ago';
+    return `${diffMonths} months ago`;
   }
 
   getYAxisLabel(): string {

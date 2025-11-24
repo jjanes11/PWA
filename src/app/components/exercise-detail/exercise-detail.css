@@ -13,6 +13,12 @@
   gap: var(--jacaona-space-lg);
 }
 
+.jacaona-exercise-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .jacaona-chart-wrapper {
   flex-shrink: 0;
 }

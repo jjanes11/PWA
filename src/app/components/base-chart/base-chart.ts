@@ -1,4 +1,4 @@
-import { Component, input, effect, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, input, output, effect, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import * as echarts from 'echarts';
 
 export interface ChartDataPoint {
@@ -7,6 +7,12 @@ export interface ChartDataPoint {
 }
 
 export type ChartType = 'bar' | 'line';
+
+export interface ChartSelectionEvent {
+  date: string;
+  value: number;
+  dataIndex: number;
+}
 
 @Component({
   selector: 'app-base-chart',
@@ -41,6 +47,8 @@ export class BaseChartComponent implements AfterViewInit, OnDestroy {
   data = input.required<ChartDataPoint[]>();
   chartType = input<ChartType>('bar');
   yAxisLabel = input<string>('');
+  
+  dataPointSelected = output<ChartSelectionEvent>();
 
   private chart: echarts.ECharts | null = null;
   private resizeObserver: ResizeObserver | null = null;
@@ -78,7 +86,25 @@ export class BaseChartComponent implements AfterViewInit, OnDestroy {
     if (this.chartContainer) {
       this.chart = echarts.init(this.chartContainer.nativeElement);
       this.updateChart(this.data(), this.chartType());
+      this.setupClickHandler();
     }
+  }
+
+  private setupClickHandler() {
+    if (!this.chart) return;
+    
+    this.chart.on('click', (params: any) => {
+      if (params.componentType === 'series') {
+        const dataPoint = this.data()[params.dataIndex];
+        if (dataPoint) {
+          this.dataPointSelected.emit({
+            date: dataPoint.date,
+            value: dataPoint.value,
+            dataIndex: params.dataIndex
+          });
+        }
+      }
+    });
   }
 
   private setupResizeObserver() {

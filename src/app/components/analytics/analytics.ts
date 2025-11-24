@@ -5,7 +5,9 @@ import { TopBarComponent } from '../top-bar/top-bar';
 import { BottomNavComponent } from '../bottom-nav/bottom-nav';
 import { TimeRangeSelectorComponent, TimeRange } from '../time-range-selector/time-range-selector';
 import { MetricSelectorComponent, MetricOption } from '../metric-selector/metric-selector';
+import { ChartInfoDisplayComponent } from '../chart-info-display/chart-info-display';
 import { AnalyticsChartComponent, ChartDataPoint } from './analytics-chart/analytics-chart';
+import { ChartSelectionEvent } from '../base-chart/base-chart';
 import { WorkoutService } from '../../services/workout.service';
 import { Workout, Exercise, Set } from '../../models/workout.models';
 
@@ -19,7 +21,7 @@ interface ChartData {
 @Component({
   selector: 'app-analytics',
   standalone: true,
-  imports: [CommonModule, TopBarComponent, BottomNavComponent, TimeRangeSelectorComponent, MetricSelectorComponent, AnalyticsChartComponent],
+  imports: [CommonModule, TopBarComponent, BottomNavComponent, TimeRangeSelectorComponent, MetricSelectorComponent, ChartInfoDisplayComponent, AnalyticsChartComponent],
   templateUrl: './analytics.html',
   styleUrl: './analytics.css'
 })
@@ -29,6 +31,7 @@ export class AnalyticsComponent {
   // State
   selectedMetric = signal<MetricType>('duration');
   selectedRange = signal<TimeRange>('Last 3 months');
+  selectedDataPoint = signal<ChartSelectionEvent | null>(null);
 
   metricOptions: MetricOption<MetricType>[] = [
     { id: 'duration', label: 'Duration' },
@@ -41,7 +44,11 @@ export class AnalyticsComponent {
     return this.getChartData();
   });
 
-  weekSummary = computed(() => {
+  chartInfoText = computed(() => {
+    const selected = this.selectedDataPoint();
+    if (selected) {
+      return this.formatDataPointInfo(selected);
+    }
     return this.getWeekSummary();
   });
 
@@ -105,10 +112,59 @@ export class AnalyticsComponent {
 
   onMetricChange(metric: MetricType) {
     this.selectedMetric.set(metric);
+    this.selectedDataPoint.set(null); // Clear selection when metric changes
   }
 
   onRangeChange(range: TimeRange) {
     this.selectedRange.set(range);
+    this.selectedDataPoint.set(null); // Clear selection when range changes
+  }
+
+  onDataPointSelected(event: ChartSelectionEvent) {
+    this.selectedDataPoint.set(event);
+  }
+
+  private formatDataPointInfo(event: ChartSelectionEvent): string {
+    const metric = this.selectedMetric();
+    const value = event.value;
+    const date = event.date;
+    const relativeTime = this.getRelativeTime(date);
+
+    if (metric === 'duration') {
+      const hours = Math.floor(value / 60);
+      const minutes = Math.round(value % 60);
+      const timeStr = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+      return `${timeStr} ${relativeTime}`;
+    } else if (metric === 'volume') {
+      return `${Math.round(value)} kg ${relativeTime}`;
+    } else {
+      return `${Math.round(value)} reps ${relativeTime}`;
+    }
+  }
+
+  private getRelativeTime(dateStr: string): string {
+    // Parse the date string (format: "Nov 15" or similar)
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const parsedDate = new Date(`${dateStr}, ${currentYear}`);
+    
+    // If parsed date is in the future, it's probably from last year
+    if (parsedDate > now) {
+      parsedDate.setFullYear(currentYear - 1);
+    }
+    
+    const diffMs = now.getTime() - parsedDate.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+    
+    if (diffDays === 0) return 'today';
+    if (diffDays === 1) return 'yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffWeeks === 1) return '1 week ago';
+    if (diffWeeks < 4) return `${diffWeeks} weeks ago`;
+    if (diffMonths === 1) return '1 month ago';
+    return `${diffMonths} months ago`;
   }
 
   navigateToExercises() {

@@ -1,9 +1,9 @@
 <app-top-bar title="Analytics" />
 
 <div class="jacaona-analytics">
-  <!-- Week Summary & Range Selector -->
+  <!-- Chart Info & Range Selector -->
   <div class="jacaona-analytics__range-wrapper">
-    <div class="jacaona-analytics__week-summary">{{ weekSummary() }}</div>
+    <app-chart-info-display [displayText]="chartInfoText()" />
     <app-time-range-selector
       [selectedRange]="selectedRange()"
       (rangeChange)="onRangeChange($event)"
@@ -12,7 +12,10 @@
 
   <!-- Chart -->
   <div class="jacaona-analytics__chart-wrapper">
-    <app-analytics-chart [data]="chartData()" />
+    <app-analytics-chart 
+      [data]="chartData()" 
+      (dataPointSelected)="onDataPointSelected($event)"
+    />
   </div>
 
   <!-- Metric Selector -->

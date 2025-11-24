@@ -13,7 +13,7 @@
 
 
 /* ========================================
-   WEEK SUMMARY & RANGE SELECTOR
+   CHART INFO & RANGE SELECTOR
    ======================================== */
 
 .jacaona-analytics__range-wrapper {
@@ -21,12 +21,6 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--jacaona-space-xl);
-}
-
-.jacaona-analytics__week-summary {
-  color: var(--jacaona-text-primary);
-  font-size: var(--jacaona-font-base);
-  font-weight: var(--jacaona-font-weight-medium);
 }
 
 
