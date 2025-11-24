@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { BottomNavComponent } from '../bottom-nav/bottom-nav';
-import { BottomMenuComponent, BottomMenuItem } from '../bottom-menu/bottom-menu';
+import { TimeRangeSelectorComponent, TimeRange } from '../time-range-selector/time-range-selector';
+import { MetricSelectorComponent, MetricOption } from '../metric-selector/metric-selector';
 import { AnalyticsChartComponent, ChartDataPoint } from './analytics-chart/analytics-chart';
 import { WorkoutService } from '../../services/workout.service';
 import { Workout, Exercise, Set } from '../../models/workout.models';
 
 type MetricType = 'duration' | 'volume' | 'reps';
-type TimeRange = 'Last 3 months' | 'Year' | 'All time';
 
 interface ChartData {
   date: string;
@@ -19,7 +19,7 @@ interface ChartData {
 @Component({
   selector: 'app-analytics',
   standalone: true,
-  imports: [CommonModule, TopBarComponent, BottomNavComponent, BottomMenuComponent, AnalyticsChartComponent],
+  imports: [CommonModule, TopBarComponent, BottomNavComponent, TimeRangeSelectorComponent, MetricSelectorComponent, AnalyticsChartComponent],
   templateUrl: './analytics.html',
   styleUrl: './analytics.css'
 })
@@ -29,7 +29,12 @@ export class AnalyticsComponent {
   // State
   selectedMetric = signal<MetricType>('duration');
   selectedRange = signal<TimeRange>('Last 3 months');
-  showRangeMenu = signal(false);
+
+  metricOptions: MetricOption<MetricType>[] = [
+    { id: 'duration', label: 'Duration' },
+    { id: 'volume', label: 'Volume' },
+    { id: 'reps', label: 'Reps' }
+  ];
 
   // Computed
   chartData = computed(() => {
@@ -39,12 +44,6 @@ export class AnalyticsComponent {
   weekSummary = computed(() => {
     return this.getWeekSummary();
   });
-
-  rangeMenuItems: BottomMenuItem[] = [
-    { action: 'Last 3 months', text: 'Last 3 months', icon: '' },
-    { action: 'Year', text: 'Year', icon: '' },
-    { action: 'All time', text: 'All time', icon: '' }
-  ];
 
   constructor(private workoutService: WorkoutService) {}
 
@@ -104,21 +103,12 @@ export class AnalyticsComponent {
       .slice(-30); // Last 30 data points
   }
 
-  selectMetric(metric: MetricType) {
+  onMetricChange(metric: MetricType) {
     this.selectedMetric.set(metric);
   }
 
-  toggleRangeMenu() {
-    this.showRangeMenu.update(v => !v);
-  }
-
-  onRangeMenuAction(itemId: string) {
-    this.selectedRange.set(itemId as TimeRange);
-    this.showRangeMenu.set(false);
-  }
-
-  onRangeMenuClose() {
-    this.showRangeMenu.set(false);
+  onRangeChange(range: TimeRange) {
+    this.selectedRange.set(range);
   }
 
   navigateToExercises() {

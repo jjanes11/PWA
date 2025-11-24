@@ -48,7 +48,7 @@ export class ExercisesComponent {
   }
 
   onExerciseClick(exercise: Exercise): void {
-    // TODO: Navigate to exercise analytics/detail page
-    console.log('Exercise clicked:', exercise.name);
+    const encodedName = encodeURIComponent(exercise.name);
+    this.router.navigate(['/exercise', encodedName]);
   }
 }

@@ -1,0 +1,26 @@
+.jacaona-exercise-detail-container {
+  background: var(--jacaona-bg-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.jacaona-exercise-detail-content {
+  flex: 1;
+  padding: var(--jacaona-space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--jacaona-space-lg);
+}
+
+.jacaona-chart-wrapper {
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .jacaona-exercise-detail-content {
+    padding: var(--jacaona-space-md);
+    gap: var(--jacaona-space-md);
+  }
+}

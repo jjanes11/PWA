@@ -1,0 +1,33 @@
+<div class="jacaona-exercise-detail-container">
+  <!-- Top Bar -->
+  <app-top-bar 
+    [title]="exerciseName()"
+    leftIcon="arrow-left"
+    (leftIconClick)="goBack()"
+  />
+
+  <!-- Main Content -->
+  <main class="jacaona-exercise-detail-content">
+    <!-- Time Range Selector -->
+    <app-time-range-selector
+      [selectedRange]="selectedRange()"
+      (rangeChange)="onRangeChange($event)"
+    />
+
+    <!-- Chart -->
+    <div class="jacaona-chart-wrapper">
+      <app-base-chart
+        [data]="chartData()"
+        [chartType]="'line'"
+        [yAxisLabel]="getYAxisLabel()"
+      />
+    </div>
+
+    <!-- Metric Selector -->
+    <app-metric-selector
+      [options]="metricOptions"
+      [selectedMetric]="selectedMetric()"
+      (metricChange)="onMetricChange($event)"
+    />
+  </main>
+</div>

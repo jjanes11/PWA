@@ -13,7 +13,7 @@
 
 
 /* ========================================
-   RANGE SELECTOR
+   WEEK SUMMARY & RANGE SELECTOR
    ======================================== */
 
 .jacaona-analytics__range-wrapper {
@@ -29,17 +29,6 @@
   font-weight: var(--jacaona-font-weight-medium);
 }
 
-.jacaona-analytics__range-btn {
-  display: flex;
-  align-items: center;
-  gap: var(--jacaona-space-xs);
-  color: var(--jacaona-accent-blue);
-}
-
-.jacaona-analytics__range-btn svg {
-  flex-shrink: 0;
-}
-
 
 /* ========================================
    CHART
@@ -47,42 +36,6 @@
 
 .jacaona-analytics__chart-wrapper {
   margin-bottom: var(--jacaona-space-xl);
-}
-
-
-/* ========================================
-   METRIC SELECTOR
-   ======================================== */
-
-.jacaona-analytics__metric-selector {
-  display: flex;
-  flex-direction: row;
-  gap: var(--jacaona-space-md);
-  justify-content: center;
-  margin-bottom: var(--jacaona-space-2xl);
-}
-
-.jacaona-analytics__metric-btn {
-  flex: 1;
-  padding: var(--jacaona-space-md) var(--jacaona-space-lg);
-  border: none;
-  border-radius: var(--jacaona-radius-full);
-  font-size: var(--jacaona-font-sm);
-  font-weight: var(--jacaona-font-weight-medium);
-  color: white;
-  background: var(--jacaona-bg-secondary);
-  cursor: pointer;
-  transition: all var(--jacaona-transition-fast);
-  text-align: center;
-}
-
-.jacaona-analytics__metric-btn:hover:not(.jacaona-analytics__metric-btn--active) {
-  background: var(--jacaona-bg-tertiary);
-}
-
-.jacaona-analytics__metric-btn--active {
-  background: var(--jacaona-accent-blue);
-  color: white;
 }
 
 
@@ -136,10 +89,5 @@
   .jacaona-analytics {
     padding: var(--jacaona-space-md);
     padding-bottom: calc(var(--jacaona-bottom-nav-height) + var(--jacaona-space-lg));
-  }
-
-  .jacaona-analytics__metric-btn {
-    padding: var(--jacaona-space-sm) var(--jacaona-space-md);
-    font-size: var(--jacaona-font-xs);
   }
 }
