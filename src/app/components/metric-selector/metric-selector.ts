@@ -1,10 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-export interface MetricOption<T = string> {
-  id: T;
-  label: string;
-}
+import { MetricOption } from '../../models/analytics.models';
 
 @Component({
   selector: 'app-metric-selector',

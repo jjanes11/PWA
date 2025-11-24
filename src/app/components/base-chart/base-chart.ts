@@ -1,18 +1,6 @@
 import { Component, input, output, effect, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import * as echarts from 'echarts';
-
-export interface ChartDataPoint {
-  date: string;
-  value: number;
-}
-
-export type ChartType = 'bar' | 'line';
-
-export interface ChartSelectionEvent {
-  date: string;
-  value: number;
-  dataIndex: number;
-}
+import { ChartDataPoint, ChartType, ChartSelectionEvent } from '../../models/analytics.models';
 
 @Component({
   selector: 'app-base-chart',

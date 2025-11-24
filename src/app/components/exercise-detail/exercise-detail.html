@@ -8,30 +8,7 @@
 
   <!-- Main Content -->
   <main class="jacaona-exercise-detail-content">
-    <!-- Chart Info & Time Range Selector -->
-    <div class="jacaona-exercise-detail-header">
-      <app-chart-info-display [displayText]="chartInfoText()" />
-      <app-time-range-selector
-        [selectedRange]="selectedRange()"
-        (rangeChange)="onRangeChange($event)"
-      />
-    </div>
-
-    <!-- Chart -->
-    <div class="jacaona-chart-wrapper">
-      <app-base-chart
-        [data]="chartData()"
-        [chartType]="'line'"
-        [yAxisLabel]="getYAxisLabel()"
-        (dataPointSelected)="onDataPointSelected($event)"
-      />
-    </div>
-
-    <!-- Metric Selector -->
-    <app-metric-selector
-      [options]="metricOptions"
-      [selectedMetric]="selectedMetric()"
-      (metricChange)="onMetricChange($event)"
-    />
+    <!-- Chart with all controls -->
+    <app-exercise-chart [exerciseName]="exerciseName()" />
   </main>
 </div>

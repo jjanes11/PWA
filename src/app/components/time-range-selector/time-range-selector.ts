@@ -1,9 +1,7 @@
 import { Component, input, output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BottomMenuComponent, BottomMenuItem } from '../bottom-menu/bottom-menu';
-import { TimeRange } from '../../utils/date.utils';
-
-export type { TimeRange };
+import { TimeRange } from '../../models/analytics.models';
 
 @Component({
   selector: 'app-time-range-selector',

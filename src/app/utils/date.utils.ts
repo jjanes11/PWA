@@ -1,6 +1,5 @@
 import { Workout } from '../models/workout.models';
-
-export type TimeRange = 'Last 3 months' | 'Year' | 'All time';
+import { TimeRange } from '../models/analytics.models';
 
 /**
  * Filters workouts by the specified time range.

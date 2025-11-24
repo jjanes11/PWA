@@ -1,13 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { Workout } from '../models/workout.models';
-import { MetricCalculatorService, WorkoutMetricType, ExerciseMetricType } from './metric-calculator.service';
-import { filterWorkoutsByRange, formatChartDate, getLastWeekWorkouts, TimeRange } from '../utils/date.utils';
+import { MetricCalculatorService } from './metric-calculator.service';
+import { 
+  WorkoutMetricType, 
+  ExerciseMetricType, 
+  TimeRange, 
+  ChartDataPoint 
+} from '../models/analytics.models';
+import { filterWorkoutsByRange, formatChartDate, getLastWeekWorkouts } from '../utils/date.utils';
 import { formatDuration, formatWeight, formatReps } from '../utils/metric-formatter.utils';
-
-export interface ChartDataPoint {
-  date: string;
-  value: number;
-}
 
 @Injectable({
   providedIn: 'root'

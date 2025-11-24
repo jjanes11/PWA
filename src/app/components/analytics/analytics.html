@@ -1,29 +1,8 @@
 <app-top-bar title="Analytics" />
 
 <div class="jacaona-analytics">
-  <!-- Chart Info & Range Selector -->
-  <div class="jacaona-analytics__range-wrapper">
-    <app-chart-info-display [displayText]="chartInfoText()" />
-    <app-time-range-selector
-      [selectedRange]="selectedRange()"
-      (rangeChange)="onRangeChange($event)"
-    />
-  </div>
-
-  <!-- Chart -->
-  <div class="jacaona-analytics__chart-wrapper">
-    <app-analytics-chart 
-      [data]="chartData()" 
-      (dataPointSelected)="onDataPointSelected($event)"
-    />
-  </div>
-
-  <!-- Metric Selector -->
-  <app-metric-selector
-    [options]="metricOptions"
-    [selectedMetric]="selectedMetric()"
-    (metricChange)="onMetricChange($event)"
-  />
+  <!-- Chart with all controls -->
+  <app-analytics-chart />
 
   <!-- History Section -->
   <div class="jacaona-analytics__history">

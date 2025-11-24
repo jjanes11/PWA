@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Workout, Exercise, Set } from '../models/workout.models';
-
-export type WorkoutMetricType = 'duration' | 'volume' | 'reps';
-export type ExerciseMetricType = 'heaviest' | 'oneRepMax' | 'bestSetVolume' | 'workoutVolume' | 'totalReps';
+import { WorkoutMetricType, ExerciseMetricType } from '../models/analytics.models';
 
 @Injectable({
   providedIn: 'root'
