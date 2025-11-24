@@ -1,0 +1,34 @@
+<div class="jacaona-calendar-container">
+  <!-- Top Bar -->
+  <app-top-bar 
+    title="Calendar"
+    [leftButton]="{ type: 'back' }"
+    (leftAction)="goBack()"
+  />
+
+  <!-- Days of Week Stripe -->
+  <div class="jacaona-calendar__days-header">
+    <div class="jacaona-calendar__day-name">Mon</div>
+    <div class="jacaona-calendar__day-name">Tue</div>
+    <div class="jacaona-calendar__day-name">Wed</div>
+    <div class="jacaona-calendar__day-name">Thu</div>
+    <div class="jacaona-calendar__day-name">Fri</div>
+    <div class="jacaona-calendar__day-name">Sat</div>
+    <div class="jacaona-calendar__day-name">Sun</div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="jacaona-calendar-content">
+    <!-- Previous Month -->
+    <app-calendar-month 
+      [year]="previousYear()"
+      [month]="previousMonth()"
+    />
+
+    <!-- Current Month -->
+    <app-calendar-month 
+      [year]="currentYear()"
+      [month]="currentMonth()"
+    />
+  </main>
+</div>

@@ -1,0 +1,33 @@
+.jacaona-calendar-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--jacaona-bg-secondary);
+}
+
+.jacaona-calendar__days-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: var(--jacaona-bg-secondary);
+  border-top: 1px solid var(--jacaona-border);
+    padding: var(--jacaona-space-sm) 0;
+  position: sticky;
+  top: 56px; /* Height of top bar */
+  z-index: var(--jacaona-z-sticky);
+}
+
+.jacaona-calendar__day-name {
+  color: var(--jacaona-text-primary);
+  text-align: center;
+  font-size: var(--jacaona-font-size-sm);
+  font-weight: var(--jacaona-font-weight-medium);
+}
+
+.jacaona-calendar-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--jacaona-space-xl);
+  padding-top: var(--jacaona-space-xl);
+  background: var(--jacaona-bg-primary);
+}

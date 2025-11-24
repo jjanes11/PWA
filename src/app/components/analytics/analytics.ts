@@ -20,6 +20,6 @@ export class AnalyticsComponent {
   }
 
   navigateToCalendar() {
-    console.log('Navigate to calendar view');
+    this.router.navigate(['/calendar']);
   }
 }
