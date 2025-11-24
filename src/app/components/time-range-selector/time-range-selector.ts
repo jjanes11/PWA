@@ -1,8 +1,9 @@
 import { Component, input, output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BottomMenuComponent, BottomMenuItem } from '../bottom-menu/bottom-menu';
+import { TimeRange } from '../../utils/date.utils';
 
-export type TimeRange = 'Last 3 months' | 'Year' | 'All time';
+export type { TimeRange };
 
 @Component({
   selector: 'app-time-range-selector',
@@ -21,7 +22,7 @@ export type TimeRange = 'Last 3 months' | 'Year' | 'All time';
       </button>
     </div>
 
-    
+
 
     <app-bottom-menu
       [isOpen]="showMenu()"

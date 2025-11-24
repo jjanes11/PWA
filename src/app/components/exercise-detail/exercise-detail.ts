@@ -3,13 +3,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { BaseChartComponent, ChartSelectionEvent } from '../base-chart/base-chart';
-import { TimeRangeSelectorComponent, TimeRange } from '../time-range-selector/time-range-selector';
+import { TimeRangeSelectorComponent } from '../time-range-selector/time-range-selector';
 import { MetricSelectorComponent, MetricOption } from '../metric-selector/metric-selector';
 import { ChartInfoDisplayComponent } from '../chart-info-display/chart-info-display';
 import { DataStoreService } from '../../services/data-store.service';
-import { Workout, Exercise as WorkoutExercise } from '../../models/workout.models';
-
-type MetricType = 'heaviest' | 'oneRepMax' | 'bestSetVolume' | 'workoutVolume' | 'totalReps';
+import { WorkoutAnalyticsService } from '../../services/workout-analytics.service';
+import { ExerciseMetricType } from '../../services/metric-calculator.service';
+import { TimeRange } from '../../utils/date.utils';
+import { getRelativeTime } from '../../utils/date.utils';
 
 @Component({
   selector: 'app-exercise-detail',
@@ -22,13 +23,14 @@ export class ExerciseDetailComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private dataStore = inject(DataStoreService);
+  private analyticsService = inject(WorkoutAnalyticsService);
 
   exerciseName = signal<string>('');
-  selectedMetric = signal<MetricType>('heaviest');
+  selectedMetric = signal<ExerciseMetricType>('heaviest');
   selectedRange = signal<TimeRange>('Last 3 months');
   selectedDataPoint = signal<ChartSelectionEvent | null>(null);
 
-  metricOptions: MetricOption<MetricType>[] = [
+  metricOptions: MetricOption<ExerciseMetricType>[] = [
     { id: 'heaviest', label: 'Heaviest Weight' },
     { id: 'oneRepMax', label: 'One Rep Max' },
     { id: 'bestSetVolume', label: 'Best Set Volume' },
@@ -52,35 +54,7 @@ export class ExerciseDetailComponent {
     if (!name) return [];
 
     const workouts = this.dataStore.workoutsSignal()();
-    const filteredWorkouts = this.filterWorkoutsByRange(workouts, range);
-    
-    // Create array with workout date and calculated value
-    const dataPoints: Array<{ date: Date; value: number }> = [];
-    
-    for (const workout of filteredWorkouts) {
-      const exercise = workout.exercises.find(e => e.name === name);
-      if (!exercise) continue;
-      
-      const value = this.calculateMetric(exercise, metric);
-      if (value > 0) { // Only include non-zero values
-        dataPoints.push({
-          date: new Date(workout.date),
-          value
-        });
-      }
-    }
-    
-    // Sort by date
-    dataPoints.sort((a, b) => a.date.getTime() - b.date.getTime());
-    
-    // Format dates for display
-    return dataPoints.map(point => ({
-      date: point.date.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric' 
-      }),
-      value: Math.round(point.value * 100) / 100 // Round to 2 decimal places
-    }));
+    return this.analyticsService.calculateExerciseMetrics(workouts, name, metric, range);
   });
 
   yAxisLabel = computed(() => {
@@ -109,60 +83,14 @@ export class ExerciseDetailComponent {
     return 'No data available';
   });
 
-  private filterWorkoutsByRange(workouts: Workout[], range: TimeRange): Workout[] {
-    const now = new Date();
-    const cutoffDate = new Date();
-    
-    switch (range) {
-      case 'Last 3 months':
-        cutoffDate.setMonth(now.getMonth() - 3);
-        break;
-      case 'Year':
-        cutoffDate.setFullYear(now.getFullYear() - 1);
-        break;
-      case 'All time':
-        return workouts.filter(w => w.completed);
-    }
-    
-    return workouts.filter(w => w.completed && new Date(w.date) >= cutoffDate);
-  }
-
-  private calculateMetric(exercise: WorkoutExercise, metric: MetricType): number {
-    const completedSets = exercise.sets.filter(s => s.completed);
-    if (completedSets.length === 0) return 0;
-    
-    switch (metric) {
-      case 'heaviest':
-        return Math.max(...completedSets.map(s => s.weight));
-        
-      case 'oneRepMax':
-        // Brzycki formula: weight / (1.0278 - 0.0278 * reps)
-        return Math.max(...completedSets.map(s => 
-          s.weight / (1.0278 - 0.0278 * s.reps)
-        ));
-        
-      case 'bestSetVolume':
-        return Math.max(...completedSets.map(s => s.weight * s.reps));
-        
-      case 'workoutVolume':
-        return completedSets.reduce((sum, s) => sum + (s.weight * s.reps), 0);
-        
-      case 'totalReps':
-        return completedSets.reduce((sum, s) => sum + s.reps, 0);
-        
-      default:
-        return 0;
-    }
-  }
-
-  onMetricChange(metric: MetricType): void {
+  onMetricChange(metric: ExerciseMetricType): void {
     this.selectedMetric.set(metric);
-    this.selectedDataPoint.set(null); // Clear selection when metric changes
+    this.selectedDataPoint.set(null);
   }
 
   onRangeChange(range: TimeRange): void {
     this.selectedRange.set(range);
-    this.selectedDataPoint.set(null); // Clear selection when range changes
+    this.selectedDataPoint.set(null);
   }
 
   onDataPointSelected(event: ChartSelectionEvent): void {
@@ -171,41 +99,16 @@ export class ExerciseDetailComponent {
 
   private formatDataPointInfo(event: ChartSelectionEvent): string {
     const metric = this.selectedMetric();
-    const value = event.value;
-    const date = event.date;
-    const relativeTime = this.getRelativeTime(date);
-    const metricLabel = this.metricOptions.find(m => m.id === metric)?.label || '';
-
-    if (metric === 'heaviest' || metric === 'oneRepMax' || metric === 'bestSetVolume') {
-      return `${Math.round(value)} kg ${relativeTime}`;
-    } else if (metric === 'workoutVolume') {
-      return `${Math.round(value)} kg ${relativeTime}`;
+    const relativeTime = getRelativeTime(event.date);
+    
+    // All exercise metrics are weight-based except totalReps
+    const metricType = metric === 'totalReps' ? 'reps' : 'weight';
+    
+    if (metricType === 'weight') {
+      return `${Math.round(event.value)} kg ${relativeTime}`;
     } else {
-      return `${Math.round(value)} reps ${relativeTime}`;
+      return `${Math.round(event.value)} reps ${relativeTime}`;
     }
-  }
-
-  private getRelativeTime(dateStr: string): string {
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    const parsedDate = new Date(`${dateStr}, ${currentYear}`);
-    
-    if (parsedDate > now) {
-      parsedDate.setFullYear(currentYear - 1);
-    }
-    
-    const diffMs = now.getTime() - parsedDate.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    const diffWeeks = Math.floor(diffDays / 7);
-    const diffMonths = Math.floor(diffDays / 30);
-    
-    if (diffDays === 0) return 'today';
-    if (diffDays === 1) return 'yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    if (diffWeeks === 1) return '1 week ago';
-    if (diffWeeks < 4) return `${diffWeeks} weeks ago`;
-    if (diffMonths === 1) return '1 month ago';
-    return `${diffMonths} months ago`;
   }
 
   getYAxisLabel(): string {
