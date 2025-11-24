@@ -22,6 +22,11 @@ export class WorkoutDetailComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
+  // Get returnUrl from query params
+  private returnUrl = toSignal(
+    this.route.queryParams.pipe(map(params => params['returnUrl'] as string | undefined))
+  );
+
   // Convert route params to signal
   private workoutId = toSignal(
     this.route.params.pipe(map(params => params['id']))
@@ -94,7 +99,12 @@ export class WorkoutDetailComponent {
   });
 
   goBack(): void {
-    this.router.navigate(['/home']);
+    const returnUrl = this.returnUrl();
+    if (returnUrl) {
+      this.router.navigateByUrl(returnUrl);
+    } else {
+      this.router.navigate(['/home']);
+    }
   }
 
   openMenu(): void {

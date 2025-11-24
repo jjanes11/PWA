@@ -48,6 +48,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/calendar/calendar').then(m => m.CalendarComponent)
   },
   { 
+    path: 'calendar-day/:date', 
+    loadComponent: () => import('./components/calendar-day/calendar-day').then(m => m.CalendarDayComponent)
+  },
+  { 
     path: 'exercises', 
     loadComponent: () => import('./components/exercises/exercises').then(m => m.ExercisesComponent)
   },

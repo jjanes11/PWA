@@ -1,10 +1,15 @@
-import { Component, input, computed } from '@angular/core';
+import { Component, input, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { DataStoreService } from '../../services/data-store.service';
+import { Workout } from '../../models/workout.models';
 
 interface CalendarDay {
   date: number;
+  dateStr: string; // YYYY-MM-DD format
   dayOfWeek: number; // 0 = Monday, 6 = Sunday
   isCurrentMonth: boolean;
+  hasWorkout: boolean;
 }
 
 @Component({
@@ -16,16 +21,19 @@ interface CalendarDay {
       <h2 class="jacaona-calendar-month__title">{{ monthTitle() }}</h2>
       
       <div class="jacaona-calendar-month__days">
-        @for (day of days(); track day.date + '-' + day.dayOfWeek) {
-          <div 
+        @for (day of days(); track day.dateStr) {
+          <button 
             class="jacaona-calendar-month__day"
             [class.jacaona-calendar-month__day--placeholder]="!day.isCurrentMonth"
+            [class.jacaona-calendar-month__day--has-workout]="day.hasWorkout"
             [style.grid-column-start]="$index === 0 ? day.dayOfWeek + 1 : 'auto'"
+            [disabled]="!day.isCurrentMonth"
+            (click)="onDayClick(day)"
           >
             @if (day.isCurrentMonth) {
-              {{ day.date }}
+              <span class="jacaona-calendar-month__day-number">{{ day.date }}</span>
             }
-          </div>
+          </button>
         }
       </div>
     </div>
@@ -62,14 +70,37 @@ interface CalendarDay {
       align-items: center;
       justify-content: center;
       font-size: var(--jacaona-font-size-base);
+      border: none;
+      border-bottom: 1px solid var(--jacaona-border);
+      cursor: pointer;
+      transition: var(--jacaona-transition-fast);
+      width: 100%;
+    }
+
+    .jacaona-calendar-month__day:hover:not(:disabled):not(.jacaona-calendar-month__day--placeholder) {
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .jacaona-calendar-month__day--placeholder {
       visibility: hidden;
+      cursor: default;
+    }
+
+    .jacaona-calendar-month__day--has-workout .jacaona-calendar-month__day-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--jacaona-accent-blue);
     }
   `]
 })
 export class CalendarMonthComponent {
+  private router = inject(Router);
+  private dataStore = inject(DataStoreService);
+
   year = input.required<number>();
   month = input.required<number>(); // 0-11 (JavaScript month)
 
@@ -81,6 +112,7 @@ export class CalendarMonthComponent {
   days = computed(() => {
     const year = this.year();
     const month = this.month();
+    const workouts = this.dataStore.workoutsSignal()();
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
@@ -88,6 +120,16 @@ export class CalendarMonthComponent {
     // Get day of week for first day (0 = Sunday, convert to 0 = Monday)
     let firstDayOfWeek = firstDay.getDay() - 1;
     if (firstDayOfWeek === -1) firstDayOfWeek = 6; // Sunday becomes 6
+
+    // Create a set of dates with workouts for fast lookup
+    const workoutDates = new Set(
+      workouts
+        .filter(w => w.completed)
+        .map(w => {
+          const date = new Date(w.date);
+          return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        })
+    );
 
     const calendarDays: CalendarDay[] = [];
 
@@ -97,13 +139,23 @@ export class CalendarMonthComponent {
       let dayOfWeek = dayDate.getDay() - 1;
       if (dayOfWeek === -1) dayOfWeek = 6; // Sunday becomes 6
 
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+
       calendarDays.push({
         date,
+        dateStr,
         dayOfWeek,
-        isCurrentMonth: true
+        isCurrentMonth: true,
+        hasWorkout: workoutDates.has(dateStr)
       });
     }
 
     return calendarDays;
   });
+
+  onDayClick(day: CalendarDay): void {
+    if (day.isCurrentMonth) {
+      this.router.navigate(['/calendar-day', day.dateStr]);
+    }
+  }
 }
