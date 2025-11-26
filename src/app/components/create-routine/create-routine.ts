@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -33,6 +33,11 @@ export class CreateRoutineComponent {
   
   private queryParams = toSignal(this.route.queryParams);
   
+  // Read returnUrl from query params, default to /workouts
+  private returnUrl = computed(() => 
+    (this.queryParams()?.['returnUrl'] as string | undefined) || '/workouts'
+  );
+  
   routineDraft = this.routineDraftService.routineDraftSignal();
   title: string = '';
   
@@ -57,8 +62,7 @@ export class CreateRoutineComponent {
     onEntityUpdated: (routine) => this.routineDraftService.setRoutineDraft(routine),
     source: WorkoutSource.RoutineDraft,
     getTitle: () => this.title,
-    onCleanup: () => this.routineDraftService.clearRoutineDraft(),
-    returnUrl: '/workouts'
+    onCleanup: () => this.routineDraftService.clearRoutineDraft()
   });
   
   // Expose editor properties for template
@@ -125,11 +129,11 @@ export class CreateRoutineComponent {
       // Save as routine to persistent storage
       this.routineService.saveRoutine(updatedRoutine);
       
-      // Use entityEditor for cleanup and navigation
-      this.entityEditor.save();
+      // Use entityEditor for cleanup and navigation with returnUrl
+      this.entityEditor.save(this.returnUrl());
       return;
     }
-    this.entityEditor.cancel();
+    this.entityEditor.cancel(this.returnUrl());
   }
 
   addExercise(): void {
@@ -153,6 +157,6 @@ export class CreateRoutineComponent {
 
   private handleDiscardConfirm(): void {
     this.cleanup.performCleanup();
-    this.router.navigate(['/workouts']);
+    this.router.navigateByUrl(this.returnUrl());
   }
 }

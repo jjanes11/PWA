@@ -132,11 +132,18 @@ export class WorkoutDetailComponent {
 
   saveAsRoutine(): void {
     const workout = this.workout();
+    const returnUrl = this.returnUrl();
+    const currentUrl = this.router.url.split('?')[0]; // Get current URL without query params
+    
     if (workout) {
-      // Navigate to routine/new with workout ID as query param
+      // Build the full return URL with preserved returnUrl query param
+      const fullReturnUrl = returnUrl ? `${currentUrl}?returnUrl=${encodeURIComponent(returnUrl)}` : currentUrl;
+      
+      // Navigate to routine/new with workout ID and returnUrl
       this.router.navigate(['/routine/new'], {
         queryParams: { 
-          sourceWorkoutId: workout.id
+          sourceWorkoutId: workout.id,
+          returnUrl: fullReturnUrl
         }
       });
     }
@@ -146,7 +153,15 @@ export class WorkoutDetailComponent {
     const workout = this.workout();
     if (!workout) return;
     
-    this.router.navigate(['/edit-workout', workout.id]);
+    const returnUrl = this.returnUrl();
+    const currentUrl = this.router.url.split('?')[0]; // Get current URL without query params
+    
+    // Build the full return URL with preserved returnUrl query param
+    const fullReturnUrl = returnUrl ? `${currentUrl}?returnUrl=${encodeURIComponent(returnUrl)}` : currentUrl;
+    
+    this.router.navigate(['/edit-workout', workout.id], {
+      queryParams: { returnUrl: fullReturnUrl }
+    });
   }
 
   deleteWorkout(): void {

@@ -1,7 +1,9 @@
 import { Component, inject, effect, signal, computed } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { WorkoutService } from '../../services/workout.service';
 import { WorkoutStatsComponent } from '../workout-stats/workout-stats';
 import { WorkoutTitleInputComponent } from '../workout-title-input/workout-title-input';
@@ -24,7 +26,13 @@ import { useEntityLoader } from '../../utils/entity-loader';
 })
 export class EditWorkoutComponent {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
+
+  // Read returnUrl from query params
+  private returnUrl = toSignal(
+    this.route.queryParams.pipe(map(params => params['returnUrl'] as string | undefined))
+  );
 
   // Use entity loader to handle route params and loading
   private entityLoader = useEntityLoader<Workout>({
@@ -55,8 +63,7 @@ export class EditWorkoutComponent {
       this.workoutService.saveWorkout(workout);
     },
     source: WorkoutSource.PersistedWorkout,
-    getTitle: () => this.workoutTitle(),
-    returnUrl: '/home'
+    getTitle: () => this.workoutTitle()
   });
   
   // Expose editor properties for template
@@ -124,7 +131,8 @@ export class EditWorkoutComponent {
   });
 
   cancel(): void {
-    this.entityEditor.cancel();
+    const returnUrl = this.returnUrl();
+    this.entityEditor.cancel(returnUrl || '/home');
   }
 
   saveWorkout(): void {
@@ -137,10 +145,12 @@ export class EditWorkoutComponent {
       name: this.workoutTitle().trim() || 'Untitled Workout',
       notes: this.workoutDescription().trim()
     };
-
     this.workout.set(updatedWorkout);
     this.workoutService.saveWorkout(updatedWorkout);
-    this.entityEditor.cancel(); // Navigate using editor's cancel (just navigation)
+    
+    // Navigate using returnUrl
+    const returnUrl = this.returnUrl();
+    this.entityEditor.cancel(returnUrl || '/home'); // Navigate using editor's cancel (just navigation)
   }
 
   addExercise(): void {

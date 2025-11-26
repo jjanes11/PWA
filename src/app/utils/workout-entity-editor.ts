@@ -164,7 +164,8 @@ export function useWorkoutEntityEditor<T extends WorkoutEntity>(
   const save = (navigateUrl?: string): void => {
     const entity = config.getEntity();
     if (!entity) {
-      router.navigate([navigateUrl || getDefaultReturnUrl(config.source)]);
+      const url = navigateUrl || getDefaultReturnUrl(config.source);
+      router.navigateByUrl(url);
       return;
     }
     
@@ -182,12 +183,14 @@ export function useWorkoutEntityEditor<T extends WorkoutEntity>(
       config.onCleanup();
     }
     
-    router.navigate([navigateUrl || getDefaultReturnUrl(config.source)]);
+    const url = navigateUrl || getDefaultReturnUrl(config.source);
+    router.navigateByUrl(url);
   };
   
   // Cancel action: navigate away without saving
   const cancel = (navigateUrl?: string): void => {
-    router.navigate([navigateUrl || getDefaultReturnUrl(config.source)]);
+    const url = navigateUrl || getDefaultReturnUrl(config.source);
+    router.navigateByUrl(url);
   };
   
   return {
