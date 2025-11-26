@@ -7,7 +7,10 @@
 
 .jacaona-calendar-day-content {
   flex: 1;
-  padding: var(--jacaona-space-md);
+  padding-top: var(--jacaona-space-xl);
+  padding-left: var(--jacaona-space-md);
+  padding-right: var(--jacaona-space-md);
+  padding-bottom: var(--jacaona-space-md);
 }
 
 .jacaona-calendar-day__workouts {
@@ -18,9 +21,16 @@
 
 .jacaona-calendar-day__empty {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: var(--jacaona-space-3xl) var(--jacaona-space-md);
+  gap: var(--jacaona-space-lg);
+}
+
+.jacaona-calendar-day__empty-icon {
+  color: var(--jacaona-text-secondary);
+  opacity: 0.5;
 }
 
 .jacaona-calendar-day__empty-text {
@@ -29,3 +39,26 @@
   text-align: center;
   margin: 0;
 }
+
+.jacaona-calendar-day__empty-btn {
+  width: 100%;
+  max-width: 400px;
+  background: var(--jacaona-accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--jacaona-radius-md);
+  padding: var(--jacaona-space-md) var(--jacaona-space-xl);
+  font-size: var(--jacaona-font-size-base);
+  font-weight: var(--jacaona-font-weight-semibold);
+  cursor: pointer;
+  transition: background-color var(--jacaona-transition-fast);
+}
+
+.jacaona-calendar-day__empty-btn:hover {
+  background: var(--jacaona-accent-blue-hover);
+}
+
+.jacaona-calendar-day__empty-btn:active {
+  transform: scale(0.98);
+}
+

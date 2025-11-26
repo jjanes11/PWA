@@ -8,11 +8,32 @@
 
   <!-- Main Content -->
   <main class="jacaona-calendar-day-content">
-    <app-workout-list
-      [workouts]="dayWorkouts()"
-      [menuItems]="menuItems"
-      [returnUrl]="returnUrl()"
-      [emptyMessage]="'No workouts on this day'"
-    />
+    @if (dayWorkouts().length > 0) {
+      <app-workout-list
+        [workouts]="dayWorkouts()"
+        [menuItems]="menuItems"
+        [returnUrl]="returnUrl()"
+        [emptyMessage]="'No workouts on this day'"
+      />
+    } @else {
+      <div class="jacaona-calendar-day__empty">
+        <div class="jacaona-calendar-day__empty-icon">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
+            <!-- Dots grid representing days -->
+            <circle cx="8" cy="13" r="0.8" opacity="0.6"/>
+            <circle cx="12" cy="13" r="0.8" opacity="0.6"/>
+            <circle cx="16" cy="13" r="0.8" opacity="0.6"/>
+            <circle cx="8" cy="17" r="0.8" opacity="0.6"/>
+            <circle cx="12" cy="17" r="0.8" opacity="0.6"/>
+            <circle cx="16" cy="17" r="0.8" opacity="0.6"/>
+          </svg>
+        </div>
+        <p class="jacaona-calendar-day__empty-text">No workouts on this day</p>
+        <button class="jacaona-calendar-day__empty-btn" (click)="onLogWorkout()">
+          Log a workout
+        </button>
+      </div>
+    }
   </main>
 </div>

@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { WorkoutListComponent } from '../workout-list/workout-list';
 import { WorkoutService } from '../../services/workout.service';
@@ -14,6 +14,7 @@ import { MenuItem } from '../card-menu/card-menu';
 })
 export class CalendarDayComponent {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private workoutService = inject(WorkoutService);
 
   workouts = this.workoutService.workoutsSignal();
@@ -70,5 +71,9 @@ export class CalendarDayComponent {
 
   goBack(): void {
     window.history.back();
+  }
+
+  onLogWorkout(): void {
+    this.router.navigate(['/start-workout']);
   }
 }
