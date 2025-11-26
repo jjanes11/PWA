@@ -8,35 +8,11 @@
 
   <!-- Main Content -->
   <main class="jacaona-calendar-day-content">
-    @if (dayWorkouts().length > 0) {
-      <div class="jacaona-calendar-day__workouts">
-        @for (workout of dayWorkouts(); track workout.id) {
-          <app-workout-card
-            [workout]="workout"
-            [formattedDate]="formatWorkoutDate(workout.date)"
-            [duration]="calculateWorkoutDuration(workout)"
-            [menuItems]="menuItems"
-            (cardClick)="onCardClick(workout.id)"
-            (menuAction)="onMenuAction($event, workout.id)"
-          />
-        }
-      </div>
-    } @else {
-      <div class="jacaona-calendar-day__empty">
-        <p class="jacaona-calendar-day__empty-text">No workouts on this day</p>
-      </div>
-    }
+    <app-workout-list
+      [workouts]="dayWorkouts()"
+      [menuItems]="menuItems"
+      [returnUrl]="returnUrl()"
+      [emptyMessage]="'No workouts on this day'"
+    />
   </main>
 </div>
-
-<!-- Delete Confirmation Dialog -->
-@if (showDeleteDialog()) {
-  <app-confirmation-dialog
-    title="Delete Workout"
-    message="Are you sure you want to delete this workout? This action cannot be undone."
-    confirmText="Delete"
-    cancelText="Cancel"
-    (confirm)="confirmDelete()"
-    (cancel)="cancelDelete()"
-  />
-}

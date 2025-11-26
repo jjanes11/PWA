@@ -1,18 +1,17 @@
-import { Component, signal, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { WorkoutService } from '../../services/workout.service';
 import { ActiveWorkoutService } from '../../services/active-workout.service';
 import { RoutineDraftService } from '../../services/routine-draft.service';
 import { MenuItem } from '../card-menu/card-menu';
-import { ConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { StatCardComponent } from '../stat-card/stat-card';
-import { WorkoutCardComponent } from '../workout-card/workout-card';
+import { WorkoutListComponent } from '../workout-list/workout-list';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, ConfirmationDialog, StatCardComponent, WorkoutCardComponent],
+  imports: [RouterModule, StatCardComponent, WorkoutListComponent],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -20,11 +19,8 @@ export class HomeComponent {
   private workoutService = inject(WorkoutService);
   private activeWorkoutService = inject(ActiveWorkoutService);
   private routineDraftService = inject(RoutineDraftService);
-  private router = inject(Router);
 
   workouts = this.workoutService.workoutsSignal();
-  showDeleteDialog = signal(false);
-  selectedWorkoutId = signal<string | null>(null);
 
   menuItems: MenuItem[] = [
     {
@@ -101,87 +97,4 @@ export class HomeComponent {
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, 5);
   });
-
-
-
-  formatWorkoutDate(date: Date | string): string {
-    const workoutDate = new Date(date);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - workoutDate.getTime());
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    
-    return workoutDate.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric' 
-    });
-  }
-
-  calculateWorkoutDuration(workout: any): string {
-    if (workout.duration) {
-      return `${workout.duration} min`;
-    }
-    
-    // Don't show estimated time for workouts without a recorded duration
-    return '0 min';
-  }
-
-  navigateToWorkout(workoutId: string): void {
-    this.router.navigate(['/workout', workoutId]);
-  }
-
-  handleMenuAction(workoutId: string, action: string): void {
-    this.selectedWorkoutId.set(workoutId);
-    
-    switch (action) {
-      case 'save-routine':
-        this.saveAsRoutine();
-        break;
-      case 'edit':
-        this.editWorkout();
-        break;
-      case 'delete':
-        this.deleteWorkout();
-        break;
-    }
-  }
-
-  private saveAsRoutine(): void {
-    const workoutId = this.selectedWorkoutId();
-    if (workoutId) {
-      // Navigate to routine/new with workout ID as query param
-      this.router.navigate(['/routine/new'], {
-        queryParams: { 
-          sourceWorkoutId: workoutId
-        }
-      });
-    }
-  }
-
-  private editWorkout(): void {
-    const workoutId = this.selectedWorkoutId();
-    if (workoutId) {
-      this.router.navigate(['/edit-workout', workoutId]);
-    }
-  }
-
-  private deleteWorkout(): void {
-    this.showDeleteDialog.set(true);
-  }
-
-  confirmDelete(): void {
-    const workoutId = this.selectedWorkoutId();
-    if (workoutId) {
-      this.workoutService.deleteWorkout(workoutId);
-    }
-    this.showDeleteDialog.set(false);
-    this.selectedWorkoutId.set(null);
-  }
-
-  cancelDelete(): void {
-    this.showDeleteDialog.set(false);
-  }
 }
