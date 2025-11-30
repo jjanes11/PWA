@@ -3,7 +3,9 @@
   <app-top-bar
     title="Exercises"
     [leftButton]="{ type: 'back' }"
+    [rightButton]="{ type: 'text', text: 'Create' }"
     (leftAction)="goBack()"
+    (rightAction)="createExercise()"
   />
 
   <!-- Exercise List Component -->

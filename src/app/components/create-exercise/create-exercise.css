@@ -5,19 +5,15 @@
   flex-direction: column;
 }
 
-/* Dialog Mode Overrides */
+/* Dialog mode: let dialog service handle sizing */
 .jacaona-create-exercise-container.jacaona-dialog-mode {
-  min-height: auto;
+  min-height: 100%;
   height: 100%;
-  width: 100%;
-  overflow: hidden;
 }
 
-/* Main Content */
 .jacaona-main-content {
   flex: 1;
   padding: var(--jacaona-space-2xl) var(--jacaona-space-lg);
-  background: var(--jacaona-bg-primary);
 }
 
 .jacaona-input-container {
@@ -49,19 +45,9 @@
   font-weight: var(--jacaona-font-weight-normal);
 }
 
-/* Responsive */
 @media (max-width: 480px) {
   .jacaona-main-content {
     padding: var(--jacaona-space-xl) var(--jacaona-space-md);
-  }
-  
-  .jacaona-page-title {
-    font-size: 16px;
-  }
-  
-  .jacaona-save-btn {
-    font-size: 14px;
-    padding: var(--jacaona-space-sm) var(--jacaona-space-md);
   }
   
   .jacaona-exercise-input {

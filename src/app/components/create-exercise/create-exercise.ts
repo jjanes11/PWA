@@ -39,19 +39,13 @@ export class CreateExercise {
 
   save(): void {
     const name = this.exerciseName().trim();
-    if (!name) {
-      return;
-    }
+    if (!name) return;
     
-    // Add the custom exercise to the service
     const newExercise = this.exerciseService.addCustomExercise(name);
-    console.log('Created custom exercise:', newExercise);
     
     if (this.isDialog()) {
-      // Return the created exercise to the parent dialog
       this.dialogRef?.close(newExercise);
     } else {
-      // Navigate back (page mode)
       this.router.navigateByUrl(this.returnUrl());
     }
   }

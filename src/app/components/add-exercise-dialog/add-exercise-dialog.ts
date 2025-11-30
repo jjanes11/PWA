@@ -29,9 +29,7 @@ export class AddExerciseDialogComponent {
   
   // Injected by DialogService
   dialogRef!: DialogRef<AddExerciseDialogComponent, WorkoutEntity>;
-  data = signal<{ entity: WorkoutEntity; isReplaceMode?: boolean; replaceExerciseId?: string }>({
-    entity: { id: '', name: '', exercises: [] } as any
-  });
+  data!: ReturnType<typeof signal<{ entity: WorkoutEntity; isReplaceMode?: boolean; replaceExerciseId?: string }>>;
   
   selectedExercises = signal<Exercise[]>([]);
   
@@ -87,11 +85,8 @@ export class AddExerciseDialogComponent {
       .open(CreateExercise, {})
       .afterClosed()
       .subscribe(newExercise => {
-        if (newExercise) {
-          console.log('Created new exercise:', newExercise);
-          // Exercise list will automatically update via signals
-          // User can now select the newly created exercise
-        }
+        // Exercise list will automatically update via signals
+        // User can now select the newly created exercise
       });
   }
 

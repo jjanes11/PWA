@@ -4,6 +4,8 @@ import { ExerciseService, Exercise } from '../../services/exercise.service';
 import { DataStoreService } from '../../services/data-store.service';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { ExerciseListComponent } from '../exercise-list/exercise-list';
+import { DialogService } from '../../services/dialog.service';
+import { CreateExercise } from '../create-exercise/create-exercise';
 
 @Component({
   selector: 'app-exercises',
@@ -15,6 +17,7 @@ export class ExercisesComponent {
   private router = inject(Router);
   private exerciseService = inject(ExerciseService);
   private dataStore = inject(DataStoreService);
+  private dialogService = inject(DialogService);
 
   allExercises = computed(() => this.exerciseService.allExercises());
 
@@ -45,6 +48,13 @@ export class ExercisesComponent {
 
   goBack(): void {
     this.router.navigate(['/analytics']);
+  }
+
+  createExercise(): void {
+    this.dialogService
+      .open(CreateExercise, {})
+      .afterClosed()
+      .subscribe();
   }
 
   onExerciseClick(exercise: Exercise): void {
