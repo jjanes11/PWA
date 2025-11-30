@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Workout, Routine } from '../models/workout.models';
+import { Exercise } from './exercise.service';
 
 interface PersistenceConfig {
   workoutsKey: string;
   routinesKey: string;
+  exercisesKey: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
   private readonly config: PersistenceConfig = {
     workoutsKey: 'workout-data',
-    routinesKey: 'routine-data'
+    routinesKey: 'routine-data',
+    exercisesKey: 'custom-exercises'
   };
 
   saveWorkouts(workouts: Workout[]): void {
@@ -29,6 +32,14 @@ export class StorageService {
   loadRoutines(): Routine[] {
     const routines = this.load<Routine>(this.config.routinesKey, 'routines');
     return routines.map(this.hydrateRoutine);
+  }
+
+  saveExercises(exercises: Exercise[]): void {
+    this.save(this.config.exercisesKey, exercises, 'custom exercises');
+  }
+
+  loadExercises(): Exercise[] {
+    return this.load<Exercise>(this.config.exercisesKey, 'custom exercises');
   }
 
   private save<T>(key: string, data: T[], entityName: string): void {
