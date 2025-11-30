@@ -1,6 +1,6 @@
 @if (workout(); as w) {
   <app-exercise-list-editor
-    [title]="'Edit Workout'"
+    [title]="pageTitle()"
     [workout]="w"
     [exerciseMode]="'edit'"
     [showMenu]="true"

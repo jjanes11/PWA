@@ -45,10 +45,16 @@ export class EditWorkoutComponent {
   // Use entity loader to handle route params and loading
   private entityLoader = useEntityLoader<Workout>({
     loadEntity: (id) => {
-      if (id === 'new') return null; // Handle transient workout creation
+      if (id === 'new') return null; // Will be handled in effect
       return this.workoutService.findWorkoutById(id);
     },
-    onNotFound: () => this.router.navigate(['/home'])
+    onNotFound: () => {
+      // Only navigate away if it's not the 'new' case
+      const id = this.entityLoader.entityId();
+      if (id !== 'new') {
+        this.router.navigate(['/home']);
+      }
+    }
   });
 
   workout = signal<Workout | null>(null);
@@ -119,6 +125,9 @@ export class EditWorkoutComponent {
   bottomPrimaryButton = EditorButtons.addExercise('secondary');
 
   emptyState = EmptyStates.editWorkout();
+  
+  // Show "Log Workout" for new transient workouts, "Edit Workout" for existing
+  pageTitle = computed(() => this.isTransient() ? 'Log Workout' : 'Edit Workout');
   
   closeSetTypeMenu(): void {
     this.entityEditor.closeSetTypeMenu();

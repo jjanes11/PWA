@@ -74,6 +74,12 @@ export class CalendarDayComponent {
   }
 
   onLogWorkout(): void {
-    this.router.navigate(['/start-workout']);
+    const date = this.dateStr();
+    this.router.navigate(['/edit-workout/new'], {
+      queryParams: { 
+        date: date,
+        returnUrl: `/calendar-day/${date}`
+      }
+    });
   }
 }
