@@ -70,7 +70,7 @@ export class CalendarDayComponent {
   });
 
   goBack(): void {
-    window.history.back();
+    this.router.navigate(['/calendar']);
   }
 
   onLogWorkout(): void {

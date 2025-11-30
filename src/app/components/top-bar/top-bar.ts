@@ -2,7 +2,7 @@ import { Component, input, output } from '@angular/core';
 
 import { IconComponent } from '../icon/icon';
 
-export type TopBarButtonType = 'back' | 'menu' | 'text';
+export type TopBarButtonType = 'back' | 'menu' | 'text' | 'icon';
 
 export interface TopBarButton {
   type: TopBarButtonType;
@@ -40,6 +40,12 @@ export interface TopBarButton {
         @if (rightButton()!.type === 'menu') {
           <button class="jacaona-menu-btn" (click)="rightAction.emit()">
             <app-icon name="menu-vertical" [size]="20" />
+          </button>
+        } @else if (rightButton()!.type === 'icon') {
+          <button class="jacaona-icon-btn" (click)="rightAction.emit()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path [attr.d]="rightButton()!.icon" />
+            </svg>
           </button>
         } @else if (rightButton()!.type === 'text') {
           <button 
@@ -93,6 +99,23 @@ export interface TopBarButton {
     }
 
     .jacaona-menu-btn:hover {
+      background: var(--jacaona-bg-tertiary);
+    }
+
+    .jacaona-icon-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: var(--jacaona-space-sm);
+      border-radius: var(--jacaona-radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color var(--jacaona-transition-fast);
+    }
+
+    .jacaona-icon-btn:hover {
       background: var(--jacaona-bg-tertiary);
     }
 
