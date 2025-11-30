@@ -19,16 +19,12 @@
 
   <!-- Main Content -->
   <main class="jacaona-calendar-content">
-    <!-- Previous Month -->
-    <app-calendar-month 
-      [year]="previousYear()"
-      [month]="previousMonth()"
-    />
-
-    <!-- Current Month -->
-    <app-calendar-month 
-      [year]="currentYear()"
-      [month]="currentMonth()"
-    />
+    @for (monthData of months(); track monthData.id) {
+      <app-calendar-month 
+        [id]="monthData.id"
+        [year]="monthData.year"
+        [month]="monthData.month"
+      />
+    }
   </main>
 </div>

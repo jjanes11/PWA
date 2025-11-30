@@ -1,8 +1,9 @@
 .jacaona-calendar-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   background: var(--jacaona-bg-secondary);
+  overflow: hidden;
 }
 
 .jacaona-calendar__days-header {
@@ -27,7 +28,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--jacaona-space-xl);
-  padding-top: var(--jacaona-space-xl);
   background: var(--jacaona-bg-primary);
+  overflow-y: auto;
+  scroll-behavior: smooth;
 }

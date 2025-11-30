@@ -42,6 +42,11 @@ interface CalendarDay {
     .jacaona-calendar-month {
       width: 100%;
       background: var(--jacaona-bg-primary);
+      /* Fixed height to fit exactly 2 months in viewport */
+      /* calc((100vh - top-bar - bottom-nav - days-header) / 2) */
+      height: calc((100vh - 56px - 60px - 40px) / 2);
+      display: flex;
+      flex-direction: column;
     }
 
     .jacaona-calendar-month__title {
@@ -50,6 +55,7 @@ interface CalendarDay {
       font-weight: var(--jacaona-font-weight-semibold);
       margin: 0;
       padding: var(--jacaona-space-lg) var(--jacaona-space-md);
+      flex-shrink: 0;
     }
 
     .jacaona-calendar-month__days {
@@ -58,6 +64,8 @@ interface CalendarDay {
       gap: 1px;
       background: var(--jacaona-border);
       border-top: 1px solid var(--jacaona-border);
+      flex: 1;
+      align-content: start;
     }
 
     .jacaona-calendar-month__day {
