@@ -18,6 +18,9 @@ export class CalendarComponent {
   
   @ViewChild('scrollContainer', { static: false }) scrollContainer?: ElementRef<HTMLElement>;
 
+  // Store initial months for recentering
+  private initialMonths: { year: number; month: number; id: string }[] = [];
+
   // Generate 5 months: 2 before current, current, 2 after current
   private monthsSignal = signal<{ year: number; month: number; id: string }[]>([]);
   private isLoadingSignal = signal(false);
@@ -29,28 +32,53 @@ export class CalendarComponent {
   constructor() {
     // Initialize with 5 months
     this.loadInitialMonths();
+    // Store initial months for recentering
+    this.initialMonths = this.monthsSignal();
   }
   
   private loadInitialMonths(): void {
     const today = new Date();
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth();
-    
+
     const months: { year: number; month: number; id: string }[] = [];
-    
+
     // Generate months from -2 to +2
     for (let offset = -2; offset <= 2; offset++) {
       const date = new Date(currentYear, currentMonth + offset, 1);
       months.push({
         year: date.getFullYear(),
         month: date.getMonth(),
-        id: `month-${offset}` // ID for scroll target
+        id: `month-${date.getFullYear()}-${date.getMonth()}`
       });
     }
-    
+
     this.monthsSignal.set(months);
   }
 
+  // Center view to initial months (previous/current/next)
+  centerToInitialMonths(): void {
+    // Reset months to initial
+    this.monthsSignal.set([...this.initialMonths]);
+    // Reset initialization flag to prevent lazy loading during scroll
+    this.hasInitializedSignal.set(false);
+    setTimeout(() => {
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
+      // Previous month
+      const prevDate = new Date(currentYear, currentMonth - 1, 1);
+      const prevId = `month-${prevDate.getFullYear()}-${prevDate.getMonth()}`;
+      const previousMonthElement = document.getElementById(prevId);
+      if (previousMonthElement) {
+        // Use 'nearest' to avoid scrolling too far
+        previousMonthElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      // Re-enable lazy loading after scroll completes
+      setTimeout(() => this.hasInitializedSignal.set(true), 500);
+    }, 100);
+  }
+  
   goBack(): void {
     this.router.navigate(['/analytics']);
   }
@@ -116,12 +144,21 @@ export class CalendarComponent {
   ngAfterViewInit(): void {
     // Scroll to show previous month at top (index 1, since 0 is 2 months ago)
     setTimeout(() => {
-      const previousMonthElement = document.getElementById('month--1');
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
+      // Previous month
+      const prevDate = new Date(currentYear, currentMonth - 1, 1);
+      const prevId = `month-${prevDate.getFullYear()}-${prevDate.getMonth()}`;
+      const previousMonthElement = document.getElementById(prevId);
       if (previousMonthElement) {
+        // Use 'start' to align at top
         previousMonthElement.scrollIntoView({ behavior: 'instant', block: 'start' });
       }
       // Mark as initialized after initial scroll position is set
-      this.hasInitializedSignal.set(true);
+      setTimeout(() => {
+        this.hasInitializedSignal.set(true);
+      }, 200);
     }, 100);
   }
   
