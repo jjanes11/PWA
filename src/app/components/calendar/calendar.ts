@@ -15,11 +15,16 @@ import { DatePickerDialogComponent } from '../date-picker-dialog/date-picker-dia
 export class CalendarComponent {
   private router = inject(Router);
   private dialogService = inject(DialogService);
+  
+  @ViewChild('scrollContainer', { static: false }) scrollContainer?: ElementRef<HTMLElement>;
 
   // Generate 5 months: 2 before current, current, 2 after current
   private monthsSignal = signal<{ year: number; month: number; id: string }[]>([]);
+  private isLoadingSignal = signal(false);
+  private hasInitializedSignal = signal(false);
   
   months = computed(() => this.monthsSignal());
+  isLoading = computed(() => this.isLoadingSignal());
   
   constructor() {
     // Initialize with 5 months
@@ -115,6 +120,111 @@ export class CalendarComponent {
       if (previousMonthElement) {
         previousMonthElement.scrollIntoView({ behavior: 'instant', block: 'start' });
       }
+      // Mark as initialized after initial scroll position is set
+      this.hasInitializedSignal.set(true);
     }, 100);
+  }
+  
+  onScroll(event: Event): void {
+    // Don't trigger loading until after initial setup
+    if (!this.hasInitializedSignal() || this.isLoadingSignal()) {
+      return;
+    }
+    
+    const element = event.target as HTMLElement;
+    const scrollTop = element.scrollTop;
+    const scrollHeight = element.scrollHeight;
+    const clientHeight = element.clientHeight;
+    
+    const scrollThreshold = 500; // Load when within 500px of edge
+    
+    // Scrolling near top - load older months
+    if (scrollTop < scrollThreshold) {
+      this.loadOlderMonths();
+    }
+    
+    // Scrolling near bottom - load newer months
+    if (scrollHeight - scrollTop - clientHeight < scrollThreshold) {
+      this.loadNewerMonths();
+    }
+  }
+  
+  private loadOlderMonths(): void {
+    this.isLoadingSignal.set(true);
+    
+    const currentMonths = this.monthsSignal();
+    if (currentMonths.length === 0) {
+      this.isLoadingSignal.set(false);
+      return;
+    }
+    
+    // Get the oldest month
+    const oldestMonth = currentMonths[0];
+    const oldDate = new Date(oldestMonth.year, oldestMonth.month, 1);
+    
+    // Add 3 months before the oldest
+    const newMonths: { year: number; month: number; id: string }[] = [];
+    for (let i = 3; i >= 1; i--) {
+      const date = new Date(oldDate.getFullYear(), oldDate.getMonth() - i, 1);
+      newMonths.push({
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        id: `month-${date.getFullYear()}-${date.getMonth()}`
+      });
+    }
+    
+    // Preserve scroll position by storing current scroll offset
+    const scrollContainer = this.scrollContainer?.nativeElement;
+    if (!scrollContainer) {
+      this.isLoadingSignal.set(false);
+      return;
+    }
+    
+    const previousScrollTop = scrollContainer.scrollTop;
+    const previousScrollHeight = scrollContainer.scrollHeight;
+    
+    this.monthsSignal.update(months => [...newMonths, ...months]);
+    
+    // Restore scroll position immediately after DOM update
+    requestAnimationFrame(() => {
+      if (scrollContainer) {
+        const newScrollHeight = scrollContainer.scrollHeight;
+        const heightDifference = newScrollHeight - previousScrollHeight;
+        // Adjust scroll position to maintain the same visual position
+        scrollContainer.scrollTop = previousScrollTop + heightDifference;
+      }
+      this.isLoadingSignal.set(false);
+    });
+  }
+  
+  private loadNewerMonths(): void {
+    this.isLoadingSignal.set(true);
+    
+    const currentMonths = this.monthsSignal();
+    if (currentMonths.length === 0) {
+      this.isLoadingSignal.set(false);
+      return;
+    }
+    
+    // Get the newest month
+    const newestMonth = currentMonths[currentMonths.length - 1];
+    const newDate = new Date(newestMonth.year, newestMonth.month, 1);
+    
+    // Add 3 months after the newest
+    const newMonths: { year: number; month: number; id: string }[] = [];
+    for (let i = 1; i <= 3; i++) {
+      const date = new Date(newDate.getFullYear(), newDate.getMonth() + i, 1);
+      newMonths.push({
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        id: `month-${date.getFullYear()}-${date.getMonth()}`
+      });
+    }
+    
+    this.monthsSignal.update(months => [...months, ...newMonths]);
+    
+    setTimeout(() => {
+      this.isLoadingSignal.set(false);
+    }, 50);
   }
 }

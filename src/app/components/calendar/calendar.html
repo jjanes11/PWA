@@ -18,7 +18,7 @@
   </div>
 
   <!-- Main Content -->
-  <main class="jacaona-calendar-content">
+  <main class="jacaona-calendar-content" #scrollContainer (scroll)="onScroll($event)">
     @for (monthData of months(); track monthData.id) {
       <app-calendar-month 
         [id]="monthData.id"
