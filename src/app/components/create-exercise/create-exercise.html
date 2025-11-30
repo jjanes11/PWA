@@ -1,8 +1,8 @@
-<div class="jacaona-create-exercise-container">
+<div class="jacaona-create-exercise-container" [class.jacaona-dialog-mode]="isDialog()">
   <!-- Top Bar -->
   <app-top-bar
     [title]="'Create Exercise'"
-    [leftButton]="{ type: 'back' }"
+    [leftButton]="isDialog() ? { type: 'text', text: 'Cancel' } : { type: 'back' }"
     [rightButton]="{ type: 'text', text: 'Save', disabled: !exerciseName().trim() }"
     (leftAction)="goBack()"
     (rightAction)="save()"

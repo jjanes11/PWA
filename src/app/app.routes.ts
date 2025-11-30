@@ -7,11 +7,6 @@ export const routes: Routes = [
     loadComponent: () => import('./components/add-workout/add-workout').then(m => m.AddWorkoutComponent)
   },
   { 
-    path: 'add-exercise', 
-    loadComponent: () => import('./components/add-exercise/add-exercise').then(m => m.AddExercise)
-    // Context loaded directly in component via effect() from query params
-  },
-  { 
     path: 'create-exercise', 
     loadComponent: () => import('./components/create-exercise/create-exercise').then(m => m.CreateExercise)
   },

@@ -5,6 +5,14 @@
   flex-direction: column;
 }
 
+/* Dialog Mode Overrides */
+.jacaona-create-exercise-container.jacaona-dialog-mode {
+  min-height: auto;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 /* Main Content */
 .jacaona-main-content {
   flex: 1;

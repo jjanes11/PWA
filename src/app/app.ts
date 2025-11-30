@@ -47,7 +47,7 @@ export class App {
         const path = event.url.split('?')[0];
         
         // Hide bottom nav on specific workout creation and exercise pages (not the main workouts list)
-        const hideNavRoutes = ['/workout/new', '/add-exercise', '/create-exercise', '/save-workout', '/routine/new'];
+        const hideNavRoutes = ['/workout/new', '/create-exercise', '/save-workout', '/routine/new'];
         // Also hide for specific workout detail pages (workout/:id pattern) and edit routine pages
         const isWorkoutDetail = path.match(/^\/workout\/[^/]+$/);
         const isEditRoutine = path.match(/^\/routine\/edit\//);

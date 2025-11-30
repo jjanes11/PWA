@@ -11,6 +11,8 @@ import { ExerciseListEditorComponent } from '../exercise-list-editor/exercise-li
 import { EditorButtons, EmptyStates } from '../../utils/editor-button-configs';
 import { useWorkoutEntityEditor } from '../../utils/workout-entity-editor';
 import { useEntityLoader } from '../../utils/entity-loader';
+import { DialogService } from '../../services/dialog.service';
+import { AddExerciseDialogComponent } from '../add-exercise-dialog/add-exercise-dialog';
 
 @Component({
   selector: 'app-edit-routine',
@@ -22,6 +24,7 @@ import { useEntityLoader } from '../../utils/entity-loader';
 export class EditRoutineComponent {
   private router = inject(Router);
   private routineService = inject(RoutineService);
+  private dialogService = inject(DialogService);
   
   // Use entity loader to handle route params and loading
   private entityLoader = useEntityLoader<Routine>({
@@ -82,7 +85,22 @@ export class EditRoutineComponent {
   }
 
   addExercise(): void {
-    this.entityEditor.navigateToAddExercise();
+    const routine = this.routine();
+    if (!routine) return;
+    
+    this.dialogService
+      .open(AddExerciseDialogComponent, { 
+        data: { entity: routine },
+        fullScreen: true
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result) {
+          // User added exercises - update and save routine
+          this.routine.set(result as Routine);
+          this.routineService.saveRoutine(result as Routine);
+        }
+      });
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {

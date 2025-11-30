@@ -16,6 +16,8 @@ import { useDiscardGuard } from '../../utils/discard-guard';
 import { useCleanupContext } from '../../utils/navigation-context';
 import { EditorButtons, EmptyStates } from '../../utils/editor-button-configs';
 import { useWorkoutEntityEditor } from '../../utils/workout-entity-editor';
+import { DialogService } from '../../services/dialog.service';
+import { AddExerciseDialogComponent } from '../add-exercise-dialog/add-exercise-dialog';
 
 @Component({
   selector: 'app-create-routine',
@@ -30,6 +32,7 @@ export class CreateRoutineComponent {
   private workoutService = inject(WorkoutService);
   private routineService = inject(RoutineService);
   private routineDraftService = inject(RoutineDraftService);
+  private dialogService = inject(DialogService);
   
   private queryParams = toSignal(this.route.queryParams);
   
@@ -85,8 +88,6 @@ export class CreateRoutineComponent {
     this.entityEditor.onEntityUpdated(routine);
   }
 
-  constructor() {}
-
   ngOnInit(): void {
     // Check if we have a source workout ID from query params
     const sourceWorkoutId = this.queryParams()?.['sourceWorkoutId'];
@@ -137,14 +138,27 @@ export class CreateRoutineComponent {
   }
 
   addExercise(): void {
-    // Update draft title before navigating
     const routine = this.routineDraft();
-    if (routine && this.title.trim()) {
+    if (!routine) return;
+    
+    // Update draft title before opening dialog
+    if (this.title.trim()) {
       const updatedRoutine: Routine = { ...routine, name: this.title.trim() };
       this.routineDraftService.setRoutineDraft(updatedRoutine);
     }
     
-    this.entityEditor.navigateToAddExercise();
+    this.dialogService
+      .open(AddExerciseDialogComponent, { 
+        data: { entity: routine },
+        fullScreen: true
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result) {
+          // User added exercises - update routine draft
+          this.routineDraftService.setRoutineDraft(result as Routine);
+        }
+      });
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {

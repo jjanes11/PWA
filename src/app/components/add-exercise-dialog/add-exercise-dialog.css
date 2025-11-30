@@ -1,0 +1,39 @@
+.jacaona-dialog-content {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+.jacaona-dialog-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--jacaona-space-lg);
+}
+
+.jacaona-dialog-footer {
+  padding: var(--jacaona-space-lg);
+  border-top: 1px solid var(--jacaona-border);
+  background: var(--jacaona-bg-primary);
+}
+
+.jacaona-add-exercise-btn {
+  width: 100%;
+  padding: var(--jacaona-space-md) var(--jacaona-space-lg);
+  background: var(--jacaona-accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--jacaona-radius-md);
+  font-size: var(--jacaona-font-size-base);
+  font-weight: var(--jacaona-font-weight-semibold);
+  cursor: pointer;
+  transition: var(--jacaona-transition-fast);
+}
+
+.jacaona-add-exercise-btn:hover {
+  background: var(--jacaona-accent-blue-hover);
+}
+
+.jacaona-add-exercise-btn:active {
+  transform: scale(0.98);
+}

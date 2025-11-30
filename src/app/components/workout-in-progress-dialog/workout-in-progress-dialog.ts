@@ -166,7 +166,7 @@ export class WorkoutInProgressDialog {
   private shouldHideOnCurrentRoute = computed(() => {
     const url = this.currentUrl();
     const path = url.split('?')[0]; // Extract path before query params
-    const hideDialogRoutes = ['/routine/new', '/add-exercise'];
+    const hideDialogRoutes = ['/routine/new'];
     const isEditRoutine = path.match(/^\/routine\/edit\//);
     const isEditWorkout = path.match(/^\/edit-workout\//);
     const isWorkoutDetail = path.match(/^\/workout\/[^/]+$/) && !path.includes('/workout/new');

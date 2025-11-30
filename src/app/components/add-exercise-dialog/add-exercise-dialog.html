@@ -1,4 +1,4 @@
-<div class="jacaona-add-exercise-container">
+<div class="jacaona-dialog-content">
   <!-- Top Bar -->
   <app-top-bar
     [title]="isReplaceMode() ? 'Replace Exercise' : 'Add Exercise'"
@@ -9,16 +9,18 @@
   />
 
   <!-- Exercise List Component -->
-  <app-exercise-list
-    [allExercises]="allExercises()"
-    [recentExercises]="recentExercises()"
-    [selectedExercises]="selectedExercises()"
-    (exerciseClick)="onExerciseClick($event)"
-  />
+  <div class="jacaona-dialog-body">
+    <app-exercise-list
+      [allExercises]="allExercises()"
+      [recentExercises]="recentExercises()"
+      [selectedExercises]="selectedExercises()"
+      (exerciseClick)="onExerciseClick($event)"
+    />
+  </div>
 
   <!-- Add Exercise Button -->
   @if (selectedExercises().length > 0) {
-    <div class="jacaona-bottom-button-container">
+    <div class="jacaona-dialog-footer">
       <button class="jacaona-add-exercise-btn" (click)="addSelectedExercises()">
         @if (selectedExercises().length === 1) {
           Add exercise

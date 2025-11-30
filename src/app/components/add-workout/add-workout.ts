@@ -14,6 +14,8 @@ import { useDiscardGuard } from '../../utils/discard-guard';
 import { useCleanupContext } from '../../utils/navigation-context';
 import { EditorButtons, EmptyStates } from '../../utils/editor-button-configs';
 import { useWorkoutEntityEditor } from '../../utils/workout-entity-editor';
+import { DialogService } from '../../services/dialog.service';
+import { AddExerciseDialogComponent } from '../add-exercise-dialog/add-exercise-dialog';
 
 @Component({
   selector: 'app-add-workout',
@@ -26,6 +28,7 @@ export class AddWorkoutComponent {
   private activeWorkoutService = inject(ActiveWorkoutService);
   private uiService = inject(WorkoutUiService);
   private router = inject(Router);
+  private dialogService = inject(DialogService);
   
   activeWorkout = this.activeWorkoutService.activeWorkoutSignal();
   
@@ -108,7 +111,21 @@ export class AddWorkoutComponent {
   }
 
   addExercise(): void {
-    this.entityEditor.navigateToAddExercise();
+    const workout = this.activeWorkout();
+    if (!workout) return;
+    
+    this.dialogService
+      .open(AddExerciseDialogComponent, { 
+        data: { entity: workout },
+        fullScreen: true
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result) {
+          // User added exercises - update active workout
+          this.activeWorkoutService.setActiveWorkout(result as Workout);
+        }
+      });
   }
 
   discardWorkout(): void {

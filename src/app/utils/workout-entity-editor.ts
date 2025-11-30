@@ -54,9 +54,6 @@ export interface WorkoutEntityEditorResult<T extends WorkoutEntity> {
   /** Handler for exercise reordering via drag and drop */
   onExerciseReorder: (event: DragReorderEvent) => void;
   
-  /** Navigate to add-exercise page with proper context */
-  navigateToAddExercise: () => void;
-  
   /** Signal indicating if set type menu is visible */
   showSetTypeMenu: Signal<boolean>;
   
@@ -123,17 +120,8 @@ export function useWorkoutEntityEditor<T extends WorkoutEntity>(
     getWorkout: config.getEntity,
     onWorkoutUpdated: config.onEntityUpdated,
     onReplaceExercise: (exerciseId: string) => {
-      const entity = config.getEntity();
-      if (entity) {
-        router.navigate(['/add-exercise'], {
-          queryParams: {
-            workoutId: entity.id,
-            source: config.source,
-            replaceExerciseId: exerciseId,
-            returnUrl: router.url
-          }
-        });
-      }
+      // TODO: Implement replace exercise with dialog
+      console.log('Replace exercise not yet implemented with dialog pattern');
     }
   });
   
@@ -144,20 +132,6 @@ export function useWorkoutEntityEditor<T extends WorkoutEntity>(
     
     const reordered = workoutEditor.reorderExercises(entity, event.fromId, event.toId);
     config.onEntityUpdated(reordered);
-  };
-  
-  // Navigate to add-exercise page
-  const navigateToAddExercise = (): void => {
-    const entity = config.getEntity();
-    if (!entity) return;
-    
-    router.navigate(['/add-exercise'], {
-      queryParams: {
-        workoutId: entity.id,
-        source: config.source,
-        returnUrl: router.url
-      }
-    });
   };
   
   // Save action: update entity with title and navigate away
@@ -200,7 +174,6 @@ export function useWorkoutEntityEditor<T extends WorkoutEntity>(
     onExerciseAction: (event: ExerciseActionEvent) => 
       exerciseCardController.handleAction(event),
     onExerciseReorder,
-    navigateToAddExercise,
     showSetTypeMenu: exerciseCardController.showSetTypeMenu,
     selectedSet: exerciseCardController.selectedSet,
     closeSetTypeMenu: () => exerciseCardController.closeSetTypeMenu(),

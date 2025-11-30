@@ -17,6 +17,9 @@ import { ExerciseListEditorComponent } from '../exercise-list-editor/exercise-li
 import { EditorButtons, EmptyStates } from '../../utils/editor-button-configs';
 import { useWorkoutEntityEditor } from '../../utils/workout-entity-editor';
 import { useEntityLoader } from '../../utils/entity-loader';
+import { DialogService } from '../../services/dialog.service';
+import { AddExerciseDialogComponent } from '../add-exercise-dialog/add-exercise-dialog';
+import { generateId } from '../../utils/id-generator';
 
 @Component({
   selector: 'app-edit-workout',
@@ -28,29 +31,64 @@ export class EditWorkoutComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private workoutService = inject(WorkoutService);
+  private dialogService = inject(DialogService);
 
-  // Read returnUrl from query params
-  private returnUrl = toSignal(
-    this.route.queryParams.pipe(map(params => params['returnUrl'] as string | undefined))
+  // Read query params
+  private queryParams = toSignal(this.route.queryParams);
+  private returnUrl = computed(() => 
+    (this.queryParams()?.['returnUrl'] as string | undefined) || '/home'
+  );
+  private dateParam = computed(() => 
+    this.queryParams()?.['date'] as string | undefined
   );
 
   // Use entity loader to handle route params and loading
   private entityLoader = useEntityLoader<Workout>({
-    loadEntity: (id) => this.workoutService.findWorkoutById(id),
+    loadEntity: (id) => {
+      if (id === 'new') return null; // Handle transient workout creation
+      return this.workoutService.findWorkoutById(id);
+    },
     onNotFound: () => this.router.navigate(['/home'])
   });
 
-  workout = this.entityLoader.entity;
-  workoutTitle = signal('');
+  workout = signal<Workout | null>(null);
+  workoutTitle = signal('Workout');
   workoutDescription = signal('');
+  isTransient = signal(false);
   
   constructor() {
-    // Update title and description when workout loads
+    // Handle loading existing workout OR creating new transient workout
     effect(() => {
-      const w = this.workout();
-      if (w) {
-        this.workoutTitle.set(w.name);
-        this.workoutDescription.set(w.notes || '');
+      const loadedWorkout = this.entityLoader.entity();
+      const entityId = this.entityLoader.entityId();
+      
+      if (loadedWorkout) {
+        // Existing workout
+        this.workout.set(loadedWorkout);
+        this.workoutTitle.set(loadedWorkout.name);
+        this.workoutDescription.set(loadedWorkout.notes || '');
+        this.isTransient.set(false);
+      } else if (entityId === 'new' && !this.workout()) {
+        // Create new transient workout
+        const dateStr = this.dateParam();
+        const date = dateStr ? new Date(dateStr + 'T12:00:00') : new Date();
+        
+        const transientWorkout: Workout = {
+          id: generateId(),
+          name: 'Workout',
+          exercises: [],
+          date: date,
+          startTime: date,
+          endTime: date,
+          duration: 0,
+          completed: true,
+          notes: ''
+        };
+        
+        this.workout.set(transientWorkout);
+        this.workoutTitle.set('Workout');
+        this.workoutDescription.set('');
+        this.isTransient.set(true);
       }
     });
   }
@@ -60,7 +98,10 @@ export class EditWorkoutComponent {
     getEntity: () => this.workout(),
     onEntityUpdated: (workout) => {
       this.workout.set(workout);
-      this.workoutService.saveWorkout(workout);
+      // Only auto-save if not transient
+      if (!this.isTransient()) {
+        this.workoutService.saveWorkout(workout);
+      }
     },
     source: WorkoutSource.PersistedWorkout,
     getTitle: () => this.workoutTitle()
@@ -131,30 +172,49 @@ export class EditWorkoutComponent {
   });
 
   cancel(): void {
-    const returnUrl = this.returnUrl();
-    this.entityEditor.cancel(returnUrl || '/home');
+    // For transient workouts, just discard (don't save)
+    // For existing workouts, changes are already auto-saved
+    this.router.navigateByUrl(this.returnUrl());
   }
 
   saveWorkout(): void {
     const workout = this.workout();
     if (!workout) return;
 
-    // Update workout with new values before saving
+    // Update workout with new values
     const updatedWorkout: Workout = {
       ...workout,
       name: this.workoutTitle().trim() || 'Untitled Workout',
       notes: this.workoutDescription().trim()
     };
-    this.workout.set(updatedWorkout);
+    
+    // Always save (first time for transient, update for existing)
     this.workoutService.saveWorkout(updatedWorkout);
     
-    // Navigate using returnUrl
-    const returnUrl = this.returnUrl();
-    this.entityEditor.cancel(returnUrl || '/home'); // Navigate using editor's cancel (just navigation)
+    // Navigate back
+    this.router.navigateByUrl(this.returnUrl());
   }
 
   addExercise(): void {
-    this.entityEditor.navigateToAddExercise();
+    const workout = this.workout();
+    if (!workout) return;
+    
+    this.dialogService
+      .open(AddExerciseDialogComponent, { 
+        data: { entity: workout },
+        fullScreen: true
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result) {
+          // User added exercises - update workout
+          this.workout.set(result as Workout);
+          // Only auto-save if not transient
+          if (!this.isTransient()) {
+            this.workoutService.saveWorkout(result as Workout);
+          }
+        }
+      });
   }
 
   onExerciseAction(event: ExerciseActionEvent): void {
