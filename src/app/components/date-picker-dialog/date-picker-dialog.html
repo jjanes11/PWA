@@ -1,0 +1,25 @@
+<div class="jacaona-date-picker">
+  <!-- Top Bar -->
+  <app-top-bar
+    [title]="'Select Date'"
+    [leftButton]="{ type: 'text', text: 'Cancel' }"
+    [rightButton]="{ type: 'text', text: 'Go to Date' }"
+    (leftAction)="cancel()"
+    (rightAction)="confirm()"
+  />
+
+  <!-- Date Input -->
+  <div class="jacaona-date-picker__content">
+    <label class="jacaona-date-picker__label">
+      Choose a date to view or log workouts
+    </label>
+    
+    <input 
+      type="date" 
+      class="jacaona-date-picker__input"
+      [value]="selectedDate()"
+      (change)="onDateChange($event)"
+      autofocus
+    />
+  </div>
+</div>

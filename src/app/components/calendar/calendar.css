@@ -32,3 +32,37 @@
   overflow-y: auto;
   scroll-behavior: smooth;
 }
+
+/* FAB (Floating Action Button) */
+.jacaona-fab {
+  position: fixed;
+  bottom: calc(60px + var(--jacaona-space-xl)); /* Above bottom nav */
+  right: var(--jacaona-space-lg);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--jacaona-accent-blue);
+  color: white;
+  border: none;
+  box-shadow: var(--jacaona-shadow-lg);
+  cursor: pointer;
+  z-index: var(--jacaona-z-fixed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--jacaona-transition-fast);
+}
+
+.jacaona-fab:hover {
+  background: var(--jacaona-accent-blue-hover);
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(33, 150, 243, 0.4);
+}
+
+.jacaona-fab:active {
+  transform: scale(0.95);
+}
+
+.jacaona-fab svg {
+  display: block;
+}

@@ -2,6 +2,8 @@ import { Component, inject, computed, signal, effect, ViewChild, ElementRef } fr
 import { Router } from '@angular/router';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { CalendarMonthComponent } from '../calendar-month/calendar-month';
+import { DialogService } from '../../services/dialog.service';
+import { DatePickerDialogComponent } from '../date-picker-dialog/date-picker-dialog';
 
 @Component({
   selector: 'app-calendar',
@@ -12,9 +14,19 @@ import { CalendarMonthComponent } from '../calendar-month/calendar-month';
 })
 export class CalendarComponent {
   private router = inject(Router);
+  private dialogService = inject(DialogService);
 
   // Generate 5 months: 2 before current, current, 2 after current
-  months = computed(() => {
+  private monthsSignal = signal<{ year: number; month: number; id: string }[]>([]);
+  
+  months = computed(() => this.monthsSignal());
+  
+  constructor() {
+    // Initialize with 5 months
+    this.loadInitialMonths();
+  }
+  
+  private loadInitialMonths(): void {
     const today = new Date();
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth();
@@ -31,11 +43,69 @@ export class CalendarComponent {
       });
     }
     
-    return months;
-  });
+    this.monthsSignal.set(months);
+  }
 
   goBack(): void {
     this.router.navigate(['/analytics']);
+  }
+  
+  openDatePicker(): void {
+    this.dialogService
+      .open(DatePickerDialogComponent, {})
+      .afterClosed()
+      .subscribe(date => {
+        if (date) {
+          this.jumpToDate(date);
+        }
+      });
+  }
+  
+  private jumpToDate(date: Date): void {
+    // Ensure the month exists in calendar
+    this.ensureMonthExists(date);
+    
+    // Navigate to day view
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
+    
+    this.router.navigate(['/calendar-day', dateStr]);
+  }
+  
+  private ensureMonthExists(date: Date): void {
+    const targetYear = date.getFullYear();
+    const targetMonth = date.getMonth();
+    
+    const exists = this.monthsSignal().some(m => 
+      m.year === targetYear && m.month === targetMonth
+    );
+    
+    if (!exists) {
+      // Add month and re-sort chronologically
+      this.monthsSignal.update(months => {
+        const newMonth = {
+          year: targetYear,
+          month: targetMonth,
+          id: `month-${targetYear}-${targetMonth}`
+        };
+        
+        return [...months, newMonth].sort((a, b) => {
+          const dateA = new Date(a.year, a.month, 1);
+          const dateB = new Date(b.year, b.month, 1);
+          return dateA.getTime() - dateB.getTime();
+        });
+      });
+      
+      // Scroll to the new month after it's rendered
+      setTimeout(() => {
+        const element = document.getElementById(`month-${targetYear}-${targetMonth}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
   }
   
   ngAfterViewInit(): void {
