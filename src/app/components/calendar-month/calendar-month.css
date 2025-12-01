@@ -1,0 +1,113 @@
+/* Calendar Month Component Styles */
+
+.jacaona-calendar-month {
+  width: 100%;
+  background: var(--jacaona-bg-primary);
+  /* Responsive height to fit 2 months in viewport */
+  height: calc((100vh - 56px - 60px - 40px) / 2);
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .jacaona-calendar-month {
+    height: calc((100vh - 56px - 60px - 32px) / 2);
+  }
+}
+
+/* Month Title */
+.jacaona-calendar-month__title {
+  color: var(--jacaona-text-primary);
+  font-size: var(--jacaona-font-size-lg);
+  font-weight: var(--jacaona-font-weight-semibold);
+  margin: 0;
+  padding: var(--jacaona-space-lg) var(--jacaona-space-md);
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .jacaona-calendar-month__title {
+    font-size: var(--jacaona-font-size-base);
+    padding: var(--jacaona-space-md) var(--jacaona-space-sm);
+  }
+}
+
+/* Days Grid */
+.jacaona-calendar-month__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--jacaona-border);
+  border-top: 1px solid var(--jacaona-border);
+  flex: 1;
+  align-content: start;
+}
+
+/* Day Cell */
+.jacaona-calendar-month__day {
+  background: var(--jacaona-bg-primary);
+  color: var(--jacaona-text-primary);
+  padding: var(--jacaona-space-md);
+  text-align: center;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--jacaona-font-size-base);
+  border: none;
+  border-bottom: 1px solid var(--jacaona-border);
+  cursor: pointer;
+  transition: var(--jacaona-transition-fast);
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .jacaona-calendar-month__day {
+    padding: var(--jacaona-space-xs);
+    min-height: 40px;
+    font-size: var(--jacaona-font-size-sm);
+  }
+}
+
+@media (max-width: 400px) {
+  .jacaona-calendar-month__day {
+    padding: var(--jacaona-space-xs) 2px;
+    min-height: 36px;
+    font-size: var(--jacaona-font-size-xs);
+  }
+}
+
+/* Day Cell States */
+.jacaona-calendar-month__day:hover:not(:disabled):not(.jacaona-calendar-month__day--placeholder) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.jacaona-calendar-month__day--placeholder {
+  visibility: hidden;
+  cursor: default;
+}
+
+/* Day with Workout */
+.jacaona-calendar-month__day--has-workout .jacaona-calendar-month__day-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--jacaona-accent-blue);
+}
+
+@media (max-width: 768px) {
+  .jacaona-calendar-month__day--has-workout .jacaona-calendar-month__day-number {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 400px) {
+  .jacaona-calendar-month__day--has-workout .jacaona-calendar-month__day-number {
+    width: 24px;
+    height: 24px;
+  }
+}

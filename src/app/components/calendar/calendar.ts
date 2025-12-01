@@ -1,14 +1,33 @@
-import { Component, inject, computed, signal, effect, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, computed, signal, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { CalendarMonthComponent } from '../calendar-month/calendar-month';
+import { CalendarWeekdaysComponent } from '../calendar-weekdays/calendar-weekdays';
 import { DialogService } from '../../services/dialog.service';
 import { DatePickerDialogComponent } from '../date-picker-dialog/date-picker-dialog';
+import {
+  MonthData,
+  generateMonthRange,
+  generateMonthsBefore,
+  generateMonthsAfter,
+  sortMonthsChronologically,
+  findMonth,
+  getPreviousMonth,
+  formatDateYMD
+} from '../../utils/calendar.utils';
+import {
+  setScrollPosition,
+  getScrollPosition,
+  isNearTop,
+  isNearBottom,
+  preserveScrollPosition,
+  scrollToElementById
+} from '../../utils/scroll.utils';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [TopBarComponent, CalendarMonthComponent],
+  imports: [TopBarComponent, CalendarMonthComponent, CalendarWeekdaysComponent],
   templateUrl: './calendar.html',
   styleUrl: './calendar.css'
 })
@@ -18,71 +37,83 @@ export class CalendarComponent {
   
   @ViewChild('scrollContainer', { static: false }) scrollContainer?: ElementRef<HTMLElement>;
 
-  // Store initial months for recentering
-  private initialMonths: { year: number; month: number; id: string }[] = [];
+  // Constants
+  private readonly INITIAL_MONTH_RANGE = { start: -2, end: 2 };
+  private readonly MONTHS_TO_LOAD = 3;
+  private readonly SCROLL_THRESHOLD = 500;
+  private readonly RECENTER_TIMEOUT = 100;
+  private readonly RECENTER_COMPLETE_TIMEOUT = 500;
+  private readonly INITIAL_SCROLL_TIMEOUT = 100;
 
-  // Generate 5 months: 2 before current, current, 2 after current
-  private monthsSignal = signal<{ year: number; month: number; id: string }[]>([]);
+  // State
+  private initialMonths: MonthData[] = [];
+  private monthsSignal = signal<MonthData[]>([]);
   private isLoadingSignal = signal(false);
   private hasInitializedSignal = signal(false);
   
+  // Computed
   months = computed(() => this.monthsSignal());
   isLoading = computed(() => this.isLoadingSignal());
   
   constructor() {
-    // Initialize with 5 months
     this.loadInitialMonths();
-    // Store initial months for recentering
     this.initialMonths = this.monthsSignal();
   }
   
+  /**
+   * Initialize calendar with 5 months centered on current month
+   */
   private loadInitialMonths(): void {
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth();
-
-    const months: { year: number; month: number; id: string }[] = [];
-
-    // Generate months from -2 to +2
-    for (let offset = -2; offset <= 2; offset++) {
-      const date = new Date(currentYear, currentMonth + offset, 1);
-      months.push({
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        id: `month-${date.getFullYear()}-${date.getMonth()}`
-      });
-    }
-
+    const { start, end } = this.INITIAL_MONTH_RANGE;
+    const months = generateMonthRange(new Date(), start, end);
     this.monthsSignal.set(months);
   }
 
-  // Center view to initial months (previous/current/next)
+  /**
+   * Reset calendar to initial view and scroll to previous month
+   */
   centerToInitialMonths(): void {
-    // Reset months to initial
-    this.monthsSignal.set([...this.initialMonths]);
-    // Reset initialization flag to prevent lazy loading during scroll
-    this.hasInitializedSignal.set(false);
-    setTimeout(() => {
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      const currentMonth = today.getMonth();
-      // Previous month
-      const prevDate = new Date(currentYear, currentMonth - 1, 1);
-      const prevId = `month-${prevDate.getFullYear()}-${prevDate.getMonth()}`;
-      const previousMonthElement = document.getElementById(prevId);
-      if (previousMonthElement) {
-        // Use 'nearest' to avoid scrolling too far
-        previousMonthElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-      // Re-enable lazy loading after scroll completes
-      setTimeout(() => this.hasInitializedSignal.set(true), 500);
-    }, 100);
+    const container = this.scrollContainer?.nativeElement;
+    if (!container) return;
+    
+    const previousMonth = getPreviousMonth(new Date());
+    const element = document.getElementById(previousMonth.id);
+    
+    // If previous month is visible, just scroll to it
+    if (element) {
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      const relativePosition = elementRect.top - containerRect.top;
+      
+      container.scrollTo({
+        top: relativePosition + container.scrollTop,
+        behavior: 'smooth'
+      });
+    } else {
+      // If not visible, reset months and scroll
+      this.monthsSignal.set([...this.initialMonths]);
+      this.hasInitializedSignal.set(false);
+      
+      setTimeout(() => {
+        scrollToElementById(previousMonth.id, 'smooth');
+        
+        setTimeout(() => {
+          this.hasInitializedSignal.set(true);
+        }, this.RECENTER_COMPLETE_TIMEOUT);
+      }, this.RECENTER_TIMEOUT);
+    }
   }
   
+  /**
+   * Navigate back to analytics page
+   */
   goBack(): void {
     this.router.navigate(['/analytics']);
   }
   
+  /**
+   * Open date picker dialog
+   */
   openDatePicker(): void {
     this.dialogService
       .open(DatePickerDialogComponent, {})
@@ -94,105 +125,100 @@ export class CalendarComponent {
       });
   }
   
+  /**
+   * Jump to a specific date in the calendar
+   */
   private jumpToDate(date: Date): void {
-    // Ensure the month exists in calendar
     this.ensureMonthExists(date);
-    
-    // Navigate to day view
+    this.navigateToDayView(date);
+  }
+  
+  /**
+   * Navigate to day view for a specific date
+   */
+  private navigateToDayView(date: Date): void {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const dateStr = `${year}-${month}-${day}`;
-    
+    const month = date.getMonth();
+    const day = date.getDate();
+    const dateStr = formatDateYMD(year, month, day);
     this.router.navigate(['/calendar-day', dateStr]);
   }
   
+  /**
+   * Ensure a month exists in the calendar, adding it if necessary
+   */
   private ensureMonthExists(date: Date): void {
     const targetYear = date.getFullYear();
     const targetMonth = date.getMonth();
     
-    const exists = this.monthsSignal().some(m => 
-      m.year === targetYear && m.month === targetMonth
-    );
+    const exists = findMonth(this.monthsSignal(), targetYear, targetMonth);
     
     if (!exists) {
-      // Add month and re-sort chronologically
-      this.monthsSignal.update(months => {
-        const newMonth = {
-          year: targetYear,
-          month: targetMonth,
-          id: `month-${targetYear}-${targetMonth}`
-        };
-        
-        return [...months, newMonth].sort((a, b) => {
-          const dateA = new Date(a.year, a.month, 1);
-          const dateB = new Date(b.year, b.month, 1);
-          return dateA.getTime() - dateB.getTime();
-        });
-      });
-      
-      // Scroll to the new month after it's rendered
-      setTimeout(() => {
-        const element = document.getElementById(`month-${targetYear}-${targetMonth}`);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
+      this.addMonthAndScroll(targetYear, targetMonth);
     }
   }
   
-  ngAfterViewInit(): void {
-    // Set scroll position immediately without animation to avoid glitch
-    const scrollContainer = this.scrollContainer?.nativeElement;
-    if (!scrollContainer) return;
-
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth();
-    
-    // Previous month (should be at index 1 in our -2,-1,0,+1,+2 array)
-    const prevDate = new Date(currentYear, currentMonth - 1, 1);
-    const prevId = `month-${prevDate.getFullYear()}-${prevDate.getMonth()}`;
-    
-    // Use multiple requestAnimationFrame to ensure DOM is fully ready
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const previousMonthElement = document.getElementById(prevId);
-        if (previousMonthElement && scrollContainer) {
-          // Set scroll position directly without scrollIntoView to avoid animation
-          scrollContainer.scrollTop = previousMonthElement.offsetTop;
-        }
-        
-        // Mark as initialized after scroll position is set
-        this.hasInitializedSignal.set(true);
-      });
+  /**
+   * Add a month to the calendar and scroll to it
+   */
+  private addMonthAndScroll(year: number, month: number): void {
+    this.monthsSignal.update(months => {
+      const newMonth: MonthData = { year, month, id: `month-${year}-${month}` };
+      return sortMonthsChronologically([...months, newMonth]);
     });
+    
+    setTimeout(() => {
+      scrollToElementById(`month-${year}-${month}`, 'smooth');
+    }, this.RECENTER_TIMEOUT);
   }
   
+  /**
+   * Set initial scroll position after view initialization
+   */
+  ngAfterViewInit(): void {
+    const container = this.scrollContainer?.nativeElement;
+    if (!container) return;
+
+    setTimeout(() => {
+      const previousMonth = getPreviousMonth(new Date());
+      const element = document.getElementById(previousMonth.id);
+      
+      if (element && container) {
+        // Calculate position relative to scrollable container
+        const containerRect = container.getBoundingClientRect();
+        const elementRect = element.getBoundingClientRect();
+        const relativePosition = elementRect.top - containerRect.top;
+        
+        // Set scroll position so previous month appears at top of scrollable area
+        container.scrollTop = relativePosition + container.scrollTop;
+        
+        this.hasInitializedSignal.set(true);
+      }
+    }, this.INITIAL_SCROLL_TIMEOUT);
+  }
+  
+  /**
+   * Handle scroll events for infinite loading
+   */
   onScroll(event: Event): void {
-    // Don't trigger loading until after initial setup
     if (!this.hasInitializedSignal() || this.isLoadingSignal()) {
       return;
     }
     
-    const element = event.target as HTMLElement;
-    const scrollTop = element.scrollTop;
-    const scrollHeight = element.scrollHeight;
-    const clientHeight = element.clientHeight;
+    const container = event.target as HTMLElement;
     
-    const scrollThreshold = 500; // Load when within 500px of edge
-    
-    // Scrolling near top - load older months
-    if (scrollTop < scrollThreshold) {
+    if (isNearTop(container, this.SCROLL_THRESHOLD)) {
       this.loadOlderMonths();
     }
     
-    // Scrolling near bottom - load newer months
-    if (scrollHeight - scrollTop - clientHeight < scrollThreshold) {
+    if (isNearBottom(container, this.SCROLL_THRESHOLD)) {
       this.loadNewerMonths();
     }
   }
   
+  /**
+   * Load older months (prepend to beginning)
+   */
   private loadOlderMonths(): void {
     this.isLoadingSignal.set(true);
     
@@ -202,45 +228,15 @@ export class CalendarComponent {
       return;
     }
     
-    // Get the oldest month
     const oldestMonth = currentMonths[0];
-    const oldDate = new Date(oldestMonth.year, oldestMonth.month, 1);
+    const newMonths = generateMonthsBefore(oldestMonth, this.MONTHS_TO_LOAD);
     
-    // Add 3 months before the oldest
-    const newMonths: { year: number; month: number; id: string }[] = [];
-    for (let i = 3; i >= 1; i--) {
-      const date = new Date(oldDate.getFullYear(), oldDate.getMonth() - i, 1);
-      newMonths.push({
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        id: `month-${date.getFullYear()}-${date.getMonth()}`
-      });
-    }
-    
-    // Preserve scroll position by storing current scroll offset
-    const scrollContainer = this.scrollContainer?.nativeElement;
-    if (!scrollContainer) {
-      this.isLoadingSignal.set(false);
-      return;
-    }
-    
-    const previousScrollTop = scrollContainer.scrollTop;
-    const previousScrollHeight = scrollContainer.scrollHeight;
-    
-    this.monthsSignal.update(months => [...newMonths, ...months]);
-    
-    // Restore scroll position immediately after DOM update
-    requestAnimationFrame(() => {
-      if (scrollContainer) {
-        const newScrollHeight = scrollContainer.scrollHeight;
-        const heightDifference = newScrollHeight - previousScrollHeight;
-        // Adjust scroll position to maintain the same visual position
-        scrollContainer.scrollTop = previousScrollTop + heightDifference;
-      }
-      this.isLoadingSignal.set(false);
-    });
+    this.prependMonthsAndPreserveScroll(newMonths);
   }
   
+  /**
+   * Load newer months (append to end)
+   */
   private loadNewerMonths(): void {
     this.isLoadingSignal.set(true);
     
@@ -250,25 +246,36 @@ export class CalendarComponent {
       return;
     }
     
-    // Get the newest month
     const newestMonth = currentMonths[currentMonths.length - 1];
-    const newDate = new Date(newestMonth.year, newestMonth.month, 1);
-    
-    // Add 3 months after the newest
-    const newMonths: { year: number; month: number; id: string }[] = [];
-    for (let i = 1; i <= 3; i++) {
-      const date = new Date(newDate.getFullYear(), newDate.getMonth() + i, 1);
-      newMonths.push({
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        id: `month-${date.getFullYear()}-${date.getMonth()}`
-      });
-    }
+    const newMonths = generateMonthsAfter(newestMonth, this.MONTHS_TO_LOAD);
     
     this.monthsSignal.update(months => [...months, ...newMonths]);
     
     setTimeout(() => {
       this.isLoadingSignal.set(false);
     }, 50);
+  }
+  
+  /**
+   * Prepend months while preserving scroll position
+   */
+  private prependMonthsAndPreserveScroll(newMonths: MonthData[]): void {
+    const container = this.scrollContainer?.nativeElement;
+    if (!container) {
+      this.isLoadingSignal.set(false);
+      return;
+    }
+    
+    const { top: previousTop, height: previousHeight } = getScrollPosition(container);
+    
+    this.monthsSignal.update(months => [...newMonths, ...months]);
+    
+    requestAnimationFrame(() => {
+      if (container) {
+        const newHeight = container.scrollHeight;
+        container.scrollTop = preserveScrollPosition(previousTop, previousHeight, newHeight);
+      }
+      this.isLoadingSignal.set(false);
+    });
   }
 }

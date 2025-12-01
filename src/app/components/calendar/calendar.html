@@ -8,18 +8,10 @@
     (rightAction)="centerToInitialMonths()"
   />
 
-  <!-- Days of Week Stripe -->
-  <div class="jacaona-calendar__days-header">
-    <div class="jacaona-calendar__day-name">Mon</div>
-    <div class="jacaona-calendar__day-name">Tue</div>
-    <div class="jacaona-calendar__day-name">Wed</div>
-    <div class="jacaona-calendar__day-name">Thu</div>
-    <div class="jacaona-calendar__day-name">Fri</div>
-    <div class="jacaona-calendar__day-name">Sat</div>
-    <div class="jacaona-calendar__day-name">Sun</div>
-  </div>
+  <!-- Weekday Header (Atomic Component) -->
+  <app-calendar-weekdays />
 
-  <!-- Main Content -->
+  <!-- Scrollable Month List -->
   <main class="jacaona-calendar-content" #scrollContainer (scroll)="onScroll($event)">
     @for (monthData of months(); track monthData.id) {
       <app-calendar-month 
@@ -30,7 +22,7 @@
     }
   </main>
   
-  <!-- FAB for quick date jump -->
+  <!-- FAB (Floating Action Button) -->
   <button 
     class="jacaona-fab"
     aria-label="Jump to date"
