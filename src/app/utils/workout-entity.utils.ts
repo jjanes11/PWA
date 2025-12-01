@@ -34,6 +34,10 @@ export function workoutFromTemplate(
   const exercises: Exercise[] = routine.exercises.map(exerciseTemplate => ({
     id: generateId(),
     name: exerciseTemplate.name,
+    equipment: exerciseTemplate.equipment,
+    primaryMuscleGroup: exerciseTemplate.primaryMuscleGroup,
+    otherMuscles: exerciseTemplate.otherMuscles,
+    exerciseType: exerciseTemplate.exerciseType,
     sets: exerciseTemplate.sets.map(setTemplate => ({
       id: generateId(),
       reps: setTemplate.reps,
@@ -69,6 +73,10 @@ function cloneExercise(exercise: Exercise): Exercise {
   return {
     id: generateId(),
     name: exercise.name,
+    equipment: exercise.equipment,
+    primaryMuscleGroup: exercise.primaryMuscleGroup,
+    otherMuscles: exercise.otherMuscles,
+    exerciseType: exercise.exerciseType,
     sets: exercise.sets.map(set => cloneSet(set))
   };
 }

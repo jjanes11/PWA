@@ -1,7 +1,57 @@
+export enum EquipmentCategory {
+  None = 'none',
+  Barbell = 'barbell',
+  Dumbbell = 'dumbbell',
+  Kettlebell = 'kettlebell',
+  Machine = 'machine',
+  Plate = 'plate',
+  ResistanceBand = 'resistance-band',
+  SuspensionBand = 'suspension-band',
+  Other = 'other'
+}
+
+export enum MuscleGroup {
+  Abdominals = 'abdominals',
+  Abductors = 'abductors',
+  Adductors = 'adductors',
+  Biceps = 'biceps',
+  Calves = 'calves',
+  Cardio = 'cardio',
+  Chest = 'chest',
+  Forearms = 'forearms',
+  FullBody = 'full-body',
+  Glutes = 'glutes',
+  Hamstrings = 'hamstrings',
+  Lats = 'lats',
+  LowerBack = 'lower-back',
+  Neck = 'neck',
+  Quadriceps = 'quadriceps',
+  Shoulders = 'shoulders',
+  Traps = 'traps',
+  Triceps = 'triceps',
+  UpperBack = 'upper-back',
+  Other = 'other'
+}
+
+export enum ExerciseType {
+  WeightAndReps = 'weight-reps',           // reps and kg
+  BodyweightReps = 'bodyweight-reps',      // reps only
+  WeightedBodyweight = 'weighted-bodyweight', // reps and +kg
+  AssistedBodyweight = 'assisted-bodyweight', // reps and -kg
+  Duration = 'duration',                    // minutes
+  DurationAndWeight = 'duration-weight',    // kg and minutes
+  DistanceAndDuration = 'distance-duration', // minutes and meters
+  WeightAndDistance = 'weight-distance'     // kg and meters
+}
+
 export interface Exercise {
   id: string;
   name: string;
   sets: Set[];
+  equipment: EquipmentCategory;
+  primaryMuscleGroup: MuscleGroup;
+  otherMuscles?: MuscleGroup[];
+  exerciseType: ExerciseType;
 }
 
 export enum SetType {

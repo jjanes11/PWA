@@ -1,4 +1,4 @@
-import { Exercise, Set as WorkoutSet, Workout, Routine } from '../models/workout.models';
+import { Exercise, Set as WorkoutSet, Workout, Routine, EquipmentCategory, MuscleGroup, ExerciseType } from '../models/workout.models';
 import { generateId } from './id-generator';
 
 export const exerciseMutations = {
@@ -9,6 +9,9 @@ export const exerciseMutations = {
     const exercise: Exercise = {
       id: generateId(),
       name: exerciseName,
+      equipment: EquipmentCategory.None,
+      primaryMuscleGroup: MuscleGroup.Other,
+      exerciseType: ExerciseType.WeightAndReps,
       sets: []
     };
 

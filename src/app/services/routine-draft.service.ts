@@ -45,6 +45,10 @@ export class RoutineDraftService {
       exercises: sourceWorkout.exercises.map(exercise => ({
         id: generateId(),
         name: exercise.name,
+        equipment: exercise.equipment,
+        primaryMuscleGroup: exercise.primaryMuscleGroup,
+        otherMuscles: exercise.otherMuscles,
+        exerciseType: exercise.exerciseType,
         sets: exercise.sets.map(set => ({
           id: generateId(),
           reps: set.reps,
