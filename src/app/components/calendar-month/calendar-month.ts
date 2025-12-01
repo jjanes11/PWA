@@ -42,11 +42,19 @@ interface CalendarDay {
     .jacaona-calendar-month {
       width: 100%;
       background: var(--jacaona-bg-primary);
-      /* Fixed height to fit exactly 2 months in viewport */
+      /* Responsive height to fit exactly 2 months in viewport */
       /* calc((100vh - top-bar - bottom-nav - days-header) / 2) */
       height: calc((100vh - 56px - 60px - 40px) / 2);
       display: flex;
       flex-direction: column;
+    }
+
+    /* Mobile devices - adjust for smaller screens */
+    @media (max-width: 768px) {
+      .jacaona-calendar-month {
+        /* Slightly smaller days header on mobile */
+        height: calc((100vh - 56px - 60px - 32px) / 2);
+      }
     }
 
     .jacaona-calendar-month__title {
@@ -56,6 +64,14 @@ interface CalendarDay {
       margin: 0;
       padding: var(--jacaona-space-lg) var(--jacaona-space-md);
       flex-shrink: 0;
+    }
+
+    /* Mobile devices - reduce title padding */
+    @media (max-width: 768px) {
+      .jacaona-calendar-month__title {
+        font-size: var(--jacaona-font-size-base);
+        padding: var(--jacaona-space-md) var(--jacaona-space-sm);
+      }
     }
 
     .jacaona-calendar-month__days {
@@ -85,6 +101,24 @@ interface CalendarDay {
       width: 100%;
     }
 
+    /* Mobile devices - reduce day cell padding and min-height */
+    @media (max-width: 768px) {
+      .jacaona-calendar-month__day {
+        padding: var(--jacaona-space-xs);
+        min-height: 40px;
+        font-size: var(--jacaona-font-size-sm);
+      }
+    }
+
+    /* Small mobile devices */
+    @media (max-width: 400px) {
+      .jacaona-calendar-month__day {
+        padding: var(--jacaona-space-xs) 2px;
+        min-height: 36px;
+        font-size: var(--jacaona-font-size-xs);
+      }
+    }
+
     .jacaona-calendar-month__day:hover:not(:disabled):not(.jacaona-calendar-month__day--placeholder) {
       background: rgba(255, 255, 255, 0.05);
     }
@@ -102,6 +136,21 @@ interface CalendarDay {
       height: 32px;
       border-radius: 50%;
       background: var(--jacaona-accent-blue);
+    }
+
+    /* Mobile devices - reduce workout indicator size */
+    @media (max-width: 768px) {
+      .jacaona-calendar-month__day--has-workout .jacaona-calendar-month__day-number {
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .jacaona-calendar-month__day--has-workout .jacaona-calendar-month__day-number {
+        width: 24px;
+        height: 24px;
+      }
     }
   `]
 })

@@ -11,10 +11,17 @@
   grid-template-columns: repeat(7, 1fr);
   background: var(--jacaona-bg-secondary);
   border-top: 1px solid var(--jacaona-border);
-    padding: var(--jacaona-space-sm) 0;
+  padding: var(--jacaona-space-sm) 0;
   position: sticky;
   top: 56px; /* Height of top bar */
   z-index: var(--jacaona-z-sticky);
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  .jacaona-calendar__days-header {
+    padding: var(--jacaona-space-xs) 0;
+  }
 }
 
 .jacaona-calendar__day-name {
@@ -22,6 +29,13 @@
   text-align: center;
   font-size: var(--jacaona-font-size-sm);
   font-weight: var(--jacaona-font-weight-medium);
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  .jacaona-calendar__day-name {
+    font-size: var(--jacaona-font-size-xs);
+  }
 }
 
 .jacaona-calendar-content {
@@ -51,6 +65,21 @@
   align-items: center;
   justify-content: center;
   transition: var(--jacaona-transition-fast);
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  .jacaona-fab {
+    bottom: calc(60px + var(--jacaona-space-md));
+    right: var(--jacaona-space-md);
+    width: 48px;
+    height: 48px;
+  }
+  
+  .jacaona-fab svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 .jacaona-fab:hover {

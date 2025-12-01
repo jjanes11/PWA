@@ -142,24 +142,31 @@ export class CalendarComponent {
   }
   
   ngAfterViewInit(): void {
-    // Scroll to show previous month at top (index 1, since 0 is 2 months ago)
-    setTimeout(() => {
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      const currentMonth = today.getMonth();
-      // Previous month
-      const prevDate = new Date(currentYear, currentMonth - 1, 1);
-      const prevId = `month-${prevDate.getFullYear()}-${prevDate.getMonth()}`;
-      const previousMonthElement = document.getElementById(prevId);
-      if (previousMonthElement) {
-        // Use 'start' to align at top
-        previousMonthElement.scrollIntoView({ behavior: 'instant', block: 'start' });
-      }
-      // Mark as initialized after initial scroll position is set
-      setTimeout(() => {
+    // Set scroll position immediately without animation to avoid glitch
+    const scrollContainer = this.scrollContainer?.nativeElement;
+    if (!scrollContainer) return;
+
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    
+    // Previous month (should be at index 1 in our -2,-1,0,+1,+2 array)
+    const prevDate = new Date(currentYear, currentMonth - 1, 1);
+    const prevId = `month-${prevDate.getFullYear()}-${prevDate.getMonth()}`;
+    
+    // Use multiple requestAnimationFrame to ensure DOM is fully ready
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const previousMonthElement = document.getElementById(prevId);
+        if (previousMonthElement && scrollContainer) {
+          // Set scroll position directly without scrollIntoView to avoid animation
+          scrollContainer.scrollTop = previousMonthElement.offsetTop;
+        }
+        
+        // Mark as initialized after scroll position is set
         this.hasInitializedSignal.set(true);
-      }, 200);
-    }, 100);
+      });
+    });
   }
   
   onScroll(event: Event): void {
