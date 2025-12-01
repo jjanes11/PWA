@@ -53,4 +53,12 @@ export class ExerciseListComponent {
   isExerciseSelected(exercise: Exercise): boolean {
     return this.selectedExercises().some(e => e.id === exercise.id);
   }
+
+  formatMuscleGroup(muscleGroup: string): string {
+    // Convert kebab-case to Title Case
+    return muscleGroup
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
 }

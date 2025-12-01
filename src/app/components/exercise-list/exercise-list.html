@@ -26,7 +26,10 @@
         [class.jacaona-exercise-selected]="isExerciseSelected(exercise)"
         (click)="selectExercise(exercise)"
       >
-        <span class="jacaona-exercise-name">{{ exercise.name }}</span>
+        <div class="jacaona-exercise-info">
+          <span class="jacaona-exercise-name">{{ exercise.name }}</span>
+          <span class="jacaona-exercise-subtitle">{{ formatMuscleGroup(exercise.primaryMuscleGroup) }}</span>
+        </div>
         @if (exercise.isCustom) {
           <span class="jacaona-badge jacaona-badge--primary jacaona-badge--uppercase">Custom</span>
         }
@@ -49,7 +52,10 @@
           [class.jacaona-exercise-selected]="isExerciseSelected(exercise)"
           (click)="selectExercise(exercise)"
         >
-          <span class="jacaona-exercise-name">{{ exercise.name }}</span>
+          <div class="jacaona-exercise-info">
+            <span class="jacaona-exercise-name">{{ exercise.name }}</span>
+            <span class="jacaona-exercise-subtitle">{{ formatMuscleGroup(exercise.primaryMuscleGroup) }}</span>
+          </div>
           @if (exercise.isCustom) {
             <span class="jacaona-badge jacaona-badge--primary jacaona-badge--uppercase">Custom</span>
           }
@@ -65,7 +71,10 @@
         [class.jacaona-exercise-selected]="isExerciseSelected(exercise)"
         (click)="selectExercise(exercise)"
       >
-        <span class="jacaona-exercise-name">{{ exercise.name }}</span>
+        <div class="jacaona-exercise-info">
+          <span class="jacaona-exercise-name">{{ exercise.name }}</span>
+          <span class="jacaona-exercise-subtitle">{{ formatMuscleGroup(exercise.primaryMuscleGroup) }}</span>
+        </div>
         @if (exercise.isCustom) {
           <span class="jacaona-badge jacaona-badge--primary jacaona-badge--uppercase">Custom</span>
         }

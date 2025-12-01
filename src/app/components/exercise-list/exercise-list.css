@@ -62,6 +62,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--jacaona-space-md);
 }
 
 .jacaona-exercise-item:hover {
@@ -80,11 +81,24 @@
   background: var(--jacaona-accent-blue);
 }
 
+.jacaona-exercise-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--jacaona-space-xs);
+  flex: 1;
+  min-width: 0;
+}
+
 .jacaona-exercise-name {
   color: var(--jacaona-text-primary);
-  font-size: var(--jacaona-font-sm);
+  font-size: var(--jacaona-font-base);
   font-weight: var(--jacaona-font-weight-medium);
-  flex: 1;
+}
+
+.jacaona-exercise-subtitle {
+  color: var(--jacaona-text-secondary);
+  font-size: var(--jacaona-font-sm);
+  font-weight: var(--jacaona-font-weight-normal);
 }
 
 .jacaona-empty-subtitle {
