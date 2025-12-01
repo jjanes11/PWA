@@ -40,7 +40,7 @@
 
 .jacaona-exercise-editor__subtitle {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--jacaona-font-sm);
   color: var(--jacaona-text-secondary);
 }
 

@@ -15,7 +15,7 @@
   background: var(--jacaona-bg-secondary);
   border: none;
   border-radius: var(--jacaona-radius-lg);
-  padding: var(--jacaona-space-xl);
+  padding: var(--jacaona-space-md);
   display: flex;
   align-items: center;
   gap: var(--jacaona-space-lg);
@@ -24,7 +24,7 @@
   color: white;
   text-decoration: none;
   font-weight: var(--jacaona-font-weight-medium);
-  font-size: 16px;
+  font-size: var(--jacaona-font-sm);
 }
 
 .jacaona-start-empty-workout:hover {
@@ -64,7 +64,7 @@
   transition: all 0.15s ease;
   color: white;
   font-weight: var(--jacaona-font-weight-medium);
-  font-size: 16px;
+  font-size: var(--jacaona-font-sm);
 }
 
 .jacaona-new-routine-btn:hover {
@@ -96,8 +96,8 @@
   }
 
   .jacaona-start-empty-workout {
-    padding: var(--jacaona-space-lg);
-    font-size: 14px;
+    padding: var(--jacaona-space-md);
+    font-size: var(--jacaona-font-sm);
   }
 
   .jacaona-plus-icon {

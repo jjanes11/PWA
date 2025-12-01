@@ -81,7 +81,7 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
 
     .jacaona-routine-name {
       color: var(--jacaona-text-primary);
-      font-size: 18px;
+      font-size: 16px;
       font-weight: var(--jacaona-font-weight-semibold);
       margin: 0 0 var(--jacaona-space-xs) 0;
     }
@@ -92,7 +92,7 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
       gap: var(--jacaona-space-xs);
       align-items: center;
       color: var(--jacaona-text-secondary);
-      font-size: 14px;
+      font-size: var(--jacaona-font-sm);
     }
 
     .jacaona-exercise-name {
@@ -111,7 +111,7 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
       border: none;
       border-radius: var(--jacaona-radius-md);
       padding: var(--jacaona-space-md);
-      font-size: 16px;
+      font-size: var(--jacaona-font-sm);
       font-weight: var(--jacaona-font-weight-semibold);
       cursor: pointer;
       transition: background-color var(--jacaona-transition-fast);

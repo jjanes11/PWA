@@ -87,7 +87,7 @@ import { CardMenuComponent, MenuItem } from '../card-menu/card-menu';
     }
 
     .jacaona-workout-description {
-      font-size: 13px;
+      font-size: var(--jacaona-font-sm);
       color: var(--jacaona-text-primary);
       margin: 0 0 var(--jacaona-space-xs) 0;
       opacity: 0.85;
