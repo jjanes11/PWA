@@ -11,15 +11,30 @@
   height: 100%;
 }
 
+.jacaona-create-exercise-container.jacaona-dialog-mode .jacaona-main-content {
+  padding: var(--jacaona-space-2xl) 0;
+}
+
+.jacaona-create-exercise-container.jacaona-dialog-mode .jacaona-input-container {
+  max-width: none;
+  padding: 0 var(--jacaona-space-lg);
+}
+
+.jacaona-create-exercise-container.jacaona-dialog-mode .jacaona-properties-section {
+  max-width: none;
+}
+
 .jacaona-main-content {
   flex: 1;
   padding: var(--jacaona-space-2xl) var(--jacaona-space-lg);
+  overflow-y: auto;
 }
 
 .jacaona-input-container {
   width: 100%;
-  max-width: 400px;
+  max-width: 600px;
   margin: 0 auto;
+  margin-bottom: var(--jacaona-space-2xl);
 }
 
 .jacaona-exercise-input {
@@ -45,12 +60,75 @@
   font-weight: var(--jacaona-font-weight-normal);
 }
 
+/* Properties Section */
+.jacaona-properties-section {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.jacaona-property-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--jacaona-space-lg);
+  cursor: pointer;
+  transition: opacity var(--jacaona-transition-fast);
+  gap: var(--jacaona-space-md);
+}
+
+.jacaona-property-item:hover {
+  opacity: 0.8;
+}
+
+.jacaona-property-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--jacaona-space-xs);
+  min-width: 0;
+}
+
+.jacaona-property-title {
+  color: var(--jacaona-text-primary);
+  font-size: var(--jacaona-font-base);
+  font-weight: var(--jacaona-font-weight-medium);
+}
+
+.jacaona-property-value {
+  color: var(--jacaona-accent-blue);
+  font-size: var(--jacaona-font-sm);
+  font-weight: var(--jacaona-font-weight-normal);
+}
+
+.jacaona-chevron-icon {
+  color: var(--jacaona-text-secondary);
+  flex-shrink: 0;
+}
+
+.jacaona-property-separator {
+  height: 1px;
+  background: var(--jacaona-bg-quaternary);
+}
+
 @media (max-width: 480px) {
   .jacaona-main-content {
     padding: var(--jacaona-space-xl) var(--jacaona-space-md);
   }
   
+  .jacaona-create-exercise-container.jacaona-dialog-mode .jacaona-main-content {
+    padding: var(--jacaona-space-xl) 0;
+  }
+  
+  .jacaona-create-exercise-container.jacaona-dialog-mode .jacaona-input-container {
+    padding: 0 var(--jacaona-space-md);
+  }
+  
   .jacaona-exercise-input {
     font-size: 16px;
+  }
+  
+  .jacaona-property-item {
+    padding: var(--jacaona-space-md);
   }
 }

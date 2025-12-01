@@ -53,7 +53,7 @@ export class ExercisesComponent {
 
   createExercise(): void {
     this.dialogService
-      .open(CreateExercise, {})
+      .open(CreateExercise, { fullScreen: true })
       .afterClosed()
       .subscribe();
   }

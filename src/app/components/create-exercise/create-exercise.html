@@ -10,6 +10,7 @@
 
   <!-- Main Content -->
   <div class="jacaona-main-content">
+    <!-- Exercise Name Input -->
     <div class="jacaona-input-container">
       <input 
         type="text" 
@@ -18,6 +19,59 @@
         class="jacaona-exercise-input"
         autofocus
       />
+    </div>
+
+    <!-- Properties Section -->
+    <div class="jacaona-properties-section">
+      <!-- Equipment -->
+      <div class="jacaona-property-item" (click)="openEquipmentSelector()">
+        <div class="jacaona-property-content">
+          <div class="jacaona-property-title">Equipment</div>
+          <div class="jacaona-property-value">{{ formatEquipment() }}</div>
+        </div>
+        <svg class="jacaona-chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/>
+        </svg>
+      </div>
+
+      <div class="jacaona-property-separator"></div>
+
+      <!-- Primary Muscle Group -->
+      <div class="jacaona-property-item" (click)="openPrimaryMuscleSelector()">
+        <div class="jacaona-property-content">
+          <div class="jacaona-property-title">Primary Muscle Group</div>
+          <div class="jacaona-property-value">{{ formatPrimaryMuscle() }}</div>
+        </div>
+        <svg class="jacaona-chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/>
+        </svg>
+      </div>
+
+      <div class="jacaona-property-separator"></div>
+
+      <!-- Other Muscles -->
+      <div class="jacaona-property-item" (click)="openOtherMusclesSelector()">
+        <div class="jacaona-property-content">
+          <div class="jacaona-property-title">Other Muscles</div>
+          <div class="jacaona-property-value">{{ formatOtherMuscles() }}</div>
+        </div>
+        <svg class="jacaona-chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/>
+        </svg>
+      </div>
+
+      <div class="jacaona-property-separator"></div>
+
+      <!-- Exercise Type -->
+      <div class="jacaona-property-item" (click)="openExerciseTypeSelector()">
+        <div class="jacaona-property-content">
+          <div class="jacaona-property-title">Exercise Type</div>
+          <div class="jacaona-property-value">{{ formatExerciseType() }}</div>
+        </div>
+        <svg class="jacaona-chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/>
+        </svg>
+      </div>
     </div>
   </div>
 </div>

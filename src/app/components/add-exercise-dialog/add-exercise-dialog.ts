@@ -82,7 +82,7 @@ export class AddExerciseDialogComponent {
   create(): void {
     // Open create-exercise as nested dialog
     this.dialogService
-      .open(CreateExercise, {})
+      .open(CreateExercise, { fullScreen: true })
       .afterClosed()
       .subscribe(newExercise => {
         // Exercise list will automatically update via signals
