@@ -162,7 +162,7 @@ export class BottomNavComponent {
       this.activeTab.set('home');
     } else if (currentRoute.includes('start-workout')) {
       this.activeTab.set('start-workout');
-    } else if (currentRoute.includes('analytics')) {
+    } else if (currentRoute.includes('analytics') || currentRoute.includes('calendar')) {
       this.activeTab.set('analytics');
     } else if (currentRoute.includes('profile')) {
       this.activeTab.set('profile');
