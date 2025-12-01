@@ -1,11 +1,11 @@
 import { Component, signal, computed, inject, input, ChangeDetectionStrategy } from '@angular/core';
-import { ExerciseService, Exercise } from '../../services/exercise.service';
+import { ExerciseService } from '../../services/exercise.service';
 import { WorkoutService } from '../../services/workout.service';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { ExerciseListComponent } from '../exercise-list/exercise-list';
 import { DataStoreService } from '../../services/data-store.service';
 import { DialogRef, DialogService } from '../../services/dialog.service';
-import { WorkoutEntity } from '../../models/workout.models';
+import { WorkoutEntity, Exercise } from '../../models/workout.models';
 import { CreateExercise } from '../create-exercise/create-exercise';
 
 /**

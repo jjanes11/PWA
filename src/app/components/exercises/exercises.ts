@@ -1,11 +1,12 @@
 import { Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { ExerciseService, Exercise } from '../../services/exercise.service';
+import { ExerciseService } from '../../services/exercise.service';
 import { DataStoreService } from '../../services/data-store.service';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { ExerciseListComponent } from '../exercise-list/exercise-list';
 import { DialogService } from '../../services/dialog.service';
 import { CreateExercise } from '../create-exercise/create-exercise';
+import { Exercise } from '../../models/workout.models';
 
 @Component({
   selector: 'app-exercises',

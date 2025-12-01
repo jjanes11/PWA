@@ -2,9 +2,10 @@ import { Component, signal, inject, computed, ChangeDetectionStrategy } from '@a
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ExerciseService, Exercise } from '../../services/exercise.service';
+import { ExerciseService } from '../../services/exercise.service';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { DialogRef } from '../../services/dialog.service';
+import { Exercise } from '../../models/workout.models';
 
 @Component({
   selector: 'app-create-exercise',

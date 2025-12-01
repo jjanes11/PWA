@@ -1,6 +1,6 @@
 import { Component, input, output, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Exercise } from '../../services/exercise.service';
+import { Exercise } from '../../models/workout.models';
 
 @Component({
   selector: 'app-exercise-list',
@@ -29,7 +29,8 @@ export class ExerciseListComponent {
     }
     return this.allExercises().filter(exercise => 
       exercise.name.toLowerCase().includes(query) ||
-      exercise.category.toLowerCase().includes(query)
+      exercise.primaryMuscleGroup.toLowerCase().includes(query) ||
+      exercise.equipment.toLowerCase().includes(query)
     );
   });
   

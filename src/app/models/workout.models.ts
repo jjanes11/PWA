@@ -52,6 +52,7 @@ export interface Exercise {
   primaryMuscleGroup: MuscleGroup;
   otherMuscles?: MuscleGroup[];
   exerciseType: ExerciseType;
+  isCustom?: boolean;
 }
 
 export enum SetType {

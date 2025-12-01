@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Workout, Routine } from '../models/workout.models';
-import { Exercise } from './exercise.service';
+import { Workout, Routine, Exercise } from '../models/workout.models';
 
 interface PersistenceConfig {
   workoutsKey: string;
