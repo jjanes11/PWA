@@ -41,6 +41,59 @@ export class StorageService {
     return this.load<Exercise>(this.config.exercisesKey, 'custom exercises');
   }
 
+  /**
+   * Generic set method for export/import service
+   */
+  async set(key: string, data: any): Promise<void> {
+    const storageKey = this.getStorageKey(key);
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(data));
+    } catch (error) {
+      console.error(`Failed to set ${key}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Generic get method for export/import service
+   */
+  async get<T>(key: string): Promise<T | null> {
+    const storageKey = this.getStorageKey(key);
+    try {
+      const data = localStorage.getItem(storageKey);
+      return data ? JSON.parse(data) as T : null;
+    } catch (error) {
+      console.error(`Failed to get ${key}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Clear all app data (for complete restore)
+   */
+  async clearAllData(): Promise<void> {
+    try {
+      localStorage.removeItem(this.config.workoutsKey);
+      localStorage.removeItem(this.config.routinesKey);
+      localStorage.removeItem(this.config.exercisesKey);
+    } catch (error) {
+      console.error('Failed to clear data:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Map generic keys to storage keys
+   */
+  private getStorageKey(key: string): string {
+    const keyMap: { [key: string]: string } = {
+      'workouts': this.config.workoutsKey,
+      'routines': this.config.routinesKey,
+      'customExercises': this.config.exercisesKey
+    };
+    return keyMap[key] || key;
+  }
+
   private save<T>(key: string, data: T[], entityName: string): void {
     try {
       localStorage.setItem(key, JSON.stringify(data));

@@ -1,0 +1,144 @@
+<div class="jacaona-settings-container">
+  <!-- Top Bar -->
+  <app-top-bar
+    [title]="'Settings'"
+    [leftButton]="{ type: 'back' }"
+    (leftAction)="goBack()"
+  />
+
+  <!-- Main Content -->
+  <div class="jacaona-main-content">
+    <!-- Data Management Section -->
+    <div class="jacaona-settings-section">
+      <h2 class="jacaona-section-title">Data Management</h2>
+      <p class="jacaona-section-description">
+        Export your data to backup all workouts, routines, and custom exercises. 
+        Import to restore from a previous backup.
+      </p>
+
+      <!-- Export Button -->
+      <button 
+        class="jacaona-settings-button jacaona-settings-button--primary"
+        (click)="exportData()"
+        [disabled]="isExporting() || isImporting()"
+      >
+        <svg class="jacaona-settings-button__icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z"/>
+        </svg>
+        <div class="jacaona-settings-button__content">
+          <span class="jacaona-settings-button__title">
+            @if (isExporting()) {
+              Exporting...
+            } @else {
+              Export Data
+            }
+          </span>
+          <span class="jacaona-settings-button__subtitle">Download all data as JSON file</span>
+        </div>
+      </button>
+
+      <!-- Import Button -->
+      <button 
+        class="jacaona-settings-button jacaona-settings-button--secondary"
+        (click)="importData()"
+        [disabled]="isExporting() || isImporting()"
+      >
+        <svg class="jacaona-settings-button__icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9,10H5L12,17L19,10H15V4H9V10M5,20V18H19V20H5Z"/>
+        </svg>
+        <div class="jacaona-settings-button__content">
+          <span class="jacaona-settings-button__title">
+            @if (isImporting()) {
+              Importing...
+            } @else {
+              Import Data
+            }
+          </span>
+          <span class="jacaona-settings-button__subtitle">Restore from JSON backup file</span>
+        </div>
+      </button>
+
+      <!-- Status Message -->
+      @if (lastAction()) {
+        <div 
+          class="jacaona-status-message"
+          [class.jacaona-status-message--success]="lastAction()!.type === 'export' && lastAction()!.message.includes('success')"
+          [class.jacaona-status-message--error]="lastAction()!.message.includes('failed')"
+        >
+          <svg class="jacaona-status-message__icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            @if (lastAction()!.message.includes('success')) {
+              <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+            } @else {
+              <path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+            }
+          </svg>
+          <span>{{ lastAction()!.message }}</span>
+          <button 
+            class="jacaona-status-message__close"
+            (click)="clearMessage()"
+            aria-label="Close message"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Information Section -->
+    <div class="jacaona-settings-section jacaona-settings-section--info">
+      <h3 class="jacaona-info-title">About Data Export/Import</h3>
+      <ul class="jacaona-info-list">
+        <li><strong>Export:</strong> Creates a JSON file with all your data</li>
+        <li><strong>Replace All:</strong> Removes existing data and restores from backup</li>
+        <li><strong>Merge:</strong> Keeps existing data and adds imported items (skips duplicates)</li>
+        <li><strong>Safe:</strong> Your data stays on your device, no cloud upload</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Import Confirmation Dialog -->
+  @if (showImportDialog()) {
+    <div class="jacaona-dialog-overlay" (click)="cancelImport()">
+      <div class="jacaona-dialog" (click)="$event.stopPropagation()">
+        <h3 class="jacaona-dialog__title">Import Data</h3>
+        <p class="jacaona-dialog__message">Choose how to import your data:</p>
+        
+        <div class="jacaona-dialog__buttons">
+          <button 
+            class="jacaona-dialog__button jacaona-dialog__button--danger"
+            (click)="confirmReplaceImport()"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+            </svg>
+            Replace All
+          </button>
+          
+          <button 
+            class="jacaona-dialog__button jacaona-dialog__button--primary"
+            (click)="confirmMergeImport()"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+            </svg>
+            Merge
+          </button>
+          
+          <button 
+            class="jacaona-dialog__button jacaona-dialog__button--secondary"
+            (click)="cancelImport()"
+          >
+            Cancel
+          </button>
+        </div>
+
+        <div class="jacaona-dialog__info">
+          <p><strong>Replace All:</strong> Removes all existing data and restores from backup</p>
+          <p><strong>Merge:</strong> Keeps existing data and adds items from backup (skips duplicates)</p>
+        </div>
+      </div>
+    </div>
+  }
+</div>

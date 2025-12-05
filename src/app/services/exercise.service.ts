@@ -114,6 +114,10 @@ export class ExerciseService {
     return this.exercises().find(exercise => exercise.id === id);
   }
 
+  getCustomExercises(): Exercise[] {
+    return this.exercises().filter(e => e.isCustom === true);
+  }
+
   searchExercises(query: string): Exercise[] {
     const searchTerm = query.toLowerCase().trim();
     if (!searchTerm) {

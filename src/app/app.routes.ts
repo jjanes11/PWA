@@ -59,6 +59,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/home/home').then(m => m.HomeComponent) // Temporary placeholder
   },
   { 
+    path: 'settings', 
+    loadComponent: () => import('./components/settings/settings').then(m => m.SettingsComponent)
+  },
+  { 
     path: 'workout/:id', 
     loadComponent: () => import('./components/workout-detail/workout-detail').then(m => m.WorkoutDetailComponent)
   },
