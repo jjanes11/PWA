@@ -3,7 +3,7 @@
   <app-top-bar
     [title]="'Create Exercise'"
     [leftButton]="isDialog() ? { type: 'text', text: 'Cancel' } : { type: 'back' }"
-    [rightButton]="{ type: 'text', text: 'Save', disabled: !exerciseName().trim() }"
+    [rightButton]="{ type: 'text', text: 'Save' }"
     (leftAction)="goBack()"
     (rightAction)="save()"
   />
@@ -11,7 +11,7 @@
   <!-- Main Content -->
   <div class="jacaona-main-content">
     <!-- Exercise Name Input -->
-    <div class="jacaona-input-container">
+    <div class="jacaona-input-container" [class.jacaona-input-error]="showNameError()">
       <input 
         type="text" 
         placeholder="Exercise Name"
@@ -19,12 +19,17 @@
         class="jacaona-exercise-input"
         autofocus
       />
+      @if (showNameError()) {
+        <div class="jacaona-error-message">Exercise name is required</div>
+      }
     </div>
 
     <!-- Properties Section -->
     <div class="jacaona-properties-section">
       <!-- Equipment -->
-      <div class="jacaona-property-item" (click)="openEquipmentSelector()">
+      <div class="jacaona-property-item" 
+           [class.jacaona-property-error]="showEquipmentError()"
+           (click)="openEquipmentSelector()">
         <div class="jacaona-property-content">
           <div class="jacaona-property-title">Equipment</div>
           <div class="jacaona-property-value">{{ formatEquipment() }}</div>
@@ -37,7 +42,9 @@
       <div class="jacaona-property-separator"></div>
 
       <!-- Primary Muscle Group -->
-      <div class="jacaona-property-item" (click)="openPrimaryMuscleSelector()">
+      <div class="jacaona-property-item" 
+           [class.jacaona-property-error]="showPrimaryMuscleError()"
+           (click)="openPrimaryMuscleSelector()">
         <div class="jacaona-property-content">
           <div class="jacaona-property-title">Primary Muscle Group</div>
           <div class="jacaona-property-value">{{ formatPrimaryMuscle() }}</div>
@@ -52,7 +59,7 @@
       <!-- Other Muscles -->
       <div class="jacaona-property-item" (click)="openOtherMusclesSelector()">
         <div class="jacaona-property-content">
-          <div class="jacaona-property-title">Other Muscles</div>
+          <div class="jacaona-property-title">Other Muscles <span class="jacaona-optional-label">(Optional)</span></div>
           <div class="jacaona-property-value">{{ formatOtherMuscles() }}</div>
         </div>
         <svg class="jacaona-chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -63,7 +70,9 @@
       <div class="jacaona-property-separator"></div>
 
       <!-- Exercise Type -->
-      <div class="jacaona-property-item" (click)="openExerciseTypeSelector()">
+      <div class="jacaona-property-item" 
+           [class.jacaona-property-error]="showExerciseTypeError()"
+           (click)="openExerciseTypeSelector()">
         <div class="jacaona-property-content">
           <div class="jacaona-property-title">Exercise Type</div>
           <div class="jacaona-property-value">{{ formatExerciseType() }}</div>

@@ -1,0 +1,49 @@
+.jacaona-property-selector-container {
+  background: var(--jacaona-bg-primary);
+  min-height: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.jacaona-options-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.jacaona-option-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--jacaona-space-lg);
+  cursor: pointer;
+  transition: opacity var(--jacaona-transition-fast);
+  gap: var(--jacaona-space-md);
+}
+
+.jacaona-option-item:hover {
+  opacity: 0.8;
+}
+
+.jacaona-option-label {
+  color: var(--jacaona-text-primary);
+  font-size: var(--jacaona-font-base);
+  font-weight: var(--jacaona-font-weight-normal);
+  flex: 1;
+}
+
+.jacaona-check-icon {
+  color: var(--jacaona-accent-blue);
+  flex-shrink: 0;
+}
+
+.jacaona-option-separator {
+  height: 1px;
+  background: var(--jacaona-bg-quaternary);
+}
+
+@media (max-width: 480px) {
+  .jacaona-option-item {
+    padding: var(--jacaona-space-md);
+  }
+}

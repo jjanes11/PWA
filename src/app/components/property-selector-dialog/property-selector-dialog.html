@@ -1,0 +1,31 @@
+<div class="jacaona-property-selector-container">
+  <!-- Top Bar -->
+  <app-top-bar
+    [title]="title()"
+    [leftButton]="allowMultiple() ? { type: 'text', text: 'Cancel' } : { type: 'back' }"
+    [rightButton]="allowMultiple() ? { type: 'text', text: 'Done' } : undefined"
+    (leftAction)="cancel()"
+    (rightAction)="done()"
+  />
+
+  <!-- Options List -->
+  <div class="jacaona-options-list">
+    @for (option of options(); track option.value; let last = $last) {
+      <div 
+        class="jacaona-option-item"
+        [class.jacaona-option-selected]="isSelected(option.value)"
+        (click)="selectOption(option.value)"
+      >
+        <span class="jacaona-option-label">{{ option.label }}</span>
+        @if (isSelected(option.value)) {
+          <svg class="jacaona-check-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
+          </svg>
+        }
+      </div>
+      @if (!last) {
+        <div class="jacaona-option-separator"></div>
+      }
+    }
+  </div>
+</div>
