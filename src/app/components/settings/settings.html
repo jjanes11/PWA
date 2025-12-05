@@ -58,6 +58,21 @@
         </div>
       </button>
 
+      <!-- Clear All Data Button -->
+      <button 
+        class="jacaona-settings-button jacaona-settings-button--danger"
+        (click)="clearAllData()"
+        [disabled]="isExporting() || isImporting()"
+      >
+        <svg class="jacaona-settings-button__icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+        </svg>
+        <div class="jacaona-settings-button__content">
+          <span class="jacaona-settings-button__title">Clear All Data</span>
+          <span class="jacaona-settings-button__subtitle">Delete all workouts, routines, and exercises</span>
+        </div>
+      </button>
+
       <!-- Status Message -->
       @if (lastAction()) {
         <div 
@@ -137,6 +152,44 @@
         <div class="jacaona-dialog__info">
           <p><strong>Replace All:</strong> Removes all existing data and restores from backup</p>
           <p><strong>Merge:</strong> Keeps existing data and adds items from backup (skips duplicates)</p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Clear Data Confirmation Dialog -->
+  @if (showClearDialog()) {
+    <div class="jacaona-dialog-overlay" (click)="cancelClearData()">
+      <div class="jacaona-dialog jacaona-dialog--danger" (click)="$event.stopPropagation()">
+        <svg class="jacaona-dialog__icon" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+        </svg>
+        <h3 class="jacaona-dialog__title">Clear All Data?</h3>
+        <p class="jacaona-dialog__message">This will permanently delete:</p>
+        <ul class="jacaona-dialog__list">
+          <li>All workouts</li>
+          <li>All routines</li>
+          <li>All custom exercises</li>
+        </ul>
+        <p class="jacaona-dialog__warning">This action cannot be undone!</p>
+        
+        <div class="jacaona-dialog__buttons">
+          <button 
+            class="jacaona-dialog__button jacaona-dialog__button--danger"
+            (click)="confirmClearData()"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+            </svg>
+            Clear Everything
+          </button>
+          
+          <button 
+            class="jacaona-dialog__button jacaona-dialog__button--secondary"
+            (click)="cancelClearData()"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>

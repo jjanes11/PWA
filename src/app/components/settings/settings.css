@@ -70,6 +70,19 @@
   color: var(--jacaona-accent-green);
 }
 
+.jacaona-settings-button--danger {
+  border: 1px solid rgba(244, 67, 54, 0.2);
+}
+
+.jacaona-settings-button--danger .jacaona-settings-button__icon {
+  color: var(--jacaona-accent-red);
+}
+
+.jacaona-settings-button--danger:hover:not(:disabled) {
+  background: rgba(244, 67, 54, 0.05);
+  border-color: rgba(244, 67, 54, 0.3);
+}
+
 .jacaona-settings-button__icon {
   flex-shrink: 0;
 }
@@ -199,6 +212,177 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Import Dialog */
+.jacaona-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: var(--jacaona-z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--jacaona-space-lg);
+  animation: fadeIn 0.2s ease;
+}
+
+.jacaona-dialog {
+  background: var(--jacaona-bg-secondary);
+  border-radius: var(--jacaona-radius-lg);
+  padding: var(--jacaona-space-xl);
+  max-width: 450px;
+  width: 100%;
+  animation: scaleIn 0.3s ease;
+  box-shadow: var(--jacaona-shadow-lg);
+}
+
+.jacaona-dialog--danger {
+  border: 2px solid var(--jacaona-accent-red);
+}
+
+.jacaona-dialog__icon {
+  display: block;
+  margin: 0 auto var(--jacaona-space-md);
+  color: var(--jacaona-accent-red);
+}
+
+.jacaona-dialog__title {
+  font-size: var(--jacaona-font-size-xl);
+  font-weight: var(--jacaona-font-weight-bold);
+  color: var(--jacaona-text-primary);
+  margin: 0 0 var(--jacaona-space-sm);
+}
+
+.jacaona-dialog__message {
+  font-size: var(--jacaona-font-size-base);
+  color: var(--jacaona-text-secondary);
+  margin: 0 0 var(--jacaona-space-md);
+  line-height: 1.5;
+}
+
+.jacaona-dialog__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--jacaona-space-md);
+}
+
+.jacaona-dialog__list li {
+  padding: var(--jacaona-space-sm) var(--jacaona-space-md);
+  color: var(--jacaona-text-primary);
+  background: var(--jacaona-bg-primary);
+  border-radius: var(--jacaona-radius-sm);
+  margin-bottom: var(--jacaona-space-xs);
+  position: relative;
+  padding-left: var(--jacaona-space-xl);
+}
+
+.jacaona-dialog__list li::before {
+  content: '•';
+  position: absolute;
+  left: var(--jacaona-space-md);
+  color: var(--jacaona-accent-red);
+  font-weight: bold;
+}
+
+.jacaona-dialog__warning {
+  font-size: var(--jacaona-font-size-sm);
+  color: var(--jacaona-accent-red);
+  font-weight: var(--jacaona-font-weight-semibold);
+  text-align: center;
+  margin: 0 0 var(--jacaona-space-xl);
+}
+
+.jacaona-dialog__buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--jacaona-space-sm);
+  margin-bottom: var(--jacaona-space-lg);
+}
+
+.jacaona-dialog__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--jacaona-space-sm);
+  padding: var(--jacaona-space-md);
+  border: none;
+  border-radius: var(--jacaona-radius-md);
+  font-size: var(--jacaona-font-size-base);
+  font-weight: var(--jacaona-font-weight-semibold);
+  cursor: pointer;
+  transition: var(--jacaona-transition-fast);
+}
+
+.jacaona-dialog__button--primary {
+  background: var(--jacaona-accent-blue);
+  color: white;
+}
+
+.jacaona-dialog__button--primary:hover {
+  background: var(--jacaona-accent-blue-hover);
+}
+
+.jacaona-dialog__button--danger {
+  background: var(--jacaona-accent-red);
+  color: white;
+}
+
+.jacaona-dialog__button--danger:hover {
+  background: rgba(244, 67, 54, 0.9);
+}
+
+.jacaona-dialog__button--secondary {
+  background: var(--jacaona-bg-tertiary);
+  color: var(--jacaona-text-primary);
+  border: 1px solid var(--jacaona-border);
+}
+
+.jacaona-dialog__button--secondary:hover {
+  background: var(--jacaona-bg-quaternary);
+}
+
+.jacaona-dialog__info {
+  padding: var(--jacaona-space-md);
+  background: var(--jacaona-bg-primary);
+  border-radius: var(--jacaona-radius-md);
+  border: 1px solid var(--jacaona-border);
+}
+
+.jacaona-dialog__info p {
+  font-size: var(--jacaona-font-size-sm);
+  color: var(--jacaona-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.jacaona-dialog__info p + p {
+  margin-top: var(--jacaona-space-sm);
+}
+
+.jacaona-dialog__info strong {
+  color: var(--jacaona-text-primary);
+  font-weight: var(--jacaona-font-weight-semibold);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 

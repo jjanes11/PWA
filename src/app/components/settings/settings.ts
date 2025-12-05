@@ -2,6 +2,7 @@ import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/cor
 import { Router } from '@angular/router';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { DataExportService } from '../../services/data-export.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-settings',
@@ -14,10 +15,12 @@ import { DataExportService } from '../../services/data-export.service';
 export class SettingsComponent {
   private router = inject(Router);
   private dataExportService = inject(DataExportService);
+  private storageService = inject(StorageService);
 
   isExporting = signal(false);
   isImporting = signal(false);
   showImportDialog = signal(false);
+  showClearDialog = signal(false);
   pendingFile = signal<File | null>(null);
   lastAction = signal<{ type: 'export' | 'import'; message: string } | null>(null);
 
@@ -148,5 +151,52 @@ export class SettingsComponent {
    */
   clearMessage(): void {
     this.lastAction.set(null);
+  }
+
+  /**
+   * Show clear all data confirmation dialog
+   */
+  clearAllData(): void {
+    this.showClearDialog.set(true);
+  }
+
+  /**
+   * Confirm and execute clear all data
+   */
+  async confirmClearData(): Promise<void> {
+    try {
+      this.showClearDialog.set(false);
+      
+      // Clear all localStorage data
+      await this.storageService.clearAllData();
+      
+      // Clear service worker caches
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(cacheNames.map(name => caches.delete(name)));
+      }
+
+      this.lastAction.set({
+        type: 'export',
+        message: 'All data cleared successfully. Reloading app...'
+      });
+
+      // Reload after short delay
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (error) {
+      this.lastAction.set({
+        type: 'import',
+        message: 'Failed to clear data. Please try again.'
+      });
+    }
+  }
+
+  /**
+   * Cancel clear all data
+   */
+  cancelClearData(): void {
+    this.showClearDialog.set(false);
   }
 }
