@@ -1,0 +1,626 @@
+{
+  "version": "1.0.0",
+  "exportDate": "2025-12-06T10:30:00.000Z",
+  "data": {
+    "workouts": [
+      {
+        "id": "workout-2025-11-08-001",
+        "name": "Upper Body Push",
+        "date": "2025-11-08T09:15:00.000Z",
+        "startTime": "2025-11-08T09:15:00.000Z",
+        "endTime": "2025-11-08T10:32:00.000Z",
+        "exercises": [
+          {
+            "id": "1",
+            "name": "Bench Press",
+            "sets": [
+              { "id": "set-1", "weight": 135, "reps": 10, "type": "warmup" },
+              { "id": "set-2", "weight": 185, "reps": 8, "type": "normal" },
+              { "id": "set-3", "weight": 205, "reps": 6, "type": "normal" },
+              { "id": "set-4", "weight": 225, "reps": 5, "type": "normal" }
+            ]
+          },
+          {
+            "id": "2",
+            "name": "Incline Bench Press",
+            "sets": [
+              { "id": "set-5", "weight": 155, "reps": 10, "type": "normal" },
+              { "id": "set-6", "weight": 165, "reps": 8, "type": "normal" },
+              { "id": "set-7", "weight": 175, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "24",
+            "name": "Shoulder Press",
+            "sets": [
+              { "id": "set-8", "weight": 95, "reps": 10, "type": "normal" },
+              { "id": "set-9", "weight": 115, "reps": 8, "type": "normal" },
+              { "id": "set-10", "weight": 125, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "36",
+            "name": "Tricep Pushdown",
+            "sets": [
+              { "id": "set-11", "weight": 50, "reps": 12, "type": "normal" },
+              { "id": "set-12", "weight": 60, "reps": 10, "type": "normal" },
+              { "id": "set-13", "weight": 70, "reps": 8, "type": "normal" },
+              { "id": "set-14", "weight": 50, "reps": 12, "type": "drop" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "workout-2025-11-10-001",
+        "name": "Lower Body",
+        "date": "2025-11-10T10:00:00.000Z",
+        "startTime": "2025-11-10T10:00:00.000Z",
+        "endTime": "2025-11-10T11:25:00.000Z",
+        "exercises": [
+          {
+            "id": "14",
+            "name": "Squat",
+            "sets": [
+              { "id": "set-15", "weight": 135, "reps": 8, "type": "warmup" },
+              { "id": "set-16", "weight": 185, "reps": 8, "type": "normal" },
+              { "id": "set-17", "weight": 225, "reps": 6, "type": "normal" },
+              { "id": "set-18", "weight": 245, "reps": 5, "type": "normal" }
+            ]
+          },
+          {
+            "id": "17",
+            "name": "Romanian Deadlift",
+            "sets": [
+              { "id": "set-19", "weight": 135, "reps": 10, "type": "normal" },
+              { "id": "set-20", "weight": 185, "reps": 8, "type": "normal" },
+              { "id": "set-21", "weight": 205, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "19",
+            "name": "Leg Extension",
+            "sets": [
+              { "id": "set-22", "weight": 120, "reps": 12, "type": "normal" },
+              { "id": "set-23", "weight": 140, "reps": 10, "type": "normal" },
+              { "id": "set-24", "weight": 160, "reps": 8, "type": "normal" }
+            ]
+          },
+          {
+            "id": "18",
+            "name": "Leg Curl",
+            "sets": [
+              { "id": "set-25", "weight": 90, "reps": 12, "type": "normal" },
+              { "id": "set-26", "weight": 100, "reps": 10, "type": "normal" },
+              { "id": "set-27", "weight": 110, "reps": 8, "type": "normal" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "workout-2025-11-12-001",
+        "name": "Back & Biceps",
+        "date": "2025-11-12T08:30:00.000Z",
+        "startTime": "2025-11-12T08:30:00.000Z",
+        "endTime": "2025-11-12T09:45:00.000Z",
+        "exercises": [
+          {
+            "id": "7",
+            "name": "Deadlift",
+            "sets": [
+              { "id": "set-28", "weight": 135, "reps": 8, "type": "warmup" },
+              { "id": "set-29", "weight": 225, "reps": 6, "type": "normal" },
+              { "id": "set-30", "weight": 275, "reps": 5, "type": "normal" },
+              { "id": "set-31", "weight": 315, "reps": 3, "type": "normal" }
+            ]
+          },
+          {
+            "id": "9",
+            "name": "Barbell Rows",
+            "sets": [
+              { "id": "set-32", "weight": 135, "reps": 10, "type": "normal" },
+              { "id": "set-33", "weight": 155, "reps": 8, "type": "normal" },
+              { "id": "set-34", "weight": 175, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "10",
+            "name": "Lat Pulldown",
+            "sets": [
+              { "id": "set-35", "weight": 120, "reps": 12, "type": "normal" },
+              { "id": "set-36", "weight": 140, "reps": 10, "type": "normal" },
+              { "id": "set-37", "weight": 160, "reps": 8, "type": "normal" }
+            ]
+          },
+          {
+            "id": "32",
+            "name": "Barbell Curl",
+            "sets": [
+              { "id": "set-38", "weight": 65, "reps": 10, "type": "normal" },
+              { "id": "set-39", "weight": 75, "reps": 8, "type": "normal" },
+              { "id": "set-40", "weight": 85, "reps": 6, "type": "normal" },
+              { "id": "set-41", "weight": 65, "reps": 10, "type": "drop" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "workout-2025-11-15-001",
+        "name": "Push Day",
+        "date": "2025-11-15T16:00:00.000Z",
+        "startTime": "2025-11-15T16:00:00.000Z",
+        "endTime": "2025-11-15T17:20:00.000Z",
+        "exercises": [
+          {
+            "id": "1",
+            "name": "Bench Press",
+            "sets": [
+              { "id": "set-42", "weight": 135, "reps": 10, "type": "warmup" },
+              { "id": "set-43", "weight": 185, "reps": 8, "type": "normal" },
+              { "id": "set-44", "weight": 205, "reps": 7, "type": "normal" },
+              { "id": "set-45", "weight": 225, "reps": 5, "type": "normal" },
+              { "id": "set-46", "weight": 235, "reps": 3, "type": "fail" }
+            ]
+          },
+          {
+            "id": "3",
+            "name": "Dumbbell Chest Press",
+            "sets": [
+              { "id": "set-47", "weight": 70, "reps": 10, "type": "normal" },
+              { "id": "set-48", "weight": 80, "reps": 8, "type": "normal" },
+              { "id": "set-49", "weight": 90, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "25",
+            "name": "Dumbbell Shoulder Press",
+            "sets": [
+              { "id": "set-50", "weight": 45, "reps": 10, "type": "normal" },
+              { "id": "set-51", "weight": 50, "reps": 8, "type": "normal" },
+              { "id": "set-52", "weight": 55, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "37",
+            "name": "Overhead Tricep Extension",
+            "sets": [
+              { "id": "set-53", "weight": 40, "reps": 12, "type": "normal" },
+              { "id": "set-54", "weight": 50, "reps": 10, "type": "normal" },
+              { "id": "set-55", "weight": 60, "reps": 8, "type": "normal" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "workout-2025-11-17-001",
+        "name": "Leg Day",
+        "date": "2025-11-17T11:00:00.000Z",
+        "startTime": "2025-11-17T11:00:00.000Z",
+        "endTime": "2025-11-17T12:30:00.000Z",
+        "exercises": [
+          {
+            "id": "14",
+            "name": "Squat",
+            "sets": [
+              { "id": "set-56", "weight": 135, "reps": 10, "type": "warmup" },
+              { "id": "set-57", "weight": 185, "reps": 8, "type": "normal" },
+              { "id": "set-58", "weight": 225, "reps": 6, "type": "normal" },
+              { "id": "set-59", "weight": 255, "reps": 5, "type": "normal" }
+            ]
+          },
+          {
+            "id": "16",
+            "name": "Leg Press",
+            "sets": [
+              { "id": "set-60", "weight": 270, "reps": 12, "type": "normal" },
+              { "id": "set-61", "weight": 360, "reps": 10, "type": "normal" },
+              { "id": "set-62", "weight": 450, "reps": 8, "type": "normal" }
+            ]
+          },
+          {
+            "id": "20",
+            "name": "Lunges",
+            "sets": [
+              { "id": "set-63", "weight": 0, "reps": 12, "type": "normal" },
+              { "id": "set-64", "weight": 0, "reps": 12, "type": "normal" },
+              { "id": "set-65", "weight": 0, "reps": 10, "type": "normal" }
+            ]
+          },
+          {
+            "id": "22",
+            "name": "Calf Raise",
+            "sets": [
+              { "id": "set-66", "weight": 180, "reps": 15, "type": "normal" },
+              { "id": "set-67", "weight": 200, "reps": 12, "type": "normal" },
+              { "id": "set-68", "weight": 220, "reps": 10, "type": "normal" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "workout-2025-11-19-001",
+        "name": "Pull Day",
+        "date": "2025-11-19T09:00:00.000Z",
+        "startTime": "2025-11-19T09:00:00.000Z",
+        "endTime": "2025-11-19T10:25:00.000Z",
+        "exercises": [
+          {
+            "id": "8",
+            "name": "Pull-ups",
+            "sets": [
+              { "id": "set-69", "weight": 0, "reps": 8, "type": "normal" },
+              { "id": "set-70", "weight": 0, "reps": 7, "type": "normal" },
+              { "id": "set-71", "weight": 0, "reps": 6, "type": "normal" },
+              { "id": "set-72", "weight": 0, "reps": 5, "type": "fail" }
+            ]
+          },
+          {
+            "id": "12",
+            "name": "Dumbbell Rows",
+            "sets": [
+              { "id": "set-73", "weight": 60, "reps": 10, "type": "normal" },
+              { "id": "set-74", "weight": 70, "reps": 8, "type": "normal" },
+              { "id": "set-75", "weight": 80, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "11",
+            "name": "Seated Cable Row",
+            "sets": [
+              { "id": "set-76", "weight": 120, "reps": 12, "type": "normal" },
+              { "id": "set-77", "weight": 140, "reps": 10, "type": "normal" },
+              { "id": "set-78", "weight": 160, "reps": 8, "type": "normal" }
+            ]
+          },
+          {
+            "id": "33",
+            "name": "Hammer Curl",
+            "sets": [
+              { "id": "set-79", "weight": 35, "reps": 12, "type": "normal" },
+              { "id": "set-80", "weight": 40, "reps": 10, "type": "normal" },
+              { "id": "set-81", "weight": 45, "reps": 8, "type": "normal" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "workout-2025-11-22-001",
+        "name": "Upper Push",
+        "date": "2025-11-22T15:30:00.000Z",
+        "startTime": "2025-11-22T15:30:00.000Z",
+        "endTime": "2025-11-22T16:50:00.000Z",
+        "exercises": [
+          {
+            "id": "2",
+            "name": "Incline Bench Press",
+            "sets": [
+              { "id": "set-82", "weight": 135, "reps": 10, "type": "warmup" },
+              { "id": "set-83", "weight": 155, "reps": 10, "type": "normal" },
+              { "id": "set-84", "weight": 175, "reps": 8, "type": "normal" },
+              { "id": "set-85", "weight": 185, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "4",
+            "name": "Dumbbell Fly",
+            "sets": [
+              { "id": "set-86", "weight": 30, "reps": 12, "type": "normal" },
+              { "id": "set-87", "weight": 35, "reps": 10, "type": "normal" },
+              { "id": "set-88", "weight": 40, "reps": 8, "type": "normal" }
+            ]
+          },
+          {
+            "id": "26",
+            "name": "Lateral Raise",
+            "sets": [
+              { "id": "set-89", "weight": 20, "reps": 12, "type": "normal" },
+              { "id": "set-90", "weight": 25, "reps": 10, "type": "normal" },
+              { "id": "set-91", "weight": 30, "reps": 8, "type": "normal" },
+              { "id": "set-92", "weight": 20, "reps": 12, "type": "drop" }
+            ]
+          },
+          {
+            "id": "35",
+            "name": "Tricep Dips",
+            "sets": [
+              { "id": "set-93", "weight": 0, "reps": 12, "type": "normal" },
+              { "id": "set-94", "weight": 0, "reps": 10, "type": "normal" },
+              { "id": "set-95", "weight": 0, "reps": 8, "type": "normal" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "workout-2025-11-24-001",
+        "name": "Lower Body Power",
+        "date": "2025-11-24T10:30:00.000Z",
+        "startTime": "2025-11-24T10:30:00.000Z",
+        "endTime": "2025-11-24T12:00:00.000Z",
+        "exercises": [
+          {
+            "id": "7",
+            "name": "Deadlift",
+            "sets": [
+              { "id": "set-96", "weight": 135, "reps": 8, "type": "warmup" },
+              { "id": "set-97", "weight": 225, "reps": 6, "type": "normal" },
+              { "id": "set-98", "weight": 275, "reps": 5, "type": "normal" },
+              { "id": "set-99", "weight": 315, "reps": 3, "type": "normal" },
+              { "id": "set-100", "weight": 335, "reps": 2, "type": "fail" }
+            ]
+          },
+          {
+            "id": "15",
+            "name": "Front Squat",
+            "sets": [
+              { "id": "set-101", "weight": 135, "reps": 8, "type": "normal" },
+              { "id": "set-102", "weight": 155, "reps": 6, "type": "normal" },
+              { "id": "set-103", "weight": 175, "reps": 5, "type": "normal" }
+            ]
+          },
+          {
+            "id": "21",
+            "name": "Bulgarian Split Squat",
+            "sets": [
+              { "id": "set-104", "weight": 40, "reps": 10, "type": "normal" },
+              { "id": "set-105", "weight": 50, "reps": 8, "type": "normal" },
+              { "id": "set-106", "weight": 60, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "23",
+            "name": "Hip Thrust",
+            "sets": [
+              { "id": "set-107", "weight": 135, "reps": 12, "type": "normal" },
+              { "id": "set-108", "weight": 185, "reps": 10, "type": "normal" },
+              { "id": "set-109", "weight": 225, "reps": 8, "type": "normal" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "workout-2025-11-26-001",
+        "name": "Back Focus",
+        "date": "2025-11-26T08:45:00.000Z",
+        "startTime": "2025-11-26T08:45:00.000Z",
+        "endTime": "2025-11-26T10:15:00.000Z",
+        "exercises": [
+          {
+            "id": "9",
+            "name": "Barbell Rows",
+            "sets": [
+              { "id": "set-110", "weight": 95, "reps": 10, "type": "warmup" },
+              { "id": "set-111", "weight": 135, "reps": 10, "type": "normal" },
+              { "id": "set-112", "weight": 155, "reps": 8, "type": "normal" },
+              { "id": "set-113", "weight": 175, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "13",
+            "name": "T-Bar Row",
+            "sets": [
+              { "id": "set-114", "weight": 90, "reps": 10, "type": "normal" },
+              { "id": "set-115", "weight": 115, "reps": 8, "type": "normal" },
+              { "id": "set-116", "weight": 135, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "10",
+            "name": "Lat Pulldown",
+            "sets": [
+              { "id": "set-117", "weight": 120, "reps": 12, "type": "normal" },
+              { "id": "set-118", "weight": 140, "reps": 10, "type": "normal" },
+              { "id": "set-119", "weight": 160, "reps": 8, "type": "normal" }
+            ]
+          },
+          {
+            "id": "31",
+            "name": "Bicep Curls",
+            "sets": [
+              { "id": "set-120", "weight": 30, "reps": 12, "type": "normal" },
+              { "id": "set-121", "weight": 35, "reps": 10, "type": "normal" },
+              { "id": "set-122", "weight": 40, "reps": 8, "type": "normal" },
+              { "id": "set-123", "weight": 30, "reps": 12, "type": "drop" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "workout-2025-11-29-001",
+        "name": "Chest & Triceps",
+        "date": "2025-11-29T17:00:00.000Z",
+        "startTime": "2025-11-29T17:00:00.000Z",
+        "endTime": "2025-11-29T18:30:00.000Z",
+        "exercises": [
+          {
+            "id": "1",
+            "name": "Bench Press",
+            "sets": [
+              { "id": "set-124", "weight": 135, "reps": 10, "type": "warmup" },
+              { "id": "set-125", "weight": 185, "reps": 8, "type": "normal" },
+              { "id": "set-126", "weight": 205, "reps": 7, "type": "normal" },
+              { "id": "set-127", "weight": 225, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "6",
+            "name": "Cable Chest Fly",
+            "sets": [
+              { "id": "set-128", "weight": 40, "reps": 12, "type": "normal" },
+              { "id": "set-129", "weight": 50, "reps": 10, "type": "normal" },
+              { "id": "set-130", "weight": 60, "reps": 8, "type": "normal" }
+            ]
+          },
+          {
+            "id": "39",
+            "name": "Close Grip Bench Press",
+            "sets": [
+              { "id": "set-131", "weight": 135, "reps": 10, "type": "normal" },
+              { "id": "set-132", "weight": 155, "reps": 8, "type": "normal" },
+              { "id": "set-133", "weight": 165, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "38",
+            "name": "Skull Crushers",
+            "sets": [
+              { "id": "set-134", "weight": 60, "reps": 12, "type": "normal" },
+              { "id": "set-135", "weight": 70, "reps": 10, "type": "normal" },
+              { "id": "set-136", "weight": 80, "reps": 8, "type": "normal" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "workout-2025-12-01-001",
+        "name": "Leg Strength",
+        "date": "2025-12-01T12:00:00.000Z",
+        "startTime": "2025-12-01T12:00:00.000Z",
+        "endTime": "2025-12-01T13:35:00.000Z",
+        "exercises": [
+          {
+            "id": "14",
+            "name": "Squat",
+            "sets": [
+              { "id": "set-137", "weight": 135, "reps": 10, "type": "warmup" },
+              { "id": "set-138", "weight": 185, "reps": 8, "type": "normal" },
+              { "id": "set-139", "weight": 225, "reps": 6, "type": "normal" },
+              { "id": "set-140", "weight": 255, "reps": 5, "type": "normal" },
+              { "id": "set-141", "weight": 275, "reps": 3, "type": "normal" }
+            ]
+          },
+          {
+            "id": "17",
+            "name": "Romanian Deadlift",
+            "sets": [
+              { "id": "set-142", "weight": 135, "reps": 10, "type": "normal" },
+              { "id": "set-143", "weight": 185, "reps": 8, "type": "normal" },
+              { "id": "set-144", "weight": 205, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "19",
+            "name": "Leg Extension",
+            "sets": [
+              { "id": "set-145", "weight": 120, "reps": 12, "type": "normal" },
+              { "id": "set-146", "weight": 140, "reps": 10, "type": "normal" },
+              { "id": "set-147", "weight": 160, "reps": 8, "type": "normal" }
+            ]
+          },
+          {
+            "id": "18",
+            "name": "Leg Curl",
+            "sets": [
+              { "id": "set-148", "weight": 90, "reps": 12, "type": "normal" },
+              { "id": "set-149", "weight": 100, "reps": 10, "type": "normal" },
+              { "id": "set-150", "weight": 110, "reps": 8, "type": "normal" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "workout-2025-12-03-001",
+        "name": "Upper Pull",
+        "date": "2025-12-03T09:30:00.000Z",
+        "startTime": "2025-12-03T09:30:00.000Z",
+        "endTime": "2025-12-03T10:55:00.000Z",
+        "exercises": [
+          {
+            "id": "8",
+            "name": "Pull-ups",
+            "sets": [
+              { "id": "set-151", "weight": 0, "reps": 10, "type": "normal" },
+              { "id": "set-152", "weight": 0, "reps": 8, "type": "normal" },
+              { "id": "set-153", "weight": 0, "reps": 7, "type": "normal" },
+              { "id": "set-154", "weight": 0, "reps": 6, "type": "fail" }
+            ]
+          },
+          {
+            "id": "12",
+            "name": "Dumbbell Rows",
+            "sets": [
+              { "id": "set-155", "weight": 60, "reps": 10, "type": "normal" },
+              { "id": "set-156", "weight": 70, "reps": 8, "type": "normal" },
+              { "id": "set-157", "weight": 80, "reps": 6, "type": "normal" }
+            ]
+          },
+          {
+            "id": "11",
+            "name": "Seated Cable Row",
+            "sets": [
+              { "id": "set-158", "weight": 120, "reps": 12, "type": "normal" },
+              { "id": "set-159", "weight": 140, "reps": 10, "type": "normal" },
+              { "id": "set-160", "weight": 160, "reps": 8, "type": "normal" }
+            ]
+          },
+          {
+            "id": "34",
+            "name": "Preacher Curl",
+            "sets": [
+              { "id": "set-161", "weight": 50, "reps": 12, "type": "normal" },
+              { "id": "set-162", "weight": 60, "reps": 10, "type": "normal" },
+              { "id": "set-163", "weight": 70, "reps": 8, "type": "normal" },
+              { "id": "set-164", "weight": 50, "reps": 12, "type": "drop" }
+            ]
+          }
+        ]
+      }
+    ],
+    "routines": [
+      {
+        "id": "routine-ppl-001",
+        "name": "Push Pull Legs",
+        "description": "Classic 6-day split focusing on push, pull, and leg movements",
+        "exercises": [
+          {
+            "id": "1",
+            "name": "Bench Press",
+            "sets": [
+              { "id": "template-1", "weight": null, "reps": 8, "type": "normal" },
+              { "id": "template-2", "weight": null, "reps": 8, "type": "normal" },
+              { "id": "template-3", "weight": null, "reps": 8, "type": "normal" }
+            ]
+          },
+          {
+            "id": "24",
+            "name": "Shoulder Press",
+            "sets": [
+              { "id": "template-4", "weight": null, "reps": 10, "type": "normal" },
+              { "id": "template-5", "weight": null, "reps": 10, "type": "normal" }
+            ]
+          },
+          {
+            "id": "36",
+            "name": "Tricep Pushdown",
+            "sets": [
+              { "id": "template-6", "weight": null, "reps": 12, "type": "normal" },
+              { "id": "template-7", "weight": null, "reps": 12, "type": "normal" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "routine-upper-lower-001",
+        "name": "Upper Lower Split",
+        "description": "4-day split alternating upper and lower body",
+        "exercises": [
+          {
+            "id": "1",
+            "name": "Bench Press",
+            "sets": [
+              { "id": "template-8", "weight": null, "reps": 8, "type": "normal" },
+              { "id": "template-9", "weight": null, "reps": 8, "type": "normal" }
+            ]
+          },
+          {
+            "id": "9",
+            "name": "Barbell Rows",
+            "sets": [
+              { "id": "template-10", "weight": null, "reps": 8, "type": "normal" },
+              { "id": "template-11", "weight": null, "reps": 8, "type": "normal" }
+            ]
+          }
+        ]
+      }
+    ],
+    "customExercises": []
+  }
+}
