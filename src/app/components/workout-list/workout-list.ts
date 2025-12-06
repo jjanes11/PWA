@@ -87,9 +87,14 @@ export class WorkoutListComponent {
   }
 
   calculateWorkoutDuration(workout: Workout): string {
-    if (workout.duration) {
-      return `${workout.duration} min`;
+    // Calculate from startTime and endTime
+    if (workout.startTime && workout.endTime) {
+      const start = new Date(workout.startTime).getTime();
+      const end = new Date(workout.endTime).getTime();
+      const durationMinutes = Math.round((end - start) / (1000 * 60));
+      return `${durationMinutes} min`;
     }
+    
     return '0 min';
   }
 

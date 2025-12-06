@@ -86,7 +86,6 @@ export class EditWorkoutComponent {
           date: date,
           startTime: date,
           endTime: date,
-          duration: 0,
           completed: true,
           notes: ''
         };

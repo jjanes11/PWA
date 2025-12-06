@@ -79,7 +79,6 @@ export interface Workout {
   startTime?: Date;
   endTime?: Date;
   exercises: Exercise[];
-  duration?: number; // in minutes
   completed: boolean;
   notes?: string;
 }

@@ -11,7 +11,12 @@ export class MetricCalculatorService {
    * Calculate duration metric for a workout.
    */
   calculateDuration(workout: Workout): number {
-    return workout.duration || 0;
+    if (workout.startTime && workout.endTime) {
+      const start = new Date(workout.startTime).getTime();
+      const end = new Date(workout.endTime).getTime();
+      return Math.round((end - start) / (1000 * 60)); // minutes
+    }
+    return 0;
   }
   
   /**

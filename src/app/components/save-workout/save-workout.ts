@@ -102,22 +102,14 @@ export class SaveWorkoutComponent implements OnInit {
     if (!workout) return;
 
     const endTime = new Date();
-    let finalDuration = 0;
-    
-    // Calculate final duration
-    if (workout.startTime) {
-      const durationMs = endTime.getTime() - workout.startTime.getTime();
-      finalDuration = Math.round(durationMs / (1000 * 60)); // Convert to minutes
-    }
 
-    // Update workout with title, description, completion status, and timing
+    // Update workout with title, description, completion status, and end time
     const updatedWorkout = {
       ...workout,
       name: this.workoutTitle().trim() || 'My Workout',
       notes: this.workoutDescription().trim(),
       completed: true,
-      endTime: endTime,
-      duration: finalDuration
+      endTime: endTime
     };
 
     this.workoutService.finishWorkout(updatedWorkout);

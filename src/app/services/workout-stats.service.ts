@@ -26,7 +26,13 @@ export class WorkoutStatsService {
           ),
         0
       );
-      const totalDuration = completed.reduce((sum, w) => sum + (w.duration || 0), 0);
+      const totalDuration = completed.reduce((sum, w) => {
+        if (w.startTime && w.endTime) {
+          const duration = Math.round((new Date(w.endTime).getTime() - new Date(w.startTime).getTime()) / (1000 * 60));
+          return sum + duration;
+        }
+        return sum;
+      }, 0);
 
       return {
         totalWorkouts: completed.length,

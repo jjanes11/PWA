@@ -81,10 +81,16 @@ export class HomeComponent {
     const activeWorkoutId = this.activeWorkoutService.getActiveWorkout()?.id;
     const routineDraftId = this.routineDraftService.getRoutineDraft()?.id;
     const completedWorkouts = this.workouts()
-      .filter(w => w.completed && w.duration && w.id !== activeWorkoutId && w.id !== routineDraftId);
+      .filter(w => w.completed && w.startTime && w.endTime && w.id !== activeWorkoutId && w.id !== routineDraftId);
     if (completedWorkouts.length === 0) return 0;
     
-    const totalTime = completedWorkouts.reduce((sum, w) => sum + (w.duration || 0), 0);
+    const totalTime = completedWorkouts.reduce((sum, w) => {
+      if (w.startTime && w.endTime) {
+        const duration = Math.round((new Date(w.endTime).getTime() - new Date(w.startTime).getTime()) / (1000 * 60));
+        return sum + duration;
+      }
+      return sum;
+    }, 0);
     return Math.round(totalTime / completedWorkouts.length);
   });
 

@@ -82,8 +82,7 @@ export class WorkoutService {
   finishWorkout(workout: Workout): void {
     const completed = {
       ...workout,
-      completed: true,
-      duration: workout.duration || this.calculateDuration(workout)
+      completed: true
     };
     
     this.store.saveWorkout(completed);
@@ -124,11 +123,5 @@ export class WorkoutService {
     newExerciseName: string
   ): T {
     return this.editor.replaceExerciseInWorkout(workout, exerciseId, newExerciseName);
-  }
-
-  private calculateDuration(workout: Workout): number {
-    const now = new Date();
-    const start = new Date(workout.date);
-    return Math.round((now.getTime() - start.getTime()) / (1000 * 60));
   }
 }
