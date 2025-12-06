@@ -91,7 +91,7 @@
               class="jacaona-duration-btn"
               (click)="onDurationClick(set.id, set.duration)"
             >
-              {{ formatDuration(set.duration) }}
+              {{ formatDurationForEdit(set.duration) }}
             </button>
           } @else {
             {{ formatDuration(set.duration) }}

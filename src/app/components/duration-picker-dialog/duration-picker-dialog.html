@@ -1,48 +1,52 @@
-<app-bottom-sheet-dialog [isOpen]="isOpen" (closed)="onCancel()">
-  <div class="jacaona-duration-picker">
-    <div class="jacaona-duration-picker__header">
-      <h3 class="jacaona-duration-picker__title">Duration</h3>
-    </div>
+@if (isOpen) {
+  <div class="jacaona-dialog-overlay" (click)="onOverlayClick()">
+    <div class="jacaona-dialog-container" (click)="$event.stopPropagation()">
+      <div class="jacaona-duration-picker">
+        <div class="jacaona-duration-picker__header">
+          <h3 class="jacaona-duration-picker__title">Duration</h3>
+        </div>
 
-    <div class="jacaona-duration-picker__content">
-      <!-- Hours Column -->
-      <div class="jacaona-duration-picker__column">
-        <div class="jacaona-duration-picker__scroll" #hoursScroll (scroll)="onHoursScroll($event)" (wheel)="onHoursWheel($event)">
-          @for (hour of hoursArray; track hour) {
-            <div class="jacaona-duration-picker__item">
-              {{ hour }}h
+        <div class="jacaona-duration-picker__content">
+          <!-- Hours Column -->
+          <div class="jacaona-duration-picker__column">
+            <div class="jacaona-duration-picker__scroll" #hoursScroll (scroll)="onHoursScroll($event)" (wheel)="onHoursWheel($event)">
+              @for (hour of hoursArray; track hour) {
+                <div class="jacaona-duration-picker__item">
+                  {{ hour }}h
+                </div>
+              }
             </div>
-          }
+          </div>
+
+          <!-- Minutes Column -->
+          <div class="jacaona-duration-picker__column">
+            <div class="jacaona-duration-picker__scroll" #minutesScroll (scroll)="onMinutesScroll($event)" (wheel)="onMinutesWheel($event)">
+              @for (minute of minutesArray; track minute) {
+                <div class="jacaona-duration-picker__item">
+                  {{ minute }}m
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Seconds Column -->
+          <div class="jacaona-duration-picker__column">
+            <div class="jacaona-duration-picker__scroll" #secondsScroll (scroll)="onSecondsScroll($event)" (wheel)="onSecondsWheel($event)">
+              @for (second of secondsArray; track second) {
+                <div class="jacaona-duration-picker__item">
+                  {{ second }}s
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="jacaona-duration-picker__actions">
+          <button class="jacaona-btn jacaona-btn--primary" (click)="onConfirm()">
+            Confirm
+          </button>
         </div>
       </div>
-
-      <!-- Minutes Column -->
-      <div class="jacaona-duration-picker__column">
-        <div class="jacaona-duration-picker__scroll" #minutesScroll (scroll)="onMinutesScroll($event)" (wheel)="onMinutesWheel($event)">
-          @for (minute of minutesArray; track minute) {
-            <div class="jacaona-duration-picker__item">
-              {{ minute }}m
-            </div>
-          }
-        </div>
-      </div>
-
-      <!-- Seconds Column -->
-      <div class="jacaona-duration-picker__column">
-        <div class="jacaona-duration-picker__scroll" #secondsScroll (scroll)="onSecondsScroll($event)" (wheel)="onSecondsWheel($event)">
-          @for (second of secondsArray; track second) {
-            <div class="jacaona-duration-picker__item">
-              {{ second }}s
-            </div>
-          }
-        </div>
-      </div>
-    </div>
-
-    <div class="jacaona-duration-picker__actions">
-      <button class="jacaona-btn jacaona-btn--primary" (click)="onConfirm()">
-        Confirm
-      </button>
     </div>
   </div>
-</app-bottom-sheet-dialog>
+}

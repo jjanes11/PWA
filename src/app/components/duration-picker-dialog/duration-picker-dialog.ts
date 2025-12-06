@@ -1,10 +1,9 @@
-import { Component, Input, Output, EventEmitter, signal, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { BottomSheetDialog } from '../bottom-sheet-dialog/bottom-sheet-dialog';
+import { Component, Input, Output, EventEmitter, signal, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-duration-picker-dialog',
   standalone: true,
-  imports: [BottomSheetDialog],
+  imports: [],
   templateUrl: './duration-picker-dialog.html',
   styleUrl: './duration-picker-dialog.css'
 })
@@ -121,5 +120,16 @@ export class DurationPickerDialogComponent implements AfterViewInit {
 
   onCancel(): void {
     this.closed.emit();
+  }
+
+  onOverlayClick(): void {
+    this.onCancel();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.isOpen) {
+      this.onCancel();
+    }
   }
 }

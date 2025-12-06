@@ -77,12 +77,15 @@
   justify-content: center;
   font-size: 14px;
   color: var(--jacaona-text-primary);
+  flex: 1;
+  min-width: 0;
 }
 
 .jacaona-input {
   width: 100%;
+  max-width: 100%;
   padding: var(--jacaona-space-sm);
-  background: var(--jacaona-bg-primary);
+  background: transparent;
   border: none;
   border-radius: var(--jacaona-radius-sm);
   color: var(--jacaona-text-primary);
@@ -90,6 +93,14 @@
   text-align: center;
   outline: none;
   transition: border-color 0.15s ease;
+  -moz-appearance: textfield; /* Remove arrows in Firefox */
+}
+
+/* Remove spinner arrows in Chrome, Safari, Edge, Opera */
+.jacaona-input::-webkit-outer-spin-button,
+.jacaona-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .jacaona-input:focus {
@@ -152,8 +163,8 @@
 .jacaona-duration-btn {
   width: 100%;
   padding: var(--jacaona-space-sm);
-  background: var(--jacaona-bg-primary);
-  border: 1px solid var(--jacaona-border);
+  background: transparent;
+  border: none;
   border-radius: var(--jacaona-radius-sm);
   color: var(--jacaona-text-primary);
   font-size: var(--jacaona-font-size-base);
@@ -165,7 +176,6 @@
 
 .jacaona-duration-btn:hover {
   background: var(--jacaona-bg-secondary);
-  border-color: var(--jacaona-accent-blue);
 }
 
 .jacaona-duration-btn:active {

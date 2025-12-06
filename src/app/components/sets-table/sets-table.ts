@@ -86,6 +86,9 @@ export class SetsTableComponent {
   selectedSetIdForDuration = signal<string | null>(null);
   selectedSetDuration = signal(0);
 
+  /**
+   * Format duration for display in view mode (e.g., "2h 48m 18s")
+   */
   formatDuration(seconds: number | undefined): string {
     if (!seconds) return '0s';
     const h = Math.floor(seconds / 3600);
@@ -98,6 +101,24 @@ export class SetsTableComponent {
     if (s > 0 || parts.length === 0) parts.push(`${s}s`);
     
     return parts.join(' ');
+  }
+
+  /**
+   * Format duration for edit mode (e.g., "2:48:18", "48:18", "0:18")
+   */
+  formatDurationForEdit(seconds: number | undefined): string {
+    if (!seconds) return '0:00';
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    
+    if (h > 0) {
+      return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    } else if (m > 0) {
+      return `${m}:${s.toString().padStart(2, '0')}`;
+    } else {
+      return `0:${s.toString().padStart(2, '0')}`;
+    }
   }
 
   onDurationClick(setId: string, currentDuration: number | undefined): void {
