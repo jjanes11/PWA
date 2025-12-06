@@ -59,7 +59,8 @@ import { getMetricDescription } from '../../utils/metric-descriptions';
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      z-index: 1;
+      z-index: 10;
+      isolation: isolate;
     }
 
     .jacaona-metric-btn {

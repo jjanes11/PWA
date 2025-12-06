@@ -38,7 +38,7 @@
   bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  z-index: var(--jacaona-z-tooltip);
+  z-index: calc(var(--jacaona-z-tooltip) + 100);
   width: max-content;
   max-width: min(320px, 90vw);
   padding: var(--jacaona-space-sm) var(--jacaona-space-md);
@@ -49,6 +49,7 @@
   animation: tooltipFadeIn 0.15s ease-out;
   white-space: normal;
   word-wrap: break-word;
+  pointer-events: auto;
 }
 
 /* Arrow pointing down */

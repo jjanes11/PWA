@@ -41,7 +41,7 @@ import { TimeRange } from '../../models/analytics.models';
       gap: var(--jacaona-space-sm);
       padding: var(--jacaona-space-sm) var(--jacaona-space-md);
       background: var(--jacaona-bg-secondary);
-      border: 1px solid var(--jacaona-bg-quaternary);
+      border: none;
       border-radius: var(--jacaona-radius-md);
       color: var(--jacaona-text-primary);
       font-size: var(--jacaona-font-size-sm);
