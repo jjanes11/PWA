@@ -12,7 +12,7 @@
 
 .jacaona-table-header {
   display: grid;
-  grid-template-columns: 50px 1fr 1fr 50px;
+  grid-template-columns: 50px repeat(auto-fit, minmax(80px, 1fr)) 50px;
   gap: var(--jacaona-space-md);
   color: var(--jacaona-text-secondary);
   font-size: 12px;
@@ -36,7 +36,7 @@
 
 .jacaona-table-row {
   display: grid;
-  grid-template-columns: 50px 1fr 1fr 50px;
+  grid-template-columns: 50px repeat(auto-fit, minmax(80px, 1fr)) 50px;
   gap: var(--jacaona-space-md);
   align-items: center;
   padding: var(--jacaona-space-sm) var(--jacaona-space-md);
@@ -69,7 +69,9 @@
 }
 
 .jacaona-cell-weight,
-.jacaona-cell-reps {
+.jacaona-cell-reps,
+.jacaona-cell-duration,
+.jacaona-cell-distance {
   display: flex;
   align-items: center;
   justify-content: center;

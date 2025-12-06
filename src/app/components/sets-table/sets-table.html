@@ -2,17 +2,27 @@
   <!-- Table Headers -->
   <div class="jacaona-table-header">
     <div class="jacaona-header-set">SET</div>
-    @if (mode === 'edit') {
-      <div class="jacaona-header-weight">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/>
-        </svg>
-        KG
-      </div>
-    } @else {
-      <div class="jacaona-header-weight">Weight</div>
+    @if (showWeight()) {
+      @if (mode === 'edit') {
+        <div class="jacaona-header-weight">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/>
+          </svg>
+          {{ weightLabel() }}
+        </div>
+      } @else {
+        <div class="jacaona-header-weight">Weight</div>
+      }
     }
-    <div class="jacaona-header-reps">REPS</div>
+    @if (showReps()) {
+      <div class="jacaona-header-reps">REPS</div>
+    }
+    @if (showDuration()) {
+      <div class="jacaona-header-duration">TIME</div>
+    }
+    @if (showDistance()) {
+      <div class="jacaona-header-distance">DISTANCE</div>
+    }
     @if (showCompleteColumn) {
       <div class="jacaona-header-check">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -39,35 +49,75 @@
       </div>
       
       <!-- Weight -->
-      <div class="jacaona-cell-weight">
-        @if (mode === 'edit') {
-          <input 
-            type="number" 
-            [value]="set.weight" 
-            (input)="onWeightChange(set.id, $event)"
-            class="jacaona-input"
-            min="0"
-            step="0.5"
-          />
-        } @else {
-          {{ set.weight }} kg
-        }
-      </div>
+      @if (showWeight()) {
+        <div class="jacaona-cell-weight">
+          @if (mode === 'edit') {
+            <input 
+              type="number" 
+              [value]="set.weight" 
+              (input)="onWeightChange(set.id, $event)"
+              class="jacaona-input"
+              min="0"
+              step="0.5"
+            />
+          } @else {
+            {{ set.weight }} {{ weightLabelView() }}
+          }
+        </div>
+      }
       
       <!-- Reps -->
-      <div class="jacaona-cell-reps">
-        @if (mode === 'edit') {
-          <input 
-            type="number" 
-            [value]="set.reps" 
-            (input)="onRepsChange(set.id, $event)"
-            class="jacaona-input"
-            min="0"
-          />
-        } @else {
-          {{ set.reps }}
-        }
-      </div>
+      @if (showReps()) {
+        <div class="jacaona-cell-reps">
+          @if (mode === 'edit') {
+            <input 
+              type="number" 
+              [value]="set.reps" 
+              (input)="onRepsChange(set.id, $event)"
+              class="jacaona-input"
+              min="0"
+            />
+          } @else {
+            {{ set.reps }}
+          }
+        </div>
+      }
+      
+      <!-- Duration (placeholder for now) -->
+      @if (showDuration()) {
+        <div class="jacaona-cell-duration">
+          @if (mode === 'edit') {
+            <input 
+              type="number" 
+              value="0"
+              class="jacaona-input"
+              min="0"
+              placeholder="mins"
+              disabled
+            />
+          } @else {
+            - min
+          }
+        </div>
+      }
+      
+      <!-- Distance (placeholder for now) -->
+      @if (showDistance()) {
+        <div class="jacaona-cell-distance">
+          @if (mode === 'edit') {
+            <input 
+              type="number" 
+              value="0"
+              class="jacaona-input"
+              min="0"
+              placeholder="m"
+              disabled
+            />
+          } @else {
+            - m
+          }
+        </div>
+      }
       
       <!-- Complete Checkbox (edit mode only) -->
       @if (showCompleteColumn) {

@@ -1,7 +1,7 @@
-import { Component, Input, Output, EventEmitter, computed } from '@angular/core';
+import { Component, Input, Output, EventEmitter, computed, signal } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { Set } from '../../models/workout.models';
+import { Set, ExerciseType } from '../../models/workout.models';
 import { getSetTypeDisplay, getSetTypeClass } from '../../utils/set-type.utils';
 
 export type SetsTableMode = 'view' | 'edit';
@@ -33,10 +33,56 @@ export class SetsTableComponent {
   @Input({ required: true }) sets!: Set[];
   @Input() mode: SetsTableMode = 'view';
   @Input() showCompleteColumn = false;
+  @Input() exerciseType?: ExerciseType;
   
   @Output() setChange = new EventEmitter<SetChangeEvent>();
   @Output() setComplete = new EventEmitter<SetCompleteEvent>();
   @Output() setTypeClick = new EventEmitter<SetTypeClickEvent>();
+
+  // Computed properties for column visibility and labels
+  showWeight = computed(() => {
+    const type = this.exerciseType ?? ExerciseType.WeightAndReps; // Default to weight and reps
+    return type === ExerciseType.WeightAndReps || 
+           type === ExerciseType.WeightedBodyweight || 
+           type === ExerciseType.AssistedBodyweight ||
+           type === ExerciseType.DurationAndWeight ||
+           type === ExerciseType.WeightAndDistance;
+  });
+
+  showReps = computed(() => {
+    const type = this.exerciseType ?? ExerciseType.WeightAndReps; // Default to weight and reps
+    return type === ExerciseType.WeightAndReps || 
+           type === ExerciseType.BodyweightReps || 
+           type === ExerciseType.WeightedBodyweight || 
+           type === ExerciseType.AssistedBodyweight;
+  });
+
+  showDuration = computed(() => {
+    const type = this.exerciseType ?? ExerciseType.WeightAndReps; // Default to weight and reps
+    return type === ExerciseType.Duration || 
+           type === ExerciseType.DurationAndWeight ||
+           type === ExerciseType.DistanceAndDuration;
+  });
+
+  showDistance = computed(() => {
+    const type = this.exerciseType ?? ExerciseType.WeightAndReps; // Default to weight and reps
+    return type === ExerciseType.DistanceAndDuration ||
+           type === ExerciseType.WeightAndDistance;
+  });
+
+  weightLabel = computed(() => {
+    const type = this.exerciseType ?? ExerciseType.WeightAndReps;
+    if (type === ExerciseType.WeightedBodyweight) return '+KG';
+    if (type === ExerciseType.AssistedBodyweight) return '-KG';
+    return 'KG';
+  });
+
+  weightLabelView = computed(() => {
+    const type = this.exerciseType ?? ExerciseType.WeightAndReps;
+    if (type === ExerciseType.WeightedBodyweight) return '+kg';
+    if (type === ExerciseType.AssistedBodyweight) return '-kg';
+    return 'kg';
+  });
 
   getSetTypeDisplay = getSetTypeDisplay;
   getSetTypeClass = getSetTypeClass;
