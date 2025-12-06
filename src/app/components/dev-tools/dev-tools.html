@@ -1,0 +1,95 @@
+<div class="jacaona-dev-tools-container">
+  <!-- Top Bar -->
+  <app-top-bar
+    [title]="'Developer Tools'"
+    [leftButton]="{ type: 'back' }"
+    (leftAction)="goBack()"
+  />
+
+  <!-- Main Content -->
+  <div class="jacaona-main-content">
+    <!-- Test Data Section -->
+    <div class="jacaona-dev-section">
+      <h2 class="jacaona-section-title">Test Data</h2>
+      <p class="jacaona-section-description">
+        Load sample workout data for testing and development. This will replace all existing data
+        with 36 pre-configured workouts covering all exercise types.
+      </p>
+
+      <!-- Load Test Data Button -->
+      <button 
+        class="jacaona-dev-button jacaona-dev-button--primary"
+        (click)="loadTestData()"
+        [disabled]="isLoadingTestData()"
+      >
+        <svg class="jacaona-dev-button__icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"/>
+        </svg>
+        <div class="jacaona-dev-button__content">
+          <span class="jacaona-dev-button__title">
+            @if (isLoadingTestData()) {
+              Loading Test Data...
+            } @else {
+              Load Test Data from GitHub
+            }
+          </span>
+          <span class="jacaona-dev-button__subtitle">Import 36 sample workouts</span>
+        </div>
+      </button>
+
+      <!-- Status Message -->
+      @if (lastAction()) {
+        <div 
+          class="jacaona-status-message"
+          [class.jacaona-status-message--success]="lastAction()!.type === 'success'"
+          [class.jacaona-status-message--error]="lastAction()!.type === 'error'"
+        >
+          <svg class="jacaona-status-message__icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            @if (lastAction()!.type === 'success') {
+              <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+            } @else {
+              <path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+            }
+          </svg>
+          <span>{{ lastAction()!.message }}</span>
+          <button 
+            class="jacaona-status-message__close"
+            (click)="clearMessage()"
+            aria-label="Close message"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+      }
+
+      <!-- Test Data Details -->
+      <div class="jacaona-dev-info">
+        <h3 class="jacaona-dev-info__title">What's Included:</h3>
+        <ul class="jacaona-dev-info__list">
+          <li>36 workouts spanning recent dates</li>
+          <li>All 8 exercise types (Duration, Reps, Weight, Distance, etc.)</li>
+          <li>Sample exercises: Bench Press, Pull-ups, Plank, Farmer's Walk, and more</li>
+          <li>Progress tracking data for analytics testing</li>
+        </ul>
+        
+        <div class="jacaona-dev-warning">
+          <svg class="jacaona-dev-warning__icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12,2L1,21H23M12,6L19.53,19H4.47M11,10V14H13V10M11,16V18H13V16"/>
+          </svg>
+          <span>Warning: This will replace all existing data. Export your current data first if you want to keep it.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Development Info Section -->
+    <div class="jacaona-dev-section">
+      <h2 class="jacaona-section-title">About Developer Tools</h2>
+      <p class="jacaona-section-description">
+        This section provides tools for testing and development. Use these features to quickly
+        populate your app with realistic data or test specific functionality.
+      </p>
+    </div>
+  </div>
+</div>

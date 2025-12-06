@@ -199,4 +199,11 @@ export class SettingsComponent {
   cancelClearData(): void {
     this.showClearDialog.set(false);
   }
+
+  /**
+   * Navigate to Developer Tools
+   */
+  goToDevTools(): void {
+    this.router.navigate(['/dev-tools']);
+  }
 }

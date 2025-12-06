@@ -63,6 +63,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/settings/settings').then(m => m.SettingsComponent)
   },
   { 
+    path: 'dev-tools', 
+    loadComponent: () => import('./components/dev-tools/dev-tools').then(m => m.DevToolsComponent)
+  },
+  { 
     path: 'workout/:id', 
     loadComponent: () => import('./components/workout-detail/workout-detail').then(m => m.WorkoutDetailComponent)
   },
