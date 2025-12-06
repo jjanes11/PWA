@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener, effect } from '@angular/core';
 
 
 @Component({
@@ -27,6 +27,8 @@ import { Component, Input, Output, EventEmitter, HostListener } from '@angular/c
       display: flex;
       align-items: flex-end;
       animation: fadeIn 0.2s ease;
+      overflow: hidden;
+      touch-action: none;
     }
 
     .jacaona-bottom-menu {
@@ -35,6 +37,7 @@ import { Component, Input, Output, EventEmitter, HostListener } from '@angular/c
       border-radius: var(--jacaona-radius-lg) var(--jacaona-radius-lg) 0 0;
       padding: var(--jacaona-space-lg);
       animation: slideUp 0.3s ease;
+      touch-action: auto;
     }
 
     @keyframes fadeIn {
@@ -53,6 +56,28 @@ export class BottomSheetDialog {
   @Input() isOpen = false;
   @Input() closeOnOverlay = true;
   @Output() closed = new EventEmitter<void>();
+
+  constructor() {
+    // Prevent body scroll when dialog is open
+    effect(() => {
+      if (this.isOpen) {
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+      } else {
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    // Ensure body scroll is restored when component is destroyed
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
+  }
 
   onOverlayClick(): void {
     if (this.closeOnOverlay) {

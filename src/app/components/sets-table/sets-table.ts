@@ -3,12 +3,13 @@ import { Component, Input, Output, EventEmitter, computed, signal } from '@angul
 import { FormsModule } from '@angular/forms';
 import { Set, ExerciseType } from '../../models/workout.models';
 import { getSetTypeDisplay, getSetTypeClass } from '../../utils/set-type.utils';
+import { DurationPickerDialogComponent } from '../duration-picker-dialog/duration-picker-dialog';
 
 export type SetsTableMode = 'view' | 'edit';
 
 export interface SetChangeEvent {
   setId: string;
-  field: 'weight' | 'reps';
+  field: 'weight' | 'reps' | 'duration';
   value: number;
 }
 
@@ -25,7 +26,7 @@ export interface SetTypeClickEvent {
 @Component({
   selector: 'app-sets-table',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, DurationPickerDialogComponent],
   templateUrl: './sets-table.html',
   styleUrl: './sets-table.css'
 })
@@ -86,6 +87,45 @@ export class SetsTableComponent {
 
   getSetTypeDisplay = getSetTypeDisplay;
   getSetTypeClass = getSetTypeClass;
+
+  // Duration picker state
+  isDurationPickerOpen = signal(false);
+  selectedSetIdForDuration = signal<string | null>(null);
+  selectedSetDuration = signal(0);
+
+  formatDuration(seconds: number | undefined): string {
+    if (!seconds) return '0s';
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    
+    const parts: string[] = [];
+    if (h > 0) parts.push(`${h}h`);
+    if (m > 0) parts.push(`${m}m`);
+    if (s > 0 || parts.length === 0) parts.push(`${s}s`);
+    
+    return parts.join(' ');
+  }
+
+  onDurationClick(setId: string, currentDuration: number | undefined): void {
+    if (this.mode === 'edit') {
+      this.selectedSetIdForDuration.set(setId);
+      this.selectedSetDuration.set(currentDuration || 0);
+      this.isDurationPickerOpen.set(true);
+    }
+  }
+
+  onDurationSelected(duration: number): void {
+    const setId = this.selectedSetIdForDuration();
+    if (setId) {
+      this.setChange.emit({ setId, field: 'duration', value: duration });
+    }
+  }
+
+  onDurationPickerClosed(): void {
+    this.isDurationPickerOpen.set(false);
+    this.selectedSetIdForDuration.set(null);
+  }
 
   onWeightChange(setId: string, event: Event): void {
     const value = parseFloat((event.target as HTMLInputElement).value) || 0;

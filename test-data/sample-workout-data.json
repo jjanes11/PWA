@@ -137,6 +137,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "triceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-09-13-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -274,6 +301,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-09-15-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -411,6 +465,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-09-17-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -548,6 +629,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "triceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-09-20-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -685,6 +793,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "calves"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-09-22-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -822,6 +957,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-09-24-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -959,6 +1121,33 @@
                                                             "exerciseType":  "bodyweight-reps",
                                                             "equipment":  "none",
                                                             "primaryMuscleGroup":  "triceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-09-27-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -1096,6 +1285,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "glutes"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-09-29-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -1233,6 +1449,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-01-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -1370,6 +1613,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "other"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-04-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -1507,6 +1777,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-06-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -1644,6 +1941,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-08-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -1781,6 +2105,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "triceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-11-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -1918,6 +2269,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-13-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -2055,6 +2433,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-15-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -2192,6 +2597,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "triceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-18-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -2329,6 +2761,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "calves"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-20-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -2466,6 +2925,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-22-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -2603,6 +3089,33 @@
                                                             "exerciseType":  "bodyweight-reps",
                                                             "equipment":  "none",
                                                             "primaryMuscleGroup":  "triceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-25-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -2740,6 +3253,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "glutes"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-27-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -2877,6 +3417,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-10-29-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -3014,6 +3581,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "other"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-01-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -3151,6 +3745,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-03-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -3288,6 +3909,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-05-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -3432,6 +4080,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "triceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-08-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -3569,6 +4244,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-10-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -3713,6 +4415,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-12-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -3857,6 +4586,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "triceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-15-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -3994,6 +4750,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "calves"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-17-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -4131,6 +4914,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-19-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -4275,6 +5085,33 @@
                                                             "exerciseType":  "bodyweight-reps",
                                                             "equipment":  "none",
                                                             "primaryMuscleGroup":  "triceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-22-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -4419,6 +5256,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "glutes"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-24-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -4563,6 +5427,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-26-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -4700,6 +5591,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "other"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-11-29-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -4844,6 +5762,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-12-01-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   },
@@ -4988,6 +5933,33 @@
                                                             "exerciseType":  "weight-reps",
                                                             "equipment":  "barbell",
                                                             "primaryMuscleGroup":  "biceps"
+                                                        },
+                                                        {
+                                                            "id":  "plank-workout-2025-12-03-001",
+                                                            "name":  "Plank",
+                                                            "equipment":  "bodyweight",
+                                                            "sets":  [
+                                                                         {
+                                                                             "duration":  60,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-1",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  65,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-2",
+                                                                             "type":  "normal"
+                                                                         },
+                                                                         {
+                                                                             "duration":  70,
+                                                                             "completed":  true,
+                                                                             "id":  "set-plank-3",
+                                                                             "type":  "normal"
+                                                                         }
+                                                                     ],
+                                                            "exerciseType":  "duration",
+                                                            "primaryMuscleGroup":  "core"
                                                         }
                                                     ]
                                   }

@@ -87,16 +87,14 @@
       @if (showDuration()) {
         <div class="jacaona-cell-duration">
           @if (mode === 'edit') {
-            <input 
-              type="number" 
-              value="0"
-              class="jacaona-input"
-              min="0"
-              placeholder="mins"
-              disabled
-            />
+            <button
+              class="jacaona-duration-btn"
+              (click)="onDurationClick(set.id, set.duration)"
+            >
+              {{ formatDuration(set.duration) }}
+            </button>
           } @else {
-            - min
+            {{ formatDuration(set.duration) }}
           }
         </div>
       }
@@ -138,3 +136,11 @@
     </div>
   }
 </div>
+
+<!-- Duration Picker Dialog -->
+<app-duration-picker-dialog
+  [isOpen]="isDurationPickerOpen()"
+  [initialDuration]="selectedSetDuration()"
+  (durationSelected)="onDurationSelected($event)"
+  (closed)="onDurationPickerClosed()"
+/>

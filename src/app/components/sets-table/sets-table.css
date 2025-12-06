@@ -148,6 +148,30 @@
   color: var(--jacaona-accent-blue);
 }
 
+/* Duration button styling */
+.jacaona-duration-btn {
+  width: 100%;
+  padding: var(--jacaona-space-sm);
+  background: var(--jacaona-bg-primary);
+  border: 1px solid var(--jacaona-border);
+  border-radius: var(--jacaona-radius-sm);
+  color: var(--jacaona-text-primary);
+  font-size: var(--jacaona-font-size-base);
+  font-weight: var(--jacaona-font-weight-medium);
+  cursor: pointer;
+  transition: var(--jacaona-transition-fast);
+  text-align: center;
+}
+
+.jacaona-duration-btn:hover {
+  background: var(--jacaona-bg-secondary);
+  border-color: var(--jacaona-accent-blue);
+}
+
+.jacaona-duration-btn:active {
+  transform: scale(0.98);
+}
+
 /* View mode - simpler table without complete column */
 :host-context(.view-mode) .jacaona-table-header,
 :host-context(.view-mode) .jacaona-table-row {
