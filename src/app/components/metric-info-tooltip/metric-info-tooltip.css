@@ -20,6 +20,8 @@
   cursor: pointer;
   transition: var(--jacaona-transition-fast);
   opacity: 0.85;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .jacaona-metric-info__btn:hover {

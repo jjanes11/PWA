@@ -35,7 +35,7 @@ import { Component, output, input } from '@angular/core';
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: var(--jacaona-z-tooltip);
+      z-index: var(--jacaona-z-modal);
       padding: var(--jacaona-space-lg);
     }
 
@@ -45,6 +45,8 @@ import { Component, output, input } from '@angular/core';
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
       max-width: 400px;
       width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .jacaona-dialog-content {

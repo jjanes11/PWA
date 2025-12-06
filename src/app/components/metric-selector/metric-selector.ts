@@ -40,6 +40,12 @@ import { getMetricDescription } from '../../utils/metric-descriptions';
       padding: 0 var(--jacaona-space-lg);
       padding-top: 120px;
       margin-top: -120px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    
+    .jacaona-metric-selector-wrapper::-webkit-scrollbar {
+      display: none;
     }
 
     .jacaona-metric-selector {
