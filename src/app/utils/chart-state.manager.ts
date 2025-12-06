@@ -99,14 +99,25 @@ export function formatWorkoutDataPoint(
  */
 export function formatExerciseDataPoint(
   event: ChartSelectionEvent,
-  metric: 'heaviest' | 'oneRepMax' | 'bestSetVolume' | 'workoutVolume' | 'totalReps'
+  metric: 'heaviest' | 'oneRepMax' | 'bestSetVolume' | 'workoutVolume' | 'totalReps' | 'mostReps' | 'bestTime' | 'totalTime'
 ): string {
   const relativeTime = getRelativeTime(event.date);
-  const metricType = metric === 'totalReps' ? 'reps' : 'weight';
   
-  if (metricType === 'weight') {
-    return `${Math.round(event.value)} kg ${relativeTime}`;
-  } else {
+  // Time-based metrics (duration in seconds)
+  if (metric === 'bestTime' || metric === 'totalTime') {
+    const minutes = Math.floor(event.value / 60);
+    const seconds = Math.round(event.value % 60);
+    if (minutes > 0) {
+      return `${minutes}m ${seconds}s ${relativeTime}`;
+    }
+    return `${seconds}s ${relativeTime}`;
+  }
+  
+  // Rep-based metrics
+  if (metric === 'totalReps' || metric === 'mostReps') {
     return `${Math.round(event.value)} reps ${relativeTime}`;
   }
+  
+  // Weight-based metrics (kg)
+  return `${Math.round(event.value)} kg ${relativeTime}`;
 }

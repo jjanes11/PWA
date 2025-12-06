@@ -63,7 +63,7 @@ export class HomeComponent {
       .reduce((total, workout) => {
         return total + (workout.exercises.reduce((exerciseTotal, exercise) => {
           return exerciseTotal + (exercise.sets.reduce((setTotal, set) => {
-            return setTotal + (set.weight * set.reps);
+            return setTotal + ((set.weight || 0) * (set.reps || 0));
           }, 0));
         }, 0));
       }, 0);

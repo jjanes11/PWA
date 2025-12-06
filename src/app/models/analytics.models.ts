@@ -1,5 +1,5 @@
 export type WorkoutMetricType = 'duration' | 'volume' | 'reps';
-export type ExerciseMetricType = 'heaviest' | 'oneRepMax' | 'bestSetVolume' | 'workoutVolume' | 'totalReps';
+export type ExerciseMetricType = 'heaviest' | 'oneRepMax' | 'bestSetVolume' | 'workoutVolume' | 'totalReps' | 'mostReps' | 'bestTime' | 'totalTime';
 export type TimeRange = 'Last 3 months' | 'Year' | 'All time';
 export type ChartType = 'bar' | 'line';
 

@@ -143,7 +143,7 @@ export class EditWorkoutComponent {
 
     const totalSets = w.exercises.reduce((sum, e) => sum + e.sets.length, 0);
     const totalVolume = w.exercises.reduce((sum, e) => 
-      sum + e.sets.reduce((setSum, s) => setSum + (s.weight * s.reps), 0), 0);
+      sum + e.sets.reduce((setSum, s) => setSum + ((s.weight || 0) * (s.reps || 0)), 0), 0);
     
     let durationStr = '0m';
     if (w.startTime && w.endTime) {

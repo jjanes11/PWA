@@ -21,7 +21,7 @@ export class WorkoutStatsService {
           sum +
           w.exercises.reduce(
             (exerciseSum, e) =>
-              exerciseSum + e.sets.reduce((setSum, s) => setSum + s.weight * s.reps, 0),
+              exerciseSum + e.sets.reduce((setSum, s) => setSum + (s.weight || 0) * (s.reps || 0), 0),
             0
           ),
         0

@@ -36,7 +36,7 @@ export class SaveWorkoutComponent implements OnInit {
 
     const totalVolume = workout.exercises.reduce((sum, exercise) =>
       sum + exercise.sets.reduce((setSum, set) => 
-        setSum + (set.weight * set.reps), 0
+        setSum + ((set.weight || 0) * (set.reps || 0)), 0
       ), 0
     );
 

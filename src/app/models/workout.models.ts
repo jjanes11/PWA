@@ -64,12 +64,16 @@ export enum SetType {
 
 export interface Set {
   id: string;
-  reps: number;
-  weight: number; // in kg
   completed: boolean;
   type?: SetType; // Set type (defaults to SetType.Normal)
   restTime?: number; // in seconds
   notes?: string;
+  
+  // Exercise-specific fields (optional based on exercise type)
+  reps?: number;
+  weight?: number; // in kg
+  duration?: number; // in seconds (for duration-based exercises)
+  distance?: number; // in meters (for distance-based exercises)
 }
 
 export interface Workout {

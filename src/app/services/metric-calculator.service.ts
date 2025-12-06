@@ -63,7 +63,7 @@ export class MetricCalculatorService {
   private calculateHeaviest(exercise: Exercise): number {
     const completedSets = exercise.sets.filter(s => s.completed);
     if (completedSets.length === 0) return 0;
-    return Math.max(...completedSets.map(s => s.weight));
+    return Math.max(...completedSets.map(s => s.weight || 0));
   }
   
   /**
@@ -74,7 +74,7 @@ export class MetricCalculatorService {
     if (completedSets.length === 0) return 0;
     
     return Math.max(...completedSets.map(set => 
-      set.weight / (1.0278 - 0.0278 * set.reps)
+      (set.weight || 0) / (1.0278 - 0.0278 * (set.reps || 0))
     ));
   }
   
@@ -84,7 +84,7 @@ export class MetricCalculatorService {
   private calculateBestSetVolume(exercise: Exercise): number {
     const completedSets = exercise.sets.filter(s => s.completed);
     if (completedSets.length === 0) return 0;
-    return Math.max(...completedSets.map(s => s.weight * s.reps));
+    return Math.max(...completedSets.map(s => (s.weight || 0) * (s.reps || 0)));
   }
   
   /**
@@ -92,7 +92,7 @@ export class MetricCalculatorService {
    */
   private calculateWorkoutVolume(exercise: Exercise): number {
     const completedSets = exercise.sets.filter(s => s.completed);
-    return completedSets.reduce((sum, set) => sum + (set.weight * set.reps), 0);
+    return completedSets.reduce((sum, set) => sum + ((set.weight || 0) * (set.reps || 0)), 0);
   }
   
   /**
@@ -100,7 +100,33 @@ export class MetricCalculatorService {
    */
   private calculateTotalReps(exercise: Exercise): number {
     const completedSets = exercise.sets.filter(s => s.completed);
-    return completedSets.reduce((sum, set) => sum + set.reps, 0);
+    return completedSets.reduce((sum, set) => sum + (set.reps || 0), 0);
+  }
+  
+  /**
+   * Calculate most reps in a single set (for bodyweight exercises).
+   */
+  private calculateMostReps(exercise: Exercise): number {
+    const completedSets = exercise.sets.filter(s => s.completed);
+    if (completedSets.length === 0) return 0;
+    return Math.max(...completedSets.map(s => s.reps || 0));
+  }
+  
+  /**
+   * Calculate best time (longest duration) in seconds (for duration exercises).
+   */
+  private calculateBestTime(exercise: Exercise): number {
+    const completedSets = exercise.sets.filter(s => s.completed);
+    if (completedSets.length === 0) return 0;
+    return Math.max(...completedSets.map(s => s.duration || 0));
+  }
+  
+  /**
+   * Calculate total time across all sets in seconds (for duration exercises).
+   */
+  private calculateTotalTime(exercise: Exercise): number {
+    const completedSets = exercise.sets.filter(s => s.completed);
+    return completedSets.reduce((sum, set) => sum + (set.duration || 0), 0);
   }
   
   /**
@@ -118,6 +144,12 @@ export class MetricCalculatorService {
         return this.calculateWorkoutVolume(exercise);
       case 'totalReps':
         return this.calculateTotalReps(exercise);
+      case 'mostReps':
+        return this.calculateMostReps(exercise);
+      case 'bestTime':
+        return this.calculateBestTime(exercise);
+      case 'totalTime':
+        return this.calculateTotalTime(exercise);
       default:
         return 0;
     }
