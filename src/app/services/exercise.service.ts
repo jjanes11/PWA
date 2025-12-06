@@ -21,11 +21,16 @@ export class ExerciseService {
       { id: '3', name: 'Dumbbell Chest Press', equipment: EquipmentCategory.Dumbbell, primaryMuscleGroup: MuscleGroup.Chest, otherMuscles: [MuscleGroup.Triceps, MuscleGroup.Shoulders], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '4', name: 'Dumbbell Fly', equipment: EquipmentCategory.Dumbbell, primaryMuscleGroup: MuscleGroup.Chest, otherMuscles: [MuscleGroup.Shoulders], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '5', name: 'Push-ups', equipment: EquipmentCategory.None, primaryMuscleGroup: MuscleGroup.Chest, otherMuscles: [MuscleGroup.Triceps, MuscleGroup.Shoulders], exerciseType: ExerciseType.BodyweightReps, sets: [] },
+      { id: '5a', name: 'Weighted Push-ups', equipment: EquipmentCategory.Other, primaryMuscleGroup: MuscleGroup.Chest, otherMuscles: [MuscleGroup.Triceps, MuscleGroup.Shoulders], exerciseType: ExerciseType.WeightedBodyweight, sets: [] },
       { id: '6', name: 'Cable Chest Fly', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.Chest, otherMuscles: [MuscleGroup.Shoulders], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       
       // Back
       { id: '7', name: 'Deadlift', equipment: EquipmentCategory.Barbell, primaryMuscleGroup: MuscleGroup.LowerBack, otherMuscles: [MuscleGroup.Hamstrings, MuscleGroup.Glutes, MuscleGroup.Traps], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '8', name: 'Pull-ups', equipment: EquipmentCategory.None, primaryMuscleGroup: MuscleGroup.Lats, otherMuscles: [MuscleGroup.Biceps, MuscleGroup.UpperBack], exerciseType: ExerciseType.BodyweightReps, sets: [] },
+      { id: '8a', name: 'Weighted Pull-ups', equipment: EquipmentCategory.Other, primaryMuscleGroup: MuscleGroup.Lats, otherMuscles: [MuscleGroup.Biceps, MuscleGroup.UpperBack], exerciseType: ExerciseType.WeightedBodyweight, sets: [] },
+      { id: '8b', name: 'Assisted Pull-ups', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.Lats, otherMuscles: [MuscleGroup.Biceps, MuscleGroup.UpperBack], exerciseType: ExerciseType.AssistedBodyweight, sets: [] },
+      { id: '8c', name: 'Weighted Chin-ups', equipment: EquipmentCategory.Other, primaryMuscleGroup: MuscleGroup.Biceps, otherMuscles: [MuscleGroup.Lats, MuscleGroup.UpperBack], exerciseType: ExerciseType.WeightedBodyweight, sets: [] },
+      { id: '8d', name: 'Assisted Chin-ups', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.Biceps, otherMuscles: [MuscleGroup.Lats, MuscleGroup.UpperBack], exerciseType: ExerciseType.AssistedBodyweight, sets: [] },
       { id: '9', name: 'Barbell Rows', equipment: EquipmentCategory.Barbell, primaryMuscleGroup: MuscleGroup.UpperBack, otherMuscles: [MuscleGroup.Lats, MuscleGroup.Biceps], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '10', name: 'Lat Pulldown', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.Lats, otherMuscles: [MuscleGroup.Biceps, MuscleGroup.UpperBack], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '11', name: 'Seated Cable Row', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.UpperBack, otherMuscles: [MuscleGroup.Lats, MuscleGroup.Biceps], exerciseType: ExerciseType.WeightAndReps, sets: [] },
@@ -37,12 +42,17 @@ export class ExerciseService {
       { id: '15', name: 'Front Squat', equipment: EquipmentCategory.Barbell, primaryMuscleGroup: MuscleGroup.Quadriceps, otherMuscles: [MuscleGroup.Glutes, MuscleGroup.Abdominals], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '16', name: 'Leg Press', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.Quadriceps, otherMuscles: [MuscleGroup.Glutes, MuscleGroup.Hamstrings], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '17', name: 'Romanian Deadlift', equipment: EquipmentCategory.Barbell, primaryMuscleGroup: MuscleGroup.Hamstrings, otherMuscles: [MuscleGroup.Glutes, MuscleGroup.LowerBack], exerciseType: ExerciseType.WeightAndReps, sets: [] },
+      { id: '17a', name: 'Single Leg Romanian Deadlift', equipment: EquipmentCategory.Dumbbell, primaryMuscleGroup: MuscleGroup.Hamstrings, otherMuscles: [MuscleGroup.Glutes, MuscleGroup.LowerBack], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '18', name: 'Leg Curl', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.Hamstrings, otherMuscles: [MuscleGroup.Calves], exerciseType: ExerciseType.WeightAndReps, sets: [] },
+      { id: '18a', name: 'Hamstring Ball Curl', equipment: EquipmentCategory.StabilityBall, primaryMuscleGroup: MuscleGroup.Hamstrings, otherMuscles: [MuscleGroup.Glutes, MuscleGroup.Abdominals], exerciseType: ExerciseType.BodyweightReps, sets: [] },
+      { id: '18b', name: 'Single Leg Hamstring Ball Curl', equipment: EquipmentCategory.StabilityBall, primaryMuscleGroup: MuscleGroup.Hamstrings, otherMuscles: [MuscleGroup.Glutes, MuscleGroup.Abdominals], exerciseType: ExerciseType.BodyweightReps, sets: [] },
       { id: '19', name: 'Leg Extension', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.Quadriceps, otherMuscles: [], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '20', name: 'Lunges', equipment: EquipmentCategory.None, primaryMuscleGroup: MuscleGroup.Quadriceps, otherMuscles: [MuscleGroup.Glutes, MuscleGroup.Hamstrings], exerciseType: ExerciseType.BodyweightReps, sets: [] },
+      { id: '20a', name: 'Weighted Lunges', equipment: EquipmentCategory.Dumbbell, primaryMuscleGroup: MuscleGroup.Quadriceps, otherMuscles: [MuscleGroup.Glutes, MuscleGroup.Hamstrings], exerciseType: ExerciseType.WeightedBodyweight, sets: [] },
       { id: '21', name: 'Bulgarian Split Squat', equipment: EquipmentCategory.Dumbbell, primaryMuscleGroup: MuscleGroup.Quadriceps, otherMuscles: [MuscleGroup.Glutes, MuscleGroup.Hamstrings], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '22', name: 'Calf Raise', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.Calves, otherMuscles: [], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '23', name: 'Hip Thrust', equipment: EquipmentCategory.Barbell, primaryMuscleGroup: MuscleGroup.Glutes, otherMuscles: [MuscleGroup.Hamstrings], exerciseType: ExerciseType.WeightAndReps, sets: [] },
+      { id: '23a', name: 'Weighted Step-ups', equipment: EquipmentCategory.Dumbbell, primaryMuscleGroup: MuscleGroup.Quadriceps, otherMuscles: [MuscleGroup.Glutes, MuscleGroup.Hamstrings], exerciseType: ExerciseType.WeightedBodyweight, sets: [] },
       
       // Shoulders
       { id: '24', name: 'Shoulder Press', equipment: EquipmentCategory.Barbell, primaryMuscleGroup: MuscleGroup.Shoulders, otherMuscles: [MuscleGroup.Triceps, MuscleGroup.Traps], exerciseType: ExerciseType.WeightAndReps, sets: [] },
@@ -59,6 +69,8 @@ export class ExerciseService {
       { id: '33', name: 'Hammer Curl', equipment: EquipmentCategory.Dumbbell, primaryMuscleGroup: MuscleGroup.Biceps, otherMuscles: [MuscleGroup.Forearms], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '34', name: 'Preacher Curl', equipment: EquipmentCategory.Barbell, primaryMuscleGroup: MuscleGroup.Biceps, otherMuscles: [MuscleGroup.Forearms], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '35', name: 'Tricep Dips', equipment: EquipmentCategory.None, primaryMuscleGroup: MuscleGroup.Triceps, otherMuscles: [MuscleGroup.Chest, MuscleGroup.Shoulders], exerciseType: ExerciseType.BodyweightReps, sets: [] },
+      { id: '35a', name: 'Weighted Dips', equipment: EquipmentCategory.Other, primaryMuscleGroup: MuscleGroup.Triceps, otherMuscles: [MuscleGroup.Chest, MuscleGroup.Shoulders], exerciseType: ExerciseType.WeightedBodyweight, sets: [] },
+      { id: '35b', name: 'Assisted Dips', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.Triceps, otherMuscles: [MuscleGroup.Chest, MuscleGroup.Shoulders], exerciseType: ExerciseType.AssistedBodyweight, sets: [] },
       { id: '36', name: 'Tricep Pushdown', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.Triceps, otherMuscles: [], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '37', name: 'Overhead Tricep Extension', equipment: EquipmentCategory.Dumbbell, primaryMuscleGroup: MuscleGroup.Triceps, otherMuscles: [MuscleGroup.Shoulders], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '38', name: 'Skull Crushers', equipment: EquipmentCategory.Barbell, primaryMuscleGroup: MuscleGroup.Triceps, otherMuscles: [], exerciseType: ExerciseType.WeightAndReps, sets: [] },
@@ -66,6 +78,7 @@ export class ExerciseService {
       
       // Core
       { id: '40', name: 'Plank', equipment: EquipmentCategory.None, primaryMuscleGroup: MuscleGroup.Abdominals, otherMuscles: [MuscleGroup.Shoulders, MuscleGroup.Glutes], exerciseType: ExerciseType.Duration, sets: [] },
+      { id: '40a', name: 'Copenhagen Plank', equipment: EquipmentCategory.None, primaryMuscleGroup: MuscleGroup.Abdominals, otherMuscles: [MuscleGroup.Adductors, MuscleGroup.Shoulders], exerciseType: ExerciseType.Duration, sets: [] },
       { id: '41', name: 'Crunches', equipment: EquipmentCategory.None, primaryMuscleGroup: MuscleGroup.Abdominals, otherMuscles: [], exerciseType: ExerciseType.BodyweightReps, sets: [] },
       { id: '42', name: 'Russian Twists', equipment: EquipmentCategory.Plate, primaryMuscleGroup: MuscleGroup.Abdominals, otherMuscles: [], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '43', name: 'Hanging Leg Raise', equipment: EquipmentCategory.None, primaryMuscleGroup: MuscleGroup.Abdominals, otherMuscles: [], exerciseType: ExerciseType.BodyweightReps, sets: [] },

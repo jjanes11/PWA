@@ -11,7 +11,7 @@
           {{ weightLabel() }}
         </div>
       } @else {
-        <div class="jacaona-header-weight">Weight</div>
+        <div class="jacaona-header-weight">{{ weightLabel() }}</div>
       }
     }
     @if (showReps()) {
@@ -61,7 +61,7 @@
               step="0.5"
             />
           } @else {
-            {{ set.weight }} {{ weightLabelView() }}
+            {{ set.weight }}
           }
         </div>
       }

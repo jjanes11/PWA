@@ -78,13 +78,6 @@ export class SetsTableComponent {
     return 'KG';
   });
 
-  weightLabelView = computed(() => {
-    const type = this.exerciseType ?? ExerciseType.WeightAndReps;
-    if (type === ExerciseType.WeightedBodyweight) return '+kg';
-    if (type === ExerciseType.AssistedBodyweight) return '-kg';
-    return 'kg';
-  });
-
   getSetTypeDisplay = getSetTypeDisplay;
   getSetTypeClass = getSetTypeClass;
 

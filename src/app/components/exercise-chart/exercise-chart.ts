@@ -77,6 +77,15 @@ export class ExerciseChartComponent {
       ];
     }
     
+    // Assisted bodyweight exercises (assisted dips, assisted pull-ups)
+    if (type === ExerciseType.AssistedBodyweight) {
+      return [
+        { id: 'lightest' as ExerciseMetricType, label: 'Lightest Assistance' },
+        { id: 'mostReps' as ExerciseMetricType, label: 'Most Reps (Set)' },
+        { id: 'totalReps' as ExerciseMetricType, label: 'Total Reps' }
+      ];
+    }
+    
     // Weight and reps exercises (bench press, squat, etc.)
     return [
       { id: 'heaviest' as ExerciseMetricType, label: 'Heaviest Weight' },
@@ -98,6 +107,14 @@ export class ExerciseChartComponent {
     
     if (type === ExerciseType.BodyweightReps) {
       return 'mostReps' as ExerciseMetricType;
+    }
+    
+    if (type === ExerciseType.WeightedBodyweight) {
+      return 'heaviest' as ExerciseMetricType;
+    }
+    
+    if (type === ExerciseType.AssistedBodyweight) {
+      return 'lightest' as ExerciseMetricType;
     }
     
     return 'heaviest' as ExerciseMetricType;

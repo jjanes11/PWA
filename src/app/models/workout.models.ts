@@ -6,6 +6,7 @@ export enum EquipmentCategory {
   Machine = 'machine',
   Plate = 'plate',
   ResistanceBand = 'resistance-band',
+  StabilityBall = 'stability-ball',
   SuspensionBand = 'suspension-band',
   Other = 'other'
 }

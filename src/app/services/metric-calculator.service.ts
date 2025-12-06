@@ -67,6 +67,18 @@ export class MetricCalculatorService {
   }
   
   /**
+   * Calculate lightest assistance weight (for assisted bodyweight exercises).
+   * Lower weight = less assistance = better performance.
+   */
+  private calculateLightest(exercise: Exercise): number {
+    const completedSets = exercise.sets.filter(s => s.completed);
+    if (completedSets.length === 0) return 0;
+    const weights = completedSets.map(s => s.weight || 0).filter(w => w > 0);
+    if (weights.length === 0) return 0;
+    return Math.min(...weights);
+  }
+  
+  /**
    * Calculate estimated one-rep max using Brzycki formula.
    */
   private calculateOneRepMax(exercise: Exercise): number {
@@ -136,6 +148,8 @@ export class MetricCalculatorService {
     switch (metric) {
       case 'heaviest':
         return this.calculateHeaviest(exercise);
+      case 'lightest':
+        return this.calculateLightest(exercise);
       case 'oneRepMax':
         return this.calculateOneRepMax(exercise);
       case 'bestSetVolume':
