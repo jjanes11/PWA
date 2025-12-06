@@ -51,7 +51,7 @@ export function useExerciseSetMutations<T extends WorkoutEntity = WorkoutEntity>
   function updateSetField(
     exerciseId: string,
     setId: string,
-    field: 'weight' | 'reps' | 'duration',
+    field: 'weight' | 'reps' | 'duration' | 'distance',
     value: number
   ): void {
     const result = resolveSet(exerciseId, setId);

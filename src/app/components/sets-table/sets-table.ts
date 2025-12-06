@@ -9,7 +9,7 @@ export type SetsTableMode = 'view' | 'edit';
 
 export interface SetChangeEvent {
   setId: string;
-  field: 'weight' | 'reps' | 'duration';
+  field: 'weight' | 'reps' | 'duration' | 'distance';
   value: number;
 }
 
@@ -128,6 +128,11 @@ export class SetsTableComponent {
   onRepsChange(setId: string, event: Event): void {
     const value = parseInt((event.target as HTMLInputElement).value) || 0;
     this.setChange.emit({ setId, field: 'reps', value });
+  }
+
+  onDistanceChange(setId: string, event: Event): void {
+    const value = parseFloat((event.target as HTMLInputElement).value) || 0;
+    this.setChange.emit({ setId, field: 'distance', value });
   }
 
   onSetTypeClick(setId: string, event: Event): void {

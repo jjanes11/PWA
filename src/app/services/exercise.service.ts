@@ -90,12 +90,15 @@ export class ExerciseService {
       { id: '47', name: 'Clean and Jerk', equipment: EquipmentCategory.Barbell, primaryMuscleGroup: MuscleGroup.FullBody, otherMuscles: [MuscleGroup.Shoulders, MuscleGroup.Quadriceps, MuscleGroup.Traps], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       { id: '48', name: 'Snatch', equipment: EquipmentCategory.Barbell, primaryMuscleGroup: MuscleGroup.FullBody, otherMuscles: [MuscleGroup.Shoulders, MuscleGroup.Quadriceps, MuscleGroup.Traps], exerciseType: ExerciseType.WeightAndReps, sets: [] },
       
-      // Cardio
+      // Cardio & Mixed
       { id: '49', name: 'Running', equipment: EquipmentCategory.None, primaryMuscleGroup: MuscleGroup.Cardio, otherMuscles: [MuscleGroup.Quadriceps, MuscleGroup.Calves], exerciseType: ExerciseType.DistanceAndDuration, sets: [] },
       { id: '50', name: 'Cycling', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.Cardio, otherMuscles: [MuscleGroup.Quadriceps, MuscleGroup.Calves], exerciseType: ExerciseType.DistanceAndDuration, sets: [] },
       { id: '51', name: 'Rowing Machine', equipment: EquipmentCategory.Machine, primaryMuscleGroup: MuscleGroup.Cardio, otherMuscles: [MuscleGroup.UpperBack, MuscleGroup.Lats, MuscleGroup.Biceps], exerciseType: ExerciseType.DistanceAndDuration, sets: [] },
       { id: '52', name: 'Jump Rope', equipment: EquipmentCategory.Other, primaryMuscleGroup: MuscleGroup.Cardio, otherMuscles: [MuscleGroup.Calves, MuscleGroup.Shoulders], exerciseType: ExerciseType.Duration, sets: [] },
-      { id: '53', name: 'Burpees', equipment: EquipmentCategory.None, primaryMuscleGroup: MuscleGroup.FullBody, otherMuscles: [MuscleGroup.Chest, MuscleGroup.Quadriceps, MuscleGroup.Shoulders], exerciseType: ExerciseType.BodyweightReps, sets: [] }
+      { id: '53', name: 'Burpees', equipment: EquipmentCategory.None, primaryMuscleGroup: MuscleGroup.FullBody, otherMuscles: [MuscleGroup.Chest, MuscleGroup.Quadriceps, MuscleGroup.Shoulders], exerciseType: ExerciseType.BodyweightReps, sets: [] },
+      { id: '54', name: 'Weighted Plank', equipment: EquipmentCategory.Plate, primaryMuscleGroup: MuscleGroup.Abdominals, otherMuscles: [MuscleGroup.Shoulders, MuscleGroup.Glutes], exerciseType: ExerciseType.DurationAndWeight, sets: [] },
+      { id: '55', name: 'Farmer\'s Walk', equipment: EquipmentCategory.Dumbbell, primaryMuscleGroup: MuscleGroup.Forearms, otherMuscles: [MuscleGroup.Traps, MuscleGroup.Shoulders, MuscleGroup.Abdominals], exerciseType: ExerciseType.WeightAndDistance, sets: [] },
+      { id: '56', name: 'Sled Push', equipment: EquipmentCategory.Other, primaryMuscleGroup: MuscleGroup.Quadriceps, otherMuscles: [MuscleGroup.Glutes, MuscleGroup.Calves, MuscleGroup.Shoulders], exerciseType: ExerciseType.WeightAndDistance, sets: [] }
     ];
 
     const customExercises = this.storageService.loadExercises();

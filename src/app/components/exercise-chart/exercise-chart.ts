@@ -52,11 +52,30 @@ export class ExerciseChartComponent {
     
     // Duration-based exercises (plank, cardio)
     if (type === ExerciseType.Duration || 
-        type === ExerciseType.DurationAndWeight ||
-        type === ExerciseType.DistanceAndDuration) {
+        type === ExerciseType.DurationAndWeight) {
       return [
         { id: 'bestTime' as ExerciseMetricType, label: 'Best Time' },
-        { id: 'totalTime' as ExerciseMetricType, label: 'Total Time' }
+        { id: 'totalTime' as ExerciseMetricType, label: 'Workout Time' }
+      ];
+    }
+    
+    // Distance and duration exercises (running, cycling, rowing)
+    if (type === ExerciseType.DistanceAndDuration) {
+      return [
+        { id: 'longestDistance' as ExerciseMetricType, label: 'Longest Distance' },
+        { id: 'totalDistance' as ExerciseMetricType, label: 'Workout Distance' },
+        { id: 'bestTime' as ExerciseMetricType, label: 'Best Time' },
+        { id: 'totalTime' as ExerciseMetricType, label: 'Workout Time' }
+      ];
+    }
+    
+    // Weight and distance exercises (farmer's walk, sled push)
+    if (type === ExerciseType.WeightAndDistance) {
+      return [
+        { id: 'heaviest' as ExerciseMetricType, label: 'Heaviest Weight' },
+        { id: 'longestDistance' as ExerciseMetricType, label: 'Longest Distance' },
+        { id: 'totalDistance' as ExerciseMetricType, label: 'Workout Distance' },
+        { id: 'distanceVolume' as ExerciseMetricType, label: 'Distance Volume' }
       ];
     }
     
@@ -64,7 +83,7 @@ export class ExerciseChartComponent {
     if (type === ExerciseType.BodyweightReps) {
       return [
         { id: 'mostReps' as ExerciseMetricType, label: 'Most Reps (Set)' },
-        { id: 'totalReps' as ExerciseMetricType, label: 'Total Reps' }
+        { id: 'totalReps' as ExerciseMetricType, label: 'Workout Reps' }
       ];
     }
     
@@ -73,7 +92,7 @@ export class ExerciseChartComponent {
       return [
         { id: 'heaviest' as ExerciseMetricType, label: 'Heaviest Weight' },
         { id: 'mostReps' as ExerciseMetricType, label: 'Most Reps (Set)' },
-        { id: 'totalReps' as ExerciseMetricType, label: 'Total Reps' }
+        { id: 'totalReps' as ExerciseMetricType, label: 'Workout Reps' }
       ];
     }
     
@@ -82,7 +101,7 @@ export class ExerciseChartComponent {
       return [
         { id: 'lightest' as ExerciseMetricType, label: 'Lightest Assistance' },
         { id: 'mostReps' as ExerciseMetricType, label: 'Most Reps (Set)' },
-        { id: 'totalReps' as ExerciseMetricType, label: 'Total Reps' }
+        { id: 'totalReps' as ExerciseMetricType, label: 'Workout Reps' }
       ];
     }
     
@@ -92,7 +111,7 @@ export class ExerciseChartComponent {
       { id: 'oneRepMax' as ExerciseMetricType, label: 'One Rep Max' },
       { id: 'bestSetVolume' as ExerciseMetricType, label: 'Best Set Volume' },
       { id: 'workoutVolume' as ExerciseMetricType, label: 'Workout Volume' },
-      { id: 'totalReps' as ExerciseMetricType, label: 'Total Reps' }
+      { id: 'totalReps' as ExerciseMetricType, label: 'Workout Reps' }
     ];
   });
 
@@ -100,9 +119,16 @@ export class ExerciseChartComponent {
     const type = this.exerciseType();
     
     if (type === ExerciseType.Duration || 
-        type === ExerciseType.DurationAndWeight ||
-        type === ExerciseType.DistanceAndDuration) {
+        type === ExerciseType.DurationAndWeight) {
       return 'bestTime' as ExerciseMetricType;
+    }
+    
+    if (type === ExerciseType.DistanceAndDuration) {
+      return 'longestDistance' as ExerciseMetricType;
+    }
+    
+    if (type === ExerciseType.WeightAndDistance) {
+      return 'longestDistance' as ExerciseMetricType;
     }
     
     if (type === ExerciseType.BodyweightReps) {

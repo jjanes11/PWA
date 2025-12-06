@@ -142,6 +142,31 @@ export class MetricCalculatorService {
   }
   
   /**
+   * Calculate longest distance in meters (for distance exercises).
+   */
+  private calculateLongestDistance(exercise: Exercise): number {
+    const completedSets = exercise.sets.filter(s => s.completed);
+    if (completedSets.length === 0) return 0;
+    return Math.max(...completedSets.map(s => s.distance || 0));
+  }
+  
+  /**
+   * Calculate total distance across all sets in meters (for distance exercises).
+   */
+  private calculateTotalDistance(exercise: Exercise): number {
+    const completedSets = exercise.sets.filter(s => s.completed);
+    return completedSets.reduce((sum, set) => sum + (set.distance || 0), 0);
+  }
+  
+  /**
+   * Calculate distance volume (weight × distance) for exercises like farmer's walk.
+   */
+  private calculateDistanceVolume(exercise: Exercise): number {
+    const completedSets = exercise.sets.filter(s => s.completed);
+    return completedSets.reduce((sum, set) => sum + ((set.weight || 0) * (set.distance || 0)), 0);
+  }
+  
+  /**
    * Calculate metric value for an exercise based on type.
    */
   calculateExerciseMetric(exercise: Exercise, metric: ExerciseMetricType): number {
@@ -164,6 +189,12 @@ export class MetricCalculatorService {
         return this.calculateBestTime(exercise);
       case 'totalTime':
         return this.calculateTotalTime(exercise);
+      case 'longestDistance':
+        return this.calculateLongestDistance(exercise);
+      case 'totalDistance':
+        return this.calculateTotalDistance(exercise);
+      case 'distanceVolume':
+        return this.calculateDistanceVolume(exercise);
       default:
         return 0;
     }

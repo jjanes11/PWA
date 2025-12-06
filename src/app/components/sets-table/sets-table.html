@@ -99,20 +99,20 @@
         </div>
       }
       
-      <!-- Distance (placeholder for now) -->
+      <!-- Distance -->
       @if (showDistance()) {
         <div class="jacaona-cell-distance">
           @if (mode === 'edit') {
             <input 
               type="number" 
-              value="0"
+              [value]="set.distance || 0"
+              (input)="onDistanceChange(set.id, $event)"
               class="jacaona-input"
               min="0"
               placeholder="m"
-              disabled
             />
           } @else {
-            - m
+            {{ set.distance || 0 }}
           }
         </div>
       }

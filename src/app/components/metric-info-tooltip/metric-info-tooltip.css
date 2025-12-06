@@ -1,0 +1,105 @@
+.jacaona-metric-info {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.jacaona-metric-info__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin-left: var(--jacaona-space-xs);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: var(--jacaona-text-secondary);
+  cursor: pointer;
+  transition: var(--jacaona-transition-fast);
+  opacity: 0.85;
+}
+
+.jacaona-metric-info__btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.jacaona-metric-info__btn:active {
+  transform: scale(0.95);
+}
+
+.jacaona-metric-info__tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--jacaona-z-tooltip);
+  width: max-content;
+  max-width: min(320px, 90vw);
+  padding: var(--jacaona-space-sm) var(--jacaona-space-md);
+  background: var(--jacaona-bg-secondary);
+  border: 1px solid var(--jacaona-border);
+  border-radius: var(--jacaona-radius-md);
+  box-shadow: var(--jacaona-shadow-lg);
+  animation: tooltipFadeIn 0.15s ease-out;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* Arrow pointing down */
+.jacaona-metric-info__tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 6px 0 6px;
+  border-color: var(--jacaona-bg-secondary) transparent transparent transparent;
+}
+
+.jacaona-metric-info__content {
+  font-size: var(--jacaona-font-size-sm);
+  line-height: 1.5;
+  color: var(--jacaona-text-primary);
+  text-align: left;
+}
+
+/* Adjust position if too close to top of screen */
+@media (max-height: 500px) {
+  .jacaona-metric-info__tooltip {
+    bottom: auto;
+    top: calc(100% + 8px);
+  }
+  
+  .jacaona-metric-info__tooltip::after {
+    top: auto;
+    bottom: 100%;
+    border-width: 0 6px 6px 6px;
+    border-color: transparent transparent var(--jacaona-bg-secondary) transparent;
+  }
+}
+
+/* Desktop: Show on hover */
+@media (hover: hover) and (pointer: fine) {
+  .jacaona-metric-info__btn:hover + .jacaona-metric-info__tooltip,
+  .jacaona-metric-info__tooltip:hover {
+    display: block;
+  }
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

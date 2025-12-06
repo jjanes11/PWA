@@ -99,7 +99,7 @@ export function formatWorkoutDataPoint(
  */
 export function formatExerciseDataPoint(
   event: ChartSelectionEvent,
-  metric: 'heaviest' | 'lightest' | 'oneRepMax' | 'bestSetVolume' | 'workoutVolume' | 'totalReps' | 'mostReps' | 'bestTime' | 'totalTime'
+  metric: 'heaviest' | 'lightest' | 'oneRepMax' | 'bestSetVolume' | 'workoutVolume' | 'totalReps' | 'mostReps' | 'bestTime' | 'totalTime' | 'longestDistance' | 'totalDistance' | 'distanceVolume'
 ): string {
   const relativeTime = getRelativeTime(event.date);
   
@@ -111,6 +111,16 @@ export function formatExerciseDataPoint(
       return `${minutes}m ${seconds}s ${relativeTime}`;
     }
     return `${seconds}s ${relativeTime}`;
+  }
+  
+  // Distance-based metrics (meters)
+  if (metric === 'longestDistance' || metric === 'totalDistance') {
+    return `${Math.round(event.value)} m ${relativeTime}`;
+  }
+  
+  // Distance volume (kg·m)
+  if (metric === 'distanceVolume') {
+    return `${Math.round(event.value)} kg·m ${relativeTime}`;
   }
   
   // Rep-based metrics
